@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{91D7D87F-713D-4233-94E4-30FFB9799350}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>KGEngine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>../../output/Debug/KG_Engine/</OutDir>
+    <IntDir>../../output/Debug/KG_Engine/</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>../../output/Release/KG_Engine/</OutDir>
+    <IntDir>../../output/Release/KG_Engine/</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>../../dx/include;../../fmod/inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>../../dx/lib/x64;../../fmod/lib/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <OutputFile>KG_Engine_D.lib</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy "*.lib" "../../lib"
+copy "*.h" "../../include/KG"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>../../dx/include;../../fmod/inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>../../dx/lib/x64;../../fmod/lib/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <OutputFile>KG_Engine_R.lib</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>copy "*.lib" "../../lib"
+copy "*.h" "../../include/KG"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="CBY_BoneBox.cpp" />
+    <ClCompile Include="CBY_BoneObj.cpp" />
+    <ClCompile Include="CBY_BoneParser.cpp" />
+    <ClCompile Include="CBY_Character.cpp" />
+    <ClCompile Include="CBY_CharacterCamera.cpp" />
+    <ClCompile Include="CBY_CharBox.cpp" />
+    <ClCompile Include="CBY_CharMgr.cpp" />
+    <ClCompile Include="CBY_DataCtrl.cpp" />
+    <ClCompile Include="CBY_Mesh.cpp" />
+    <ClCompile Include="CBY_MeshSkin.cpp" />
+    <ClCompile Include="CBY_Obj.cpp" />
+    <ClCompile Include="CBY_Object.cpp" />
+    <ClCompile Include="CBY_ObjectMgr.cpp" />
+    <ClCompile Include="CBY_Parser.cpp" />
+    <ClCompile Include="CBY_SkinObj.cpp" />
+    <ClCompile Include="CBY_SkinParser.cpp" />
+    <ClCompile Include="CBY_Weapon.cpp" />
+    <ClCompile Include="JH_BaseObj.cpp" />
+    <ClCompile Include="JH_Map.cpp" />
+    <ClCompile Include="JH_MapMgr.cpp" />
+    <ClCompile Include="JH_MapObj.cpp" />
+    <ClCompile Include="JH_ObjMgr.cpp" />
+    <ClCompile Include="KG_ArcBall.cpp" />
+    <ClCompile Include="KG_BackViewCamera.cpp" />
+    <ClCompile Include="KG_Camera.cpp" />
+    <ClCompile Include="KG_Core.cpp" />
+    <ClCompile Include="KG_DebugCamera.cpp" />
+    <ClCompile Include="KG_Device.cpp" />
+    <ClCompile Include="KG_DxHelperEx.cpp" />
+    <ClCompile Include="KG_DxHeper.cpp" />
+    <ClCompile Include="KG_DxRT.cpp" />
+    <ClCompile Include="KG_DxState.cpp" />
+    <ClCompile Include="KG_DXWrite.cpp" />
+    <ClCompile Include="KG_Frusutm.cpp" />
+    <ClCompile Include="KG_Input.cpp" />
+    <ClCompile Include="KG_MapLod.cpp" />
+    <ClCompile Include="KG_Math.cpp" />
+    <ClCompile Include="KG_Minimap.cpp" />
+    <ClCompile Include="KG_Model.cpp" />
+    <ClCompile Include="KG_ModelViewCamera.cpp" />
+    <ClCompile Include="KG_Node.cpp" />
+    <ClCompile Include="KG_Select.cpp" />
+    <ClCompile Include="KG_Shadow.cpp" />
+    <ClCompile Include="KG_ShapeBox.cpp" />
+    <ClCompile Include="KG_ShapeLine.cpp" />
+    <ClCompile Include="KG_ShapeMap.cpp" />
+    <ClCompile Include="KG_ShapeObject.cpp" />
+    <ClCompile Include="KG_SkyBox.cpp" />
+    <ClCompile Include="KG_Sound.cpp" />
+    <ClCompile Include="KG_SoundMgr.cpp" />
+    <ClCompile Include="KG_Sprite.cpp" />
+    <ClCompile Include="KG_TextureMgr.cpp" />
+    <ClCompile Include="KG_Time.cpp" />
+    <ClCompile Include="KG_Window.cpp" />
+    <ClCompile Include="LightMgr.cpp" />
+    <ClCompile Include="LightObj.cpp" />
+    <ClCompile Include="NormalMap.cpp" />
+    <ClCompile Include="QuadTree.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CBY_BoneBox.h" />
+    <ClInclude Include="CBY_BoneObj.h" />
+    <ClInclude Include="CBY_BoneParser.h" />
+    <ClInclude Include="CBY_Character.h" />
+    <ClInclude Include="CBY_CharacterCamera.h" />
+    <ClInclude Include="CBY_CharBox.h" />
+    <ClInclude Include="CBY_CharMgr.h" />
+    <ClInclude Include="CBY_DataCtrl.h" />
+    <ClInclude Include="CBY_Mesh.h" />
+    <ClInclude Include="CBY_MeshSkin.h" />
+    <ClInclude Include="CBY_Obj.h" />
+    <ClInclude Include="CBY_Object.h" />
+    <ClInclude Include="CBY_ObjectMgr.h" />
+    <ClInclude Include="CBY_ObjStd.h" />
+    <ClInclude Include="CBY_Parser.h" />
+    <ClInclude Include="CBY_SkinObj.h" />
+    <ClInclude Include="CBY_SkinParser.h" />
+    <ClInclude Include="CBY_Weapon.h" />
+    <ClInclude Include="JH_BaseObj.h" />
+    <ClInclude Include="JH_Map.h" />
+    <ClInclude Include="JH_MapMgr.h" />
+    <ClInclude Include="JH_MapObj.h" />
+    <ClInclude Include="JH_ObjMgr.h" />
+    <ClInclude Include="KG_ArcBall.h" />
+    <ClInclude Include="KG_BackViewCamera.h" />
+    <ClInclude Include="KG_Camera.h" />
+    <ClInclude Include="KG_Core.h" />
+    <ClInclude Include="KG_DebugCamera.h" />
+    <ClInclude Include="KG_Device.h" />
+    <ClInclude Include="KG_DxHelperEx.h" />
+    <ClInclude Include="KG_DxHeper.h" />
+    <ClInclude Include="KG_DxRT.h" />
+    <ClInclude Include="KG_DxState.h" />
+    <ClInclude Include="KG_DXWrite.h" />
+    <ClInclude Include="KG_Frusutm.h" />
+    <ClInclude Include="KG_Input.h" />
+    <ClInclude Include="KG_MapLod.h" />
+    <ClInclude Include="KG_Math.h" />
+    <ClInclude Include="KG_Minimap.h" />
+    <ClInclude Include="KG_Model.h" />
+    <ClInclude Include="KG_ModelViewCamera.h" />
+    <ClInclude Include="KG_Node.h" />
+    <ClInclude Include="KG_ObjStd.h" />
+    <ClInclude Include="KG_Select.h" />
+    <ClInclude Include="KG_Shadow.h" />
+    <ClInclude Include="KG_ShapeBox.h" />
+    <ClInclude Include="KG_ShapeLine.h" />
+    <ClInclude Include="KG_ShapeMap.h" />
+    <ClInclude Include="KG_ShapeObject.h" />
+    <ClInclude Include="KG_SkyBox.h" />
+    <ClInclude Include="KG_Sound.h" />
+    <ClInclude Include="KG_SoundMgr.h" />
+    <ClInclude Include="KG_Sprite.h" />
+    <ClInclude Include="KG_Std.h" />
+    <ClInclude Include="KG_TextureMgr.h" />
+    <ClInclude Include="KG_Time.h" />
+    <ClInclude Include="KG_Window.h" />
+    <ClInclude Include="LightMgr.h" />
+    <ClInclude Include="LightObj.h" />
+    <ClInclude Include="NormalMap.h" />
+    <ClInclude Include="QuadTree.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

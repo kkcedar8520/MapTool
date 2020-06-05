@@ -1,0 +1,203 @@
+Texture2D		g_txDiffuseA : register(t0);
+Texture2D		g_txDiffuseB : register(t1);
+SamplerState	g_Sample0 : register(s0);
+
+struct PS_IN
+{
+	float4 p : SV_POSITION;
+	float3 n : NORMAL;
+	float4 c : COLOR0;
+	float2 t : TEXCOORDO;
+	float time : TEXCOORD1;
+};
+
+struct PS_OUT
+{
+	float4 add : SV_TARGET0;
+	float4 mul : SV_TARGET1;
+};
+
+PS_OUT PS(PS_IN vsdata)
+{
+	PS_OUT pout;
+	float4 FinalA = g_txDiffuseA.Sample(g_Sample0, vsdata.t);
+
+	pout.add = FinalA;
+	return pout;
+}
+
+PS_OUT PSBlend(PS_IN vsdata)
+{
+	PS_OUT pout;
+	float4 FinalA = g_txDiffuseA.Sample(g_Sample0, vsdata.t);
+	float4 FinalB = g_txDiffuseB.Sample(g_Sample0, vsdata.t);
+	float alpha=(FinalA.r+FinalA.g+FinalA.b)/3;
+	pout.mul=float4(1-alpha,1-alpha,1-alpha,alpha);
+	pout.add=lerp(FinalA,FinalB,vsdata.time);
+	return pout;
+}
+
+PS_OUT PSBlend2(PS_IN vsdata)
+{
+	PS_OUT pout;
+	float4 SRC = g_txDiffuseA.Sample(g_Sample0, vsdata.t);
+	if(SRC.x == 1.0f)
+	{
+		if(SRC.y == 1.0f)
+		{
+			if(SRC.z == 1.0f)
+			{
+				SRC.w=0.0f;
+			}
+		}
+	}
+
+	pout.add = SRC;
+	return pout;
+}
+
+PS_OUT PSBlendMon(PS_IN vsdata)
+{
+	PS_OUT pout;
+	float4 SRC = g_txDiffuseA.Sample(g_Sample0, vsdata.t);
+	if(SRC.x == 1.0f)
+	{
+		if(SRC.y == 1.0f)
+		{
+			if(SRC.z == 1.0f)
+			{
+				SRC.w=0.0f;
+			}
+		}
+	}
+	SRC.w = SRC.w * vsdata.time;
+	pout.add = SRC;
+	return pout;
+}
+
+PS_OUT PSBlendMap(PS_IN vsdata)
+{
+	PS_OUT pout;
+	float4 SRC = g_txDiffuseA.Sample(g_Sample0, vsdata.t);
+	if(SRC.x == 1.0f)
+	{
+		if(SRC.y == 1.0f)
+		{
+			if(SRC.z == 1.0f)
+			{
+				SRC.w=0.0f;
+			}
+		}
+	}
+
+	pout.add = SRC*vsdata.c;
+	return pout;
+}
+
+PS_OUT PSASEBland(PS_IN inData)
+{
+	PS_OUT vOut;
+	float4 vFinalA = g_txDiffuseA.Sample(g_Sample0, inData.t);
+	float4 vFinalB = g_txDiffuseB.Sample(g_Sample0, inData.t);
+	float alpha= max(max(vFinalA.r, vFinalA.g), vFinalA.b);
+	vOut.mul = float4(1-alpha,1-alpha,1-alpha,alpha);
+	vOut.add = vFinalA*inData.c;
+	return vOut;
+}
+
+
+PS_OUT PSASEBland2(PS_IN vsdata)
+{
+	PS_OUT pout;
+	float4 SRC =vsdata.c;
+	return pout;
+}
+
+struct VS_OUT
+{
+	float4 p : SV_POSITION;
+	float3 n : NORMAL;
+	float4 c : COLOR0;
+	float2 t : TEXCOORDO;
+	float time : TEXCOORD1;
+};
+
+struct VS_IN
+{
+	float3 p : POINT;
+	float3 n : NORMAL;
+	float4 c : COLOR;
+	float2 t : TEXT;
+};
+
+cbuffer m_ConData : register(b0)
+{
+	float4x4 g_matWorld : packoffset(c0);
+	float4x4 g_matView : packoffset(c4);
+	float4x4 g_matProj : packoffset(c8);
+	float4 TowerScope : packoffset(c12);
+	float4 TowerClick : packoffset(c13);
+};
+
+float4 Scope(float3 vPos)
+{
+	float4 Color = float4(0,0,0,0);	
+	float Distance = distance(vPos.xy,TowerScope.xy);
+
+	// (min)a~b(max), tÀÇ °ª
+	//float offset = smoothstep( Distance-30 , Distance , TowerScope.w);
+	float offset = smoothstep(0, TowerScope.w , Distance);
+	float a = 1 - offset;
+	Color = offset * float4(1,1,1,1);
+		
+	Color.w=1;
+	return Color;
+}
+
+
+VS_OUT VS(VS_IN data)
+{
+	VS_OUT vout;
+	vout.p = float4(data.p, 1.0f);
+	vout.n = data.n;
+	vout.c = data.c;
+	vout.t = data.t;
+	return vout;
+}
+
+VS_OUT VSmat(VS_IN data)
+{
+	VS_OUT vout;
+	float4 vLocal = float4(data.p, 1.0f);
+	float4 vWorld = mul(vLocal, g_matWorld);
+	float4 vView = mul(vWorld, g_matView);
+	float4 vProj = mul(vView, g_matProj);
+	vout.p = vProj;
+	vout.n = data.n;
+	vout.c = data.c;
+	vout.t = data.t;
+	vout.time = TowerScope.x;
+	return vout;
+}
+
+VS_OUT VSmatMap(VS_IN data)
+{
+	VS_OUT vout;
+	float4 vLocal = float4(data.p, 1.0f);
+	float4 vWorld = mul(vLocal, g_matWorld);
+	float4 vView = mul(vWorld, g_matView);
+	float4 vProj = mul(vView, g_matProj);
+	vout.p = vProj;
+	vout.n = data.n;
+	if(TowerClick.x==1)
+	{
+		vout.c = Scope(vWorld.xyz);
+	}
+	else
+	{
+	vout.c = data.c;
+	}
+	vout.t = data.t;
+	return vout;
+}
+

@@ -1,0 +1,89 @@
+#define MAX_BONE_MATRICES 255
+struct VS_OUT
+{
+	float4 p : SV_POSITION;
+	float3 n : NORMAL;
+	float4 c : COLOR0;
+	float2 t : TEXCOORD0;	
+};
+struct VS_IN
+{
+	float3 p : POSITION;
+	float3 n : NORMAL;
+	float4 c : COLOR;
+	float2 t : TEXCOORD0;
+	float4 i : TEXCOORD1;
+	float4 w : TEXCOORD2;
+};
+
+cbuffer cb_Data : register(b0)
+{
+	float4x4 g_matWorld : packoffset(c0);
+	float4x4 g_matView : packoffset(c4);
+	float4x4 g_matProj : packoffset(c8);
+	float4 time : packoffset(c12);	
+};
+cbuffer cb_AnimMatrices : register(b1)
+{
+	matrix g_matBoneWorld[MAX_BONE_MATRICES];
+}
+VS_OUT VSSKIN(VS_IN inData)
+{
+	VS_OUT vOut;
+	float4 vLocal = float4(inData.p,1.0f);
+	float4 vAnim = float4(0,0,0,0);
+	float3 vNormal = float3(0,0,0);
+	for( int iBiped=0; iBiped < 1; iBiped++)
+	{
+		uint iBoneIndex = (uint)inData.i[iBiped];
+		vAnim += mul(vLocal,
+			g_matBoneWorld[iBoneIndex] ) * inData.w[iBiped];
+		vNormal += mul(inData.n,
+			(float3x3)g_matBoneWorld[inData.i[iBiped]] ) * inData.w[iBiped];
+	}
+	float4 vWorld = mul(vAnim, g_matWorld);
+	float4 vView = mul(vWorld, g_matView);
+	float4 vProj = mul(vView, g_matProj);
+	vOut.p = vProj;
+	vOut.c = inData.c;
+	vOut.t = inData.t;
+	vOut.n = normalize(mul( vNormal, (float3x3)g_matWorld ));
+	return vOut;
+}
+
+VS_OUT VSOBJECT(VS_IN inData)
+{
+	VS_OUT vOut;
+	float4 vLocal = float4(inData.p,1.0f);
+	float4 vWorld = mul(vLocal, g_matWorld);
+	float4 vView = mul(vWorld, g_matView);
+	float4 vProj = mul(vView, g_matProj);
+	vOut.p = vProj;
+	vOut.c = inData.c;
+	vOut.t = inData.t;
+	vOut.n = inData.n;
+	return vOut;
+}
+
+Texture2D		g_txDiffuseA : register(t0);
+SamplerState	g_Sample0 : register(s0);
+
+struct PS_IN
+{
+	float4 p : SV_POSITION;
+	float3 n : NORMAL;
+	float4 c : COLOR0;
+	float2 t : TEXCOORD0;
+};
+
+float4 PS(PS_IN inData): SV_TARGET0
+{
+	float4 vFinalA = g_txDiffuseA.Sample(g_Sample0, inData.t);
+	return vFinalA;
+}
+
+float4 PSBone(PS_IN inData): SV_TARGET0
+{
+	float4 vFinalA=float4(0,0,1,1);
+	return vFinalA;
+}

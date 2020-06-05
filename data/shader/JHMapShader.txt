@@ -1,0 +1,239 @@
+
+#define g_iLightNum 1
+
+
+struct VS_OUT
+{
+	float4 p 			: SV_POSITION;
+	float3 n 			: NORMAL;
+	float4 c 			: COLOR0;
+	float2 t 			: TEXCOORD0;
+	float3 v			: TEXCOORD1;
+	float3 vEye			: TEXCOORD2;
+	float3 vHalf		: TEXCOORD3;
+	float3 vLightDir	: TEXCOORD4;
+	float4 vlocal		: TEXCOORD5;
+};
+struct VS_IN
+{
+	float3 p : POSITION;
+	float3 n : NORMAL;
+	float4 c : COLOR;
+	float2 t : TEX;
+	float3 tan: TANGENT;
+};
+struct VS_OUT_LINE
+{
+	float4 p : SV_POSITION;
+	float4 c : COLOR0;
+};
+struct VS_IN_LINE
+{
+	float3 p : POSITION;
+	float4 c : COLOR;
+};
+cbuffer cb_Data : register(b0)
+{
+	float4x4 g_matWorld;
+	float4x4 g_matView ;
+	float4x4 g_matProj ;
+	float4x4 g_matNorm ;
+
+};
+cbuffer cb_Light : register(b1)
+{
+	float4 vAmbinentLightColor[g_iLightNum];
+	float4 vDiffuseLightColor[g_iLightNum];
+	float4 vSpecularLightColor[g_iLightNum];
+	float4 vSpotLightColor[g_iLightNum];
+	float4 vLightDirection[g_iLightNum];
+	float4 vLightPos[g_iLightNum];
+	float4 vEyeDirection[g_iLightNum];
+	float4 vEyePos[g_iLightNum];
+	float4 vSpotLight[g_iLightNum];
+	matrix g_LTM;
+	
+};
+cbuffer cb_MapSub : register(b2)
+{
+	float4	vSubData; 
+};
+float4 Diffuse(float3 vNormal)
+{
+	 float4 fIntesity=max(0,dot(vNormal,normalize(-vLightDirection[0].xyz)));
+	 return vAmbinentLightColor[0]+vDiffuseLightColor[0]*fIntesity;
+}
+float4 Specular(float3 vNormal)
+{
+	float4 Final=float4(0,0,0,0);
+	for(int Light=0; Light<g_iLightNum;Light++)
+	{
+		float3 vReflect=reflect(vLightDirection[Light].xyz,vNormal);
+		float fIntensity=max(0,dot(vReflect,normalize(-vEyeDirection[Light].xyz)));
+		float fPower=pow(fIntensity,30);
+
+		float4 cSpecular=fPower*float4(1,1,1,1);
+		
+		Final+=cSpecular;
+	}
+
+	return Final;
+}
+float4 ComputePointLight(float3 vVertexPos,float3 vNormal)
+{
+	float4 FinalColor=float4(0,0,0,0);
+	for(int Light=0; Light<g_iLightNum;Light++)
+	{
+		float fDistance = distance(vVertexPos.xyz, vLightPos[Light].xyz);
+		float fOffset = smoothstep(fDistance - 40, fDistance, vSpotLight[Light].w - 40);
+	
+		float4 vPointLightDirection;
+		vPointLightDirection.xyz=normalize(vVertexPos.xyz-vLightPos[Light].xyz);
+
+		float fIntensity = max(0, dot(vNormal,-vPointLightDirection.xyz));
+		float4 vColor=fOffset *vDiffuseLightColor[Light];
+
+		FinalColor+=vColor;
+	
+	}
+	FinalColor.a=1.0f;
+	return FinalColor;
+}
+
+float4 ComputeSpotLight(float3 vVertexPos,float3 vNormal)
+{
+	float4 FinalColor=float4(0,0,0,0);
+	for(int Light=0; Light<g_iLightNum;Light++)
+	{
+		float fInner=vSpotLight[Light].x;
+		float fOutnner=vSpotLight[Light].y;
+		float FallOff=vSpotLight[Light].z;
+		float fRange=vSpotLight[Light].w;
+
+		float fDistance = distance(vVertexPos.xyz, vLightPos[Light].xyz);
+
+		float3 VertexDirectionLight=normalize(vVertexPos.xyz-vLightPos[Light].xyz);
+
+		float fDot = max(0, dot(vLightDirection[Light].xyz,VertexDirectionLight.xyz));
+
+		float fIntensity = saturate(dot(vNormal.xyz,-vLightDirection[Light].xyz));
+
+		float fOffset = smoothstep(fDistance - FallOff, fDistance, fRange);
+		float fPhi = vSpotLight[Light].x - vSpotLight[Light].y;
+
+		
+	
+		if(fDot>fInner)
+		{
+
+			FinalColor+=vSpotLightColor[Light]*fIntensity*fOffset;
+
+		}
+		else
+		{
+			float fLuminanceB = 1.0f - (fInner - fDot) / fPhi;
+			fOffset=min(fOffset,fLuminanceB);
+			FinalColor+=vSpotLightColor[Light]*fIntensity*fOffset;
+		}
+	
+	}
+		FinalColor.a=1.0f;
+		return FinalColor;
+}
+
+VS_OUT VS(VS_IN inData)
+{
+	VS_OUT vOut;
+	float4 vLocal = float4(inData.p,1.0f);
+	float4 vWorld = mul(vLocal, g_matWorld);
+	float4 vView = mul(vWorld, g_matView);
+	float4 vProj = mul(vView, g_matProj);
+	vOut.p = vProj;
+	vOut.n=inData.n;
+	vOut.c=inData.c;
+	vOut.t =inData.t*10;
+	vOut.v= vWorld;
+	float3 fTan=normalize(mul(inData.tan,(float3x3)g_matNorm));
+	float3 B=cross(fTan,inData.n);
+	float3x3 tanMat={fTan.x,B.x,inData.n.x,
+		fTan.y,B.y,inData.n.y,
+		fTan.z,B.z,inData.n.z,};
+
+	float3 vLightDir =vLightDirection[0].xyz;// normalize(cb_vLightVector.xyz - vWorldPos);
+	vOut.vHalf = normalize(mul(normalize(vLightDir + vEyePos[0]), tanMat));
+	vOut.vLightDir = normalize(mul(-vLightDir, tanMat));
+	vOut.vEye = normalize(mul(vEyePos[0], tanMat));
+
+	vOut.vlocal = mul(vLocal,g_LTM);
+	//vOut.c=ComputePointLight(vOut.v,vOut.n);
+	return vOut;
+}
+
+
+Texture2D		g_txDiffuseA : register(t0);
+Texture2D		g_txDiffuseB : register(t1);
+Texture2D		g_SplattingAlpha:register(t2);
+Texture2D		g_SplattTexArray[8];
+Texture2D		g_txShadow : register(t11);
+
+
+SamplerState	g_Sample0 : register(s0);
+
+struct PS_IN
+{
+	float4 p			 : SV_POSITION;
+	float3 n			: NORMAL;
+	float4 c			 : COLOR0;
+	float2 t			: TEXCOORD0;
+	float3 v			: TEXCOORD1;
+	float3 vEye			: TEXCOORD2;
+	float3 vHalf		: TEXCOORD3;
+	float3 vLightDir	: TEXCOORD4;
+	float4 vlocal       : TEXCOORD5;
+};
+
+struct PS_OUT
+{
+	float4 c : SV_TARGET;
+};
+PS_OUT PS(PS_IN inData)
+{
+	PS_OUT vOut;
+	float4 vBase = g_txDiffuseA.Sample(g_Sample0, inData.t);	
+	float4 normal = g_txDiffuseB.Sample(g_Sample0, inData.t);	
+	float4 vAlpha=g_SplattingAlpha.Sample(g_Sample0,inData.t/10);
+	
+
+	normal = normalize((normal - 0.5f) * 2.0f);
+
+	float4 vFinalColor=vBase;//*(Diffuse(normal.xyz));
+	
+
+	float4 vTexture=g_SplattTexArray[0].Sample(g_Sample0,inData.t)* vAlpha.r;
+	vFinalColor=lerp(vFinalColor,vTexture,vAlpha.r);
+	vTexture=g_SplattTexArray[1].Sample(g_Sample0,inData.t)* vAlpha.g;
+	vFinalColor=lerp(vFinalColor,vTexture,vAlpha.g);
+	vTexture=g_SplattTexArray[2].Sample(g_Sample0,inData.t)* vAlpha.b;
+	vFinalColor=lerp(vFinalColor,vTexture,vAlpha.b);
+	vTexture=g_SplattTexArray[3].Sample(g_Sample0,inData.t)* vAlpha.a;
+	vFinalColor=lerp(vFinalColor,vTexture,vAlpha.a);
+
+
+
+	vOut.c=vFinalColor*(Diffuse(normal.xyz)+Diffuse(inData.n));//lerp(vBase,vTexture,vTexture.a);
+	
+/*	float3 tex;
+	tex.x = inData.vlocal.x / inData.vlocal.w;
+	tex.y = inData.vlocal.y / inData.vlocal.w;
+	tex.z = inData.vlocal.z / inData.vlocal.w;
+
+	float sh = g_txShadow.Sample(g_Sample0, tex.xy) + 0.013f;*/
+	
+	/*if(sh < tex.z)
+	{
+		vOut.c*= float4(0.5,0.5,0.5,1);
+	}*/
+	vOut.c.a=1.0f;
+
+	return vOut;
+}

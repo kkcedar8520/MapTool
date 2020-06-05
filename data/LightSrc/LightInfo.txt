@@ -1,0 +1,31 @@
+#SPRITE 3
+Diffuse 9
+vAmbinentLightColor	0.3 0.3 0.3 1.0
+vDiffuseLightColor	1.0 1.0 1.0 1.0
+vSpecularLightColor	1.0 1.0 1.0 1.0
+vSpotLightColor		1.0 1.0 1.0 1.0
+LightDir			0.0 1.0 0.0 1.0
+At					0.0 0.0 0.0 1.0				
+LightPos			1.0 1.0 1.0 1.0
+vSpotLight			0.0 0.0 0.0 0.0
+Globalvalue			0.0 0.0 0.0 2.0	
+Point 9
+vAmbinentLightColor	0.2 0.2 0.2 1.0
+vDiffuseLightColor	1.0 1.0 1.0 1.0
+vSpecularLightColor	1.0 1.0 1.0 1.0
+vSpotLightColor		1.0 1.0 1.0 1.0
+LightDir			0.0 1.0 0.0 1.0
+At					0.0 0.0 0.0 1.0				
+LightPos			100.0 100.0 100.0 1.0
+vSpotLight			0.0 0.0 50.0 100.0
+Globalvalue			100.0 50.0 0.0 2.0	
+SpotLight 9
+vAmbinentLightColor	0.2 0.2 0.2 1.0
+vDiffuseLightColor	1.0 1.0 1.0 1.0
+vSpecularLightColor	1.0 1.0 1.0 1.0
+vSpotLightColor		1.0 1.0 1.0 1.0
+LightDir			0.0 1.0 0.0 1.0
+At					0.0 0.0 0.0 1.0				
+LightPos			-100.0 20.0 -100.0 1.0
+vSpotLight			45.0 60.0 50.0 100.0
+Globalvalue			100.0 50.0 0.0 3.0	

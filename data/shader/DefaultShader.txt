@@ -1,0 +1,91 @@
+Texture2D		g_txDiffuseA : register(t0);
+Texture2D		g_txDiffuseB : register(t1);
+SamplerState	g_Sample0 : register(s0);
+
+struct PS_IN
+{
+	float4 p : SV_POSITION;
+	float3 n : NORMAL;
+	float4 c : COLOR0;
+	float2 t : TEXCOORDO;
+};
+
+struct PS_OUT
+{
+	float4 c : SV_TARGET;
+};
+
+PS_OUT PS(PS_IN vsdata)
+{
+	PS_OUT pout;
+	pout.c = g_txDiffuseA.Sample(g_Sample0, vsdata.t);
+	return pout;
+}
+
+PS_OUT PSBlend(PS_IN vsdata)
+{
+	PS_OUT pout;
+	float4 SRC= g_txDiffuseA.Sample(g_Sample0, vsdata.t);
+	if (SRC.x == 0.0f)
+	{
+		if (SRC.y == 0.0f)
+		{
+			if (SRC.z == 0.0f)
+			{
+				SRC.w = 0.0f;
+			}
+		}
+	}
+
+	pout.c = SRC;
+	return pout;
+}
+
+struct VS_OUT
+{
+	float4 p : SV_POSITION;
+	float3 n : NORMAL;
+	float4 c : COLOR0;
+	float2 t : TEXCOORDO;
+};
+
+struct VS_IN
+{
+	float3 p : POINT;
+	float3 n : NORMAL;
+	float4 c : COLOR;
+	float2 t : TEXT;
+};
+
+cbuffer m_ConData : register(b0)
+{
+	float4x4 g_matWorld : packoffset(c0);
+	float4x4 g_matView : packoffset(c4);
+	float4x4 g_matProj : packoffset(c8);
+	float4 time : packoffset(c12);
+
+};
+
+VS_OUT VS(VS_IN data)
+{
+	VS_OUT vout;
+	vout.p = float4(data.p, 1.0f);
+	vout.n = data.n;
+	vout.c = data.c;
+	vout.t = data.t;
+	return vout;
+}
+
+VS_OUT VSmat(VS_IN data)
+{
+	VS_OUT vout;
+	float4 vLocal = float4(data.p, 1.0f);
+	float4 vWorld = mul(vLocal, g_matWorld);
+	float4 vView = mul(vWorld, g_matView);
+	float4 vProj = mul(vView, g_matProj);
+	vout.p = vProj;
+	vout.n = data.n;
+	vout.c = data.c;
+	vout.t = data.t;
+	return vout;
+}

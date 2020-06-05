@@ -1,0 +1,29 @@
+#Light 4
+LightSrc 6
+cAmbientLightColor 0.1 0.1 0.1 1 
+cDifuseLightColor 1 1 1 1 
+cSpecularLightColor	1 1 1 1 
+LightPos 50 1 50 1
+vAt	200 80 200 1
+vSpot 90 120 5 1
+LightSrc 6
+cAmbientLightColor 0.1 0.1 0.1 1 
+cDifuseLightColor 1 1 1 1 
+cSpecularLightColor	1 1 1 1 
+LightPos 50 1 50 1
+vAt	200 80 200 1
+vSpot 90 120 5 1
+LightSrc 6
+cAmbientLightColor 0.1 0.1 0.1 1 
+cDifuseLightColor 1 1 1 1 
+cSpecularLightColor	1 1 1 1 
+LightPos 50 1 50 1
+vAt	200 80 200 1
+vSpot 90 120 5 1
+LightSrc 6
+cAmbientLightColor 0.1 0.1 0.1 1 
+cDifuseLightColor 1 1 1 1 
+cSpecularLightColor	1 1 1 1 
+LightPos 50 1 50 1
+vAt	200 80 200 1
+vSpot 90 120 5 1

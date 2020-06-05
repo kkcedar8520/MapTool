@@ -1,0 +1,53 @@
+Texture2D		g_txDiffuseA : register(t0);
+Texture2D		g_txDiffuseB : register(t1);
+SamplerState	g_Sample0 : register(s0);
+
+struct PS_IN
+{
+	float4 p : SV_POSITION;
+	float4 c : COLOR0;
+};
+
+struct PS_OUT
+{
+	float4 c : SV_TARGET;
+};
+
+PS_OUT PS(PS_IN vsdata)
+{
+	PS_OUT pout;
+	pout.c=vsdata.c;
+	return pout;
+}
+struct VS_OUT
+{
+	float4 p : SV_POSITION;
+	float4 c : COLOR0;
+};
+
+struct VS_IN
+{
+	float3 p : POINT;
+	float4 c : COLOR;
+};
+
+cbuffer m_ConData : register(b0)
+{
+	float4x4 g_matWorld : packoffset(c0);
+	float4x4 g_matView : packoffset(c4);
+	float4x4 g_matProj : packoffset(c8);
+	float4 time : packoffset(c12);
+
+};
+
+VS_OUT VS(VS_IN data)
+{
+	VS_OUT vout;
+	float4 vLocal = float4(data.p, 1.0f);
+	float4 vWorld = mul(vLocal, g_matWorld);
+	float4 vView = mul(vWorld, g_matView);
+	float4 vProj = mul(vView, g_matProj);
+	vout.p = vProj;
+	vout.c = data.c;
+	return vout;
+}

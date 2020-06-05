@@ -1,0 +1,405 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{ae91aa51-fb86-4671-b950-7fcb62a8fbb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DX">
+      <UniqueIdentifier>{d6a36aa4-1c42-47cc-b475-fd9fb8bc65ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{fd432e23-d132-4e70-9fe0-a2387df24a10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{eabf8cb4-5289-42f3-80a0-561b906fc3e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Shape">
+      <UniqueIdentifier>{43d3a560-7bda-4d73-91e4-c3a9f0cdf609}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shadow">
+      <UniqueIdentifier>{7b47ba88-093e-45a3-a459-f2e31768f780}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JH">
+      <UniqueIdentifier>{b761eab2-3d50-4e42-aa71-556780c00ad1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{3c969479-97e8-48df-8a90-8c71d0b36597}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CBY">
+      <UniqueIdentifier>{6fd5f671-a569-4625-bf72-f8c15c533c79}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="KG_Core.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_Device.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_Window.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_ArcBall.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_BackViewCamera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_DebugCamera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_Frusutm.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_Minimap.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_ModelViewCamera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_DxHelperEx.cpp">
+      <Filter>DX</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_DxHeper.cpp">
+      <Filter>DX</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_DxRT.cpp">
+      <Filter>DX</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_DxState.cpp">
+      <Filter>DX</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_DXWrite.cpp">
+      <Filter>DX</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_Model.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_Sprite.cpp">
+      <Filter>Model\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_ShapeObject.cpp">
+      <Filter>Model\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_ShapeMap.cpp">
+      <Filter>Model\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_ShapeLine.cpp">
+      <Filter>Model\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_ShapeBox.cpp">
+      <Filter>Model\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_Input.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_Math.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_Select.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_Sound.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_SoundMgr.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_TextureMgr.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_Time.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_Shadow.cpp">
+      <Filter>Shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="JH_Map.cpp">
+      <Filter>JH</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>JH</Filter>
+    </ClCompile>
+    <ClCompile Include="NormalMap.cpp">
+      <Filter>JH</Filter>
+    </ClCompile>
+    <ClCompile Include="JH_BaseObj.cpp">
+      <Filter>JH</Filter>
+    </ClCompile>
+    <ClCompile Include="LightMgr.cpp">
+      <Filter>JH</Filter>
+    </ClCompile>
+    <ClCompile Include="LightObj.cpp">
+      <Filter>JH</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_SkyBox.cpp">
+      <Filter>JH</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_Node.cpp">
+      <Filter>JH</Filter>
+    </ClCompile>
+    <ClCompile Include="KG_MapLod.cpp">
+      <Filter>JH</Filter>
+    </ClCompile>
+    <ClCompile Include="CBY_BoneBox.cpp">
+      <Filter>CBY</Filter>
+    </ClCompile>
+    <ClCompile Include="CBY_BoneObj.cpp">
+      <Filter>CBY</Filter>
+    </ClCompile>
+    <ClCompile Include="CBY_BoneParser.cpp">
+      <Filter>CBY</Filter>
+    </ClCompile>
+    <ClCompile Include="CBY_Mesh.cpp">
+      <Filter>CBY</Filter>
+    </ClCompile>
+    <ClCompile Include="CBY_MeshSkin.cpp">
+      <Filter>CBY</Filter>
+    </ClCompile>
+    <ClCompile Include="CBY_Obj.cpp">
+      <Filter>CBY</Filter>
+    </ClCompile>
+    <ClCompile Include="CBY_Object.cpp">
+      <Filter>CBY</Filter>
+    </ClCompile>
+    <ClCompile Include="CBY_ObjectMgr.cpp">
+      <Filter>CBY</Filter>
+    </ClCompile>
+    <ClCompile Include="CBY_Parser.cpp">
+      <Filter>CBY</Filter>
+    </ClCompile>
+    <ClCompile Include="JH_MapObj.cpp">
+      <Filter>JH</Filter>
+    </ClCompile>
+    <ClCompile Include="JH_MapMgr.cpp">
+      <Filter>JH</Filter>
+    </ClCompile>
+    <ClCompile Include="JH_ObjMgr.cpp">
+      <Filter>JH</Filter>
+    </ClCompile>
+    <ClCompile Include="CBY_DataCtrl.cpp">
+      <Filter>CBY</Filter>
+    </ClCompile>
+    <ClCompile Include="CBY_SkinObj.cpp">
+      <Filter>CBY</Filter>
+    </ClCompile>
+    <ClCompile Include="CBY_SkinParser.cpp">
+      <Filter>CBY</Filter>
+    </ClCompile>
+    <ClCompile Include="CBY_Character.cpp">
+      <Filter>CBY</Filter>
+    </ClCompile>
+    <ClCompile Include="CBY_CharacterCamera.cpp">
+      <Filter>CBY</Filter>
+    </ClCompile>
+    <ClCompile Include="CBY_CharBox.cpp">
+      <Filter>CBY</Filter>
+    </ClCompile>
+    <ClCompile Include="CBY_CharMgr.cpp">
+      <Filter>CBY</Filter>
+    </ClCompile>
+    <ClCompile Include="CBY_Weapon.cpp">
+      <Filter>CBY</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="KG_Core.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_Device.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_ObjStd.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_Std.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_Window.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_ArcBall.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_BackViewCamera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_DebugCamera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_ModelViewCamera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_Minimap.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_Frusutm.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_DxHelperEx.h">
+      <Filter>DX</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_DxHeper.h">
+      <Filter>DX</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_DxRT.h">
+      <Filter>DX</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_DxState.h">
+      <Filter>DX</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_DXWrite.h">
+      <Filter>DX</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_Model.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_Sprite.h">
+      <Filter>Model\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_ShapeObject.h">
+      <Filter>Model\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_ShapeMap.h">
+      <Filter>Model\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_ShapeLine.h">
+      <Filter>Model\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_ShapeBox.h">
+      <Filter>Model\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_Input.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_Math.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_Select.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_Sound.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_SoundMgr.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_TextureMgr.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_Time.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_Shadow.h">
+      <Filter>Shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="JH_Map.h">
+      <Filter>JH</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree.h">
+      <Filter>JH</Filter>
+    </ClInclude>
+    <ClInclude Include="NormalMap.h">
+      <Filter>JH</Filter>
+    </ClInclude>
+    <ClInclude Include="JH_BaseObj.h">
+      <Filter>JH</Filter>
+    </ClInclude>
+    <ClInclude Include="LightMgr.h">
+      <Filter>JH</Filter>
+    </ClInclude>
+    <ClInclude Include="LightObj.h">
+      <Filter>JH</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_SkyBox.h">
+      <Filter>JH</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_Node.h">
+      <Filter>JH</Filter>
+    </ClInclude>
+    <ClInclude Include="KG_MapLod.h">
+      <Filter>JH</Filter>
+    </ClInclude>
+    <ClInclude Include="CBY_BoneBox.h">
+      <Filter>CBY</Filter>
+    </ClInclude>
+    <ClInclude Include="CBY_BoneObj.h">
+      <Filter>CBY</Filter>
+    </ClInclude>
+    <ClInclude Include="CBY_BoneParser.h">
+      <Filter>CBY</Filter>
+    </ClInclude>
+    <ClInclude Include="CBY_Mesh.h">
+      <Filter>CBY</Filter>
+    </ClInclude>
+    <ClInclude Include="CBY_MeshSkin.h">
+      <Filter>CBY</Filter>
+    </ClInclude>
+    <ClInclude Include="CBY_Obj.h">
+      <Filter>CBY</Filter>
+    </ClInclude>
+    <ClInclude Include="CBY_Object.h">
+      <Filter>CBY</Filter>
+    </ClInclude>
+    <ClInclude Include="CBY_ObjectMgr.h">
+      <Filter>CBY</Filter>
+    </ClInclude>
+    <ClInclude Include="CBY_ObjStd.h">
+      <Filter>CBY</Filter>
+    </ClInclude>
+    <ClInclude Include="CBY_Parser.h">
+      <Filter>CBY</Filter>
+    </ClInclude>
+    <ClInclude Include="JH_MapObj.h">
+      <Filter>JH</Filter>
+    </ClInclude>
+    <ClInclude Include="JH_MapMgr.h">
+      <Filter>JH</Filter>
+    </ClInclude>
+    <ClInclude Include="JH_ObjMgr.h">
+      <Filter>JH</Filter>
+    </ClInclude>
+    <ClInclude Include="CBY_DataCtrl.h">
+      <Filter>CBY</Filter>
+    </ClInclude>
+    <ClInclude Include="CBY_SkinObj.h">
+      <Filter>CBY</Filter>
+    </ClInclude>
+    <ClInclude Include="CBY_SkinParser.h">
+      <Filter>CBY</Filter>
+    </ClInclude>
+    <ClInclude Include="CBY_Character.h">
+      <Filter>CBY</Filter>
+    </ClInclude>
+    <ClInclude Include="CBY_CharacterCamera.h">
+      <Filter>CBY</Filter>
+    </ClInclude>
+    <ClInclude Include="CBY_CharBox.h">
+      <Filter>CBY</Filter>
+    </ClInclude>
+    <ClInclude Include="CBY_CharMgr.h">
+      <Filter>CBY</Filter>
+    </ClInclude>
+    <ClInclude Include="CBY_Weapon.h">
+      <Filter>CBY</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

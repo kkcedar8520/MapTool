@@ -1,5 +1,10 @@
+#pragma once
 #include "JH_MapMgr.h"
 #include"JH_ObjMgr.h"
+
+
+
+
 
 
 namespace JH {
@@ -37,7 +42,7 @@ namespace JH {
 		GMData.m_pQuadTree = std::make_shared<HQuadTree>();
 
 		//Map Basic Text Data
-
+		I_ObjMgr.m_ObjectList.clear();
 
 		TCHAR   Temp[256];
 		_fgetts(m_pBuffer, 256, fp);
@@ -165,9 +170,21 @@ namespace JH {
 				&OBJ.m_MapObj.m_Box.fExtent[0], &OBJ.m_MapObj.m_Box.fExtent[1], &OBJ.m_MapObj.m_Box.fExtent[2]);
 		}
 
+		const TCHAR* HeightFile;
+	
+		TCHAR Tempm[256] = L"(null)";
+		
+		if (m_MapData.m_HeightMapFile== Tempm)
+		{
+			HeightFile = nullptr;
+		}
+		else
+		{
+			HeightFile = m_MapData.m_HeightMapFile.data();
+		}
 		CreateMap(GMData.m_pMap.get(), GMData.m_pQuadTree.get(),
 			m_MapData.iRow, m_MapData.iCol, m_MapData.iCellCount, m_MapData.iCellSize,
-			m_MapData.m_BaseTextureFile.c_str(), m_MapData.m_NormalMapFile.c_str(), m_MapData.m_HeightMapFile.c_str());
+			m_MapData.m_BaseTextureFile.c_str(), m_MapData.m_NormalMapFile.c_str(), HeightFile);
 		for (int iTex = 0; iTex < m_MapData.m_pSplattTextureFile.size(); iTex++)
 		{
 			GMData.m_pMap->AddSplattTexture(m_MapData.m_pSplattTextureFile[iTex].data(), iTex + 1);
@@ -230,10 +247,10 @@ namespace JH {
 		{
 			pMap->Release();
 			pQuad->Release();
-
+			
 		}
 
-
+		pMap->m_vHeightList.resize(m_MapData.m_fHegihtList.size());
 		if (pHeightMapFileName)
 		{
 			pMap->CreateHeightMap(m_pd3dDevice, m_pContext, pHeightMapFileName);

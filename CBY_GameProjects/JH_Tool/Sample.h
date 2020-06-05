@@ -6,7 +6,6 @@
 #include"KG_BackViewCamera.h"
 #include"KG_DebugCamera.h"
 #include"KG_ModelViewCamera.h"
-#include"MaxObj.h"
 #include"KG_SkyBox.h"
 #include "CBY_Object.h"
 #include"KG_Shadow.h"

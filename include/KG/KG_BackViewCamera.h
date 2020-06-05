@@ -8,6 +8,7 @@ public:
 	//void Front(float fValue);
 
 public:
+	void Update(D3DXVECTOR4 rotvalue);
 	void Front(float Speed);
 	void Side(float Speed);
 	KG_BackViewCamera();

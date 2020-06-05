@@ -7,7 +7,7 @@
 #include"KG_DebugCamera.h"
 #include"MaxObj.h"
 #include"KG_SkyBox.h"
-#include "CBY_Object.h"
+#include"CBY_Object.h"
 #include"KG_Std.h"
 #include"JH_MapMgr.h"
 #include"KG_Shadow.h"

@@ -245,7 +245,7 @@ bool  Sample::SaveMapData(const TCHAR* LoadFile)
 		{
 			 OBJ.m_MapObj= *Obj.second;
 
-			 OBJ.m_MapObj.m_Box = m_QuadTree->SetBB(&OBJ.m_MapObj);
+			 //OBJ.m_MapObj.m_Box = m_QuadTree->SetBB(&OBJ.m_MapObj);
 			m_sMapData.m_sQTData.m_ObjList.push_back(OBJ);
 		}
 	}
@@ -505,7 +505,7 @@ bool  Sample::LoadMapData(const TCHAR* LoadFile)
 
 
 	//if (SUCCEEDED(hr = D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice,
-	//	m_sMapData.m_pSplattAlphaTextureFile.data(), NULL, NULL, m_pLoadAlphaSrv.GetAddressOf(), NULL)))
+	//	m_sMapData.m_pSplattAlphaTextureFile.data(), NULL, NULL, m_Map->m_pCopySrv.GetAddressOf(), NULL)))
 	//	m_pLoadAlphaSrv->GetResource((ID3D11Resource**)pReadTexture.GetAddressOf());
 
 	//m_pContext->CopyResource((ID3D11Resource*)pUAVTexture.Get(), (ID3D11Resource*)pReadTexture.Get());
@@ -846,12 +846,14 @@ void Sample::SelectObject()
 
 	m_Interval = 999999.0f;
 	bool bSel = false;;
+
 	m_QuadTree->GetSelectObj(m_QuadTree->m_pRootNode);
 
 	
 	for (int iObj = 0; iObj <m_QuadTree->m_SelectObjList.size(); iObj++)
 	{
-		if (m_Select.OBBToRay(&m_QuadTree->m_SelectObjList[iObj]->m_Box))
+		KG_Box Box = m_QuadTree->SetBB(m_QuadTree->m_SelectObjList[iObj].get());
+		if (m_Select.OBBToRay(&Box))
 		{
 			FLOAT fDistance=D3DXVec3Length(&(m_QuadTree->m_pSelect->m_vIntersection));
 			if (m_Interval> fDistance)
@@ -882,16 +884,18 @@ void Sample::MapUpDown(JH::SPHERE sphere)
 	{
 		D3DXVECTOR3 vCenter = m_QuadTree->m_SelectNodeList[iNode]->m_Box.vCenter;
 		D3DXVECTOR3 vMin = m_QuadTree->m_SelectNodeList[iNode]->m_Box.vMin;
-		float fDistance = sqrt((vCenter.x - sphere.vCenter.x)*
-			(vCenter.x - sphere.vCenter.x) +
-			(vCenter.z - sphere.vCenter.z)*
-			(vCenter.z - sphere.vCenter.z));
-		float fMinMax = sqrt((vCenter.x - sphere.vCenter.x)*
-			(vCenter.x - vMin.x) +
-			(vCenter.z - vMin.z)*
-			(vCenter.z - vMin.z));
+		float fDistance = D3DXVec3Length(&(vCenter - sphere.vCenter));
+		float fMinMax = D3DXVec3Length(&(vCenter - vMin));
+		//float fDistance = sqrt((vCenter.x - sphere.vCenter.x)*
+		//	(vCenter.x - sphere.vCenter.x) +
+		//	(vCenter.z - sphere.vCenter.z)*
+		//	(vCenter.z - sphere.vCenter.z));
+		//float fMinMax = sqrt((vCenter.x - sphere.vCenter.x)*
+		//	(vCenter.x - vMin.x) +
+		//	(vCenter.z - vMin.z)*
+		//	(vCenter.z - vMin.z));
 		DWORD dwFace = m_QuadTree->m_SelectNodeList[iNode]->m_IndexList.size() / 3;
-		if (sphere.Radius+ fMinMax >= fDistance)
+		if (sphere.Radius + fMinMax >= fDistance)
 		{
 			for (int iFace = 0; iFace < dwFace; iFace++)
 			{
@@ -906,14 +910,14 @@ void Sample::MapUpDown(JH::SPHERE sphere)
 						(m_Map->m_VerTex[i0].p.z - sphere.vCenter.z));
 
 					float  fDet = (fDistance / sphere.Radius)*D3DX_PI / 2.0;
-					
+
 					float value = cos(fDet)*g_SecondTime;
 					if (sphere.Radius > fDistance)
 					{
 						m_Map->m_VerTex[i0].p.y += value * m_HeightVlaue;
 					}
 
-				
+
 				}
 				DWORD i0 = m_QuadTree->m_SelectNodeList[iNode]->m_IndexList[iFace * 3 + 0];
 				DWORD i1 = m_QuadTree->m_SelectNodeList[iNode]->m_IndexList[iFace * 3 + 1];
@@ -931,6 +935,69 @@ void Sample::MapUpDown(JH::SPHERE sphere)
 				m_Map->m_VerTex[i2].n = vFaceNormal;
 
 
+			}
+		}
+	
+
+		for (size_t iNeighbor = 0; iNeighbor < m_QuadTree->m_SelectNodeList[iNode]->m_NeighborNodeList.size(); iNeighbor++)
+		{
+			if (m_QuadTree->m_SelectNodeList[iNode]->m_NeighborNodeList[iNeighbor] == nullptr)
+				continue;
+
+			D3DXVECTOR3 vCenter = m_QuadTree->m_SelectNodeList[iNode]->m_NeighborNodeList[iNeighbor]->m_Box.vCenter;
+			D3DXVECTOR3 vMin = m_QuadTree->m_SelectNodeList[iNode]->m_NeighborNodeList[iNeighbor]->m_Box.vMin;
+			float fDistance = D3DXVec3Length(&(vCenter - sphere.vCenter));
+			float fMinMax = D3DXVec3Length(&(vCenter - vMin));
+	/*		float fDistance = sqrt((vCenter.x - sphere.vCenter.x)*
+				(vCenter.x - sphere.vCenter.x) +
+				(vCenter.z - sphere.vCenter.z)*
+				(vCenter.z - sphere.vCenter.z));
+			float fMinMax = sqrt((vCenter.x - sphere.vCenter.x)*
+				(vCenter.x - vMin.x) +
+				(vCenter.z - vMin.z)*
+				(vCenter.z - vMin.z));*/
+			DWORD dwFace = m_QuadTree->m_SelectNodeList[iNode]->m_NeighborNodeList[iNeighbor]->m_IndexList.size() / 3;
+			if (sphere.Radius + fMinMax >= fDistance)
+			{
+				for (int iFace = 0; iFace < dwFace; iFace++)
+				{
+					for (int iV = 0; iV < 3; iV++)
+					{
+						DWORD i0 = m_QuadTree->m_SelectNodeList[iNode]->m_NeighborNodeList[iNeighbor]->m_IndexList[iFace * 3 + iV];
+
+
+						fDistance = sqrt((m_Map->m_VerTex[i0].p.x - sphere.vCenter.x)*
+							(m_Map->m_VerTex[i0].p.x - sphere.vCenter.x) +
+							(m_Map->m_VerTex[i0].p.z - sphere.vCenter.z)*
+							(m_Map->m_VerTex[i0].p.z - sphere.vCenter.z));
+
+						float  fDet = (fDistance / sphere.Radius)*D3DX_PI / 2.0;
+
+						float value = cos(fDet)*g_SecondTime;
+						if (sphere.Radius > fDistance)
+						{
+							m_Map->m_VerTex[i0].p.y += value * m_HeightVlaue;
+						}
+
+
+					}
+					DWORD i0 = m_QuadTree->m_SelectNodeList[iNode]->m_NeighborNodeList[iNeighbor]->m_IndexList[iFace * 3 + 0];
+					DWORD i1 = m_QuadTree->m_SelectNodeList[iNode]->m_NeighborNodeList[iNeighbor]->m_IndexList[iFace * 3 + 1];
+					DWORD i2 = m_QuadTree->m_SelectNodeList[iNode]->m_NeighborNodeList[iNeighbor]->m_IndexList[iFace * 3 + 2];
+
+					D3DXVECTOR3 vFaceNormal, E0, E1;
+					E0 = m_Map->m_VerTex[i1].p - m_Map->m_VerTex[i0].p;
+					E1 = m_Map->m_VerTex[i2].p - m_Map->m_VerTex[i0].p;
+
+					D3DXVec3Cross(&vFaceNormal, &E0, &E1);
+					D3DXVec3Normalize(&vFaceNormal, &vFaceNormal);
+
+					m_Map->m_VerTex[i0].n = vFaceNormal;
+					m_Map->m_VerTex[i1].n = vFaceNormal;
+					m_Map->m_VerTex[i2].n = vFaceNormal;
+
+
+				}
 			}
 		}
 

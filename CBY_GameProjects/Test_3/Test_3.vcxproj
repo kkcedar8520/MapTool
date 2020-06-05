@@ -79,11 +79,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../fmod/inc;../../include/KG;../../dx/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(WindowsSDK_IncludePath);../../include/KG;../../fmod/inc;../../dx/include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>../../lib;../../fmod/lib/x64;../../dx/lib/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..//..//lib;..//..//Dx//Lib//x64;..//..//fmod//lib//x64;</AdditionalLibraryDirectories>
       <AdditionalDependencies>KG_Engine_D.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>

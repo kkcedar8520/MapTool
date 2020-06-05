@@ -5,7 +5,6 @@
 #include"KG_ShapeMap.h"
 #include"LightMgr.h"
 
-
 #pragma warning( disable:4005 )
 
 TCHAR* main::FixupName(T_STR name)
@@ -42,7 +41,7 @@ bool main::Init()
 	m_pMainCamera->UpdateVector();
 
 	JH::I_MapMgr.Set(m_pd3dDevice, m_pContext, m_pMainCamera, m_Select);
-	JH::I_MapMgr.AddMap(L"../../MapSave/SampleRubber2.Map");
+	JH::I_MapMgr.AddMap(L"../../MapSave/aa.Map");
 	float fAspect = (float)Winrt.right / Winrt.bottom;
 	m_pMainCamera->CreateProjMatrix(0.1F, 1000.0F, D3DX_PI*0.4F, fAspect);
 	
@@ -116,7 +115,9 @@ bool main::Render()
 					iter != pNode->m_ObjList.end();
 					iter++)
 				{
-					int pos = m_pMainCamera->CheckOBBInPlane(iter->second->m_Box);
+					KG_Box Box;
+					Box = m_QuadTree->SetBB(iter->second.get());
+					int pos = m_pMainCamera->CheckOBBInPlane(Box);
 					if (pos == P_BACK)  continue;
 
 

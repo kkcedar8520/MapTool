@@ -290,7 +290,7 @@ namespace JH {
 
 		InitLevelOrder(m_pRootNode, 3);
 		BuildTree(m_pRootNode);
-
+		SetNeighborNode(m_pRootNode);
 
 		return TRUE;
 	}
@@ -300,13 +300,12 @@ namespace JH {
 		{
 			for (int iNode = 0; iNode < 4; iNode++)
 			{
-				if (!pNode->m_pChild[iNode])
+				if (pNode->m_pChild[iNode])
 				{
 					DWORD dwIndex = pNode->m_pChild[iNode]->m_dwPositionIndex[1] * pow(2.0f, pNode->m_pChild[iNode]->m_dwDepth)
 						+ pNode->m_pChild[iNode]->m_dwPositionIndex[0];
 
 					DWORD dwValue = pNode->m_pChild[iNode]->m_dwDepth;
-
 					m_LevelList[dwValue][dwIndex] = pNode->m_pChild[iNode];
 
 				}
@@ -576,7 +575,9 @@ namespace JH {
 		std::map<int, std::shared_ptr<JH_MapObj>>::iterator iter;
 		for (iter = pNode->m_ObjList.begin(); iter != pNode->m_ObjList.end(); iter++)
 		{
-			if (m_pSelect->OBBToRay(&iter->second->m_Box))
+			KG_Box Box=SetBB(iter->second.get());
+
+			if (m_pSelect->OBBToRay(&Box))
 			{
 				m_SelectObjList.push_back(iter->second);
 				//CreateBB(pNode);
@@ -779,6 +780,7 @@ namespace JH {
 	}
 	void HQuadTree::SetNeighborNode(KG_Node* pNode)
 	{
+		if (pNode == nullptr) return;
 		FindNeighborNode(pNode);
 		for (int iNode = 0; iNode < 4; iNode++)
 		{

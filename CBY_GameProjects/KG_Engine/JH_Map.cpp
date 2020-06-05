@@ -492,7 +492,6 @@ namespace JH
 		LightConstantBuffer mcb = I_LIGHT_MGR.m_cbLight;
 		UpdateConstantBuffer(I_LIGHT_MGR.m_pLightConstantBuffer[0].Get(), &I_LIGHT_MGR.m_cbLight);
 		m_obj.m_pContext->PSSetConstantBuffers(1, 1, pBuffers);
-		m_obj.m_pContext->PSSetConstantBuffers(1, 1, pBuffers);
 		UINT offset = 0;
 		UINT stride = sizeof(D3DXVECTOR3);
 		if (m_pNormMapFileName)

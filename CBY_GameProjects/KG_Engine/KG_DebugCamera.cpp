@@ -45,12 +45,12 @@ bool KG_DebugCamera::Frame()
 {
 	if (I_Input.GetKeyCheck('W'))					//카메라의 이동
 	{
-		m_Pos += m_Look * g_SecondTime * 30;
+		m_Pos += m_Look * g_SecondTime * 50;
 	}
 
 	if (I_Input.GetKeyCheck('S'))
 	{
-		m_Pos -= m_Look * g_SecondTime * 30;
+		m_Pos -= m_Look * g_SecondTime * 50;
 	}
 	if (I_Input.GetKeyCheck(VK_UP))					//시점 변환
 	{

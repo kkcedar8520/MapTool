@@ -214,6 +214,9 @@ namespace CBY
 			}
 			_fgetts(pBuffer, 256, fp_src);
 			_stscanf_s(pBuffer, _T("%d%d%d"), &m_data.ObjList[dw].Socket, &m_data.ObjList[dw].ObjSocket, &m_data.ObjList[dw].FireSocket);
+
+			_fgetts(pBuffer, 256, fp_src);
+			_stscanf_s(pBuffer, _T("%f%f%f"), &m_data.ObjList[dw].vpos.x, &m_data.ObjList[dw].vpos.y, &m_data.ObjList[dw].vpos.z);
 		}
 
 		fclose(fp_src);

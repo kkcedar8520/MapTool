@@ -71,6 +71,7 @@ struct CONDATA				//상수 버퍼의 정보 구조체
 	D3DXMATRIX World;
 	D3DXMATRIX View;
 	D3DXMATRIX Proj;
+	D3DXMATRIX Normal;
 	D3DXVECTOR4 ddata;	//273/345
 	CONDATA()
 	{
@@ -163,7 +164,6 @@ public:
 	//bool Create(ID3D11Device* pd3dDevice, ID3D11DeviceContext* Context, const TCHAR* verFileName, const TCHAR* pixFileName,const TCHAR* TexFileName, const CHAR* VSName = "VS", const CHAR* PSName = "PS");
 	virtual HRESULT CreateVertexData();					//정점 버퍼 데이터 생성
 	virtual HRESULT CreateIndexData();					//인덱스 버퍼 데이터 생성
-	virtual void UpdateVertexData();					//정점 버퍼 데이터 업데이트
 	virtual HRESULT CreateVertexBuffer();				//정점 버퍼 생성
 	virtual HRESULT CreateIndexBuffer();				//인덱스 버퍼 생성
 	virtual HRESULT CreateConstantBuffer();				//상수 버퍼 생성
@@ -180,6 +180,7 @@ public:
 	virtual void UVConvert(std::vector<PNCT_VERTEX>& vertex, RECT& Rect, int Width, int Height);
 
 	virtual void UpdatePSShader(ID3D11ShaderResourceView* textview);
+	virtual void UpdateVertexData(std::vector<PNCT_VERTEX>& list);					//정점 버퍼 데이터 업데이트
 	//virtual void UVConvert();
 
 public:

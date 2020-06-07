@@ -10,16 +10,16 @@ struct VS_OUT
 	float2 t 			: TEXCOORD0;
 	float3 v			: TEXCOORD1;
 	float3 vEye			: TEXCOORD2;
-	float3 vHalf		: TEXCOORD3;
+	float3 vHalf		:  TEXCOORD3;
 	float3 vLightDir	: TEXCOORD4;
 };
 struct VS_IN
 {
-	float3 p : POSITION;
+	float3 p : POINT;
 	float3 n : NORMAL;
 	float4 c : COLOR;
-	float2 t : TEX;
-	float3 tan: TANGENT;
+	float2 t : TEXT;
+	//float3 tan: TANGENT;
 };
 struct VS_OUT_LINE
 {
@@ -144,14 +144,14 @@ VS_OUT VS(VS_IN inData)
 	VS_OUT vOut;
 	float4 vLocal = float4(inData.p,1.0f);
 	float4 vWorld = mul(vLocal, g_matWorld);
-	float4 vView = mul(vWorld, g_matView);
+	float4 vView = mul(vWorld,g_matView);
 	float4 vProj = mul(vView, g_matProj);
 	vOut.p = vProj;
 	vOut.n=inData.n;
 	vOut.c=inData.c;
 	vOut.t =inData.t*10;
 	vOut.v= vWorld;
-	float3 fTan=normalize(mul(inData.tan,(float3x3)g_matNorm));
+	/*float3 fTan=normalize(mul(inData.tan,(float3x3)g_matNorm));
 	float3 B=cross(fTan,inData.n);
 	float3x3 tanMat={fTan.x,B.x,inData.n.x,
 		fTan.y,B.y,inData.n.y,
@@ -160,7 +160,7 @@ VS_OUT VS(VS_IN inData)
 	float3 vLightDir =vLightDirection[0].xyz;// normalize(cb_vLightVector.xyz - vWorldPos);
 	vOut.vHalf = normalize(mul(normalize(vLightDir + vEyePos[0]), tanMat));
 	vOut.vLightDir = normalize(mul(-vLightDir, tanMat));
-	vOut.vEye = normalize(mul(vEyePos[0], tanMat));
+	vOut.vEye = normalize(mul(vEyePos[0], tanMat));*/
 
 	//vOut.c=ComputePointLight(vOut.v,vOut.n);
 	return vOut;
@@ -197,36 +197,18 @@ PS_OUT PS(PS_IN inData)
 {
 	PS_OUT vOut;
 	float4 vBase = g_txDiffuseA.Sample(g_Sample0, inData.t);	
-	float4 normal = g_txDiffuseB.Sample(g_Sample0, inData.t);	
-	float4 vAlpha=g_SplattingAlpha.Sample(g_Sample0,inData.t/10);
+
+
 	
 
-	normal = normalize((normal - 0.5f) * 2.0f);
 
-	float4 vFinalColor=vBase*(Diffuse(normal.xyz));
-	
-	for(int iCount=0 ; iCount<vSubData.x;iCount+=4)
-	{
-	float4 vTexture=g_SplattTexArray[iCount].Sample(g_Sample0,inData.t);
-	vBase = lerp(vBase,vTexture, vAlpha.r);
-	vTexture=g_SplattTexArray[iCount].Sample(g_Sample0,inData.t);
-	vBase = lerp(vBase,vTexture, vAlpha.g);
-	vTexture=g_SplattTexArray[iCount].Sample(g_Sample0,inData.t);
-	vBase = lerp(vBase,vTexture, vAlpha.b);
-	vTexture=g_SplattTexArray[iCount].Sample(g_Sample0,inData.t);
-	vBase = lerp(vBase,vTexture, vAlpha.a);
-	}
-	
-	if(vAlpha.a==0)
-	{
-		vFinalColor+=vBase*(Diffuse(normal.xyz));
-	}
+	float4 vFinalColor=vBase*(Diffuse(inData.n));
 	
 
-	vOut.c=float4(1,1,1,1);
+	vOut.c=vFinalColor;
 	
 	
-	
+
 
 	vOut.c.a=1.0f;
 

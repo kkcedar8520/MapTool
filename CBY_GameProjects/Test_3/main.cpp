@@ -40,8 +40,14 @@ bool main::Init()
 	m_pMainCamera->CreateViewMatrix(D3DXVECTOR3(0, 100, -50.0f), D3DXVECTOR3(0, 0, 0));
 	m_pMainCamera->UpdateVector();
 
+
+	JH::I_LIGHT_MGR.GetDevice(m_pd3dDevice);
+	JH::I_LIGHT_MGR.GetContext(m_pContext);
+	JH::I_LIGHT_MGR.SetCamera(m_pMainCamera);
+	JH::I_LIGHT_MGR.Create(L"../../data/Shader/JHMapShader.txt", L"../../data/LightSrc/LightInfo.txt");
+
 	JH::I_MapMgr.Set(m_pd3dDevice, m_pContext, m_pMainCamera, m_Select);
-	JH::I_MapMgr.AddMap(L"../../MapSave/aa.Map");
+	JH::I_MapMgr.AddMap(L"../../MapSave/desertMap.Map");
 	float fAspect = (float)Winrt.right / Winrt.bottom;
 	m_pMainCamera->CreateProjMatrix(0.1F, 1000.0F, D3DX_PI*0.4F, fAspect);
 	
@@ -104,9 +110,9 @@ bool main::Render()
 	else
 	{
 		JH::I_MapMgr.GetCurrentMap().m_pQuadTree->Render();
-		for (auto LightObj :JH::I_LIGHT_MGR.m_LightObjList)
-		{
-			m_pContext->PSSetShaderResources(11, 1, &LightObj.m_Shadow.m_Rt->m_pDsvSRV);
+	/*	for (auto LightObj :JH::I_LIGHT_MGR.m_LightObjList)
+		{*/
+			/*m_pContext->PSSetShaderResources(11, 1, &LightObj.m_Shadow.m_Rt->m_pDsvSRV);*/
 			for (int iNode = 0; iNode < JH::I_MapMgr.GetCurrentMap().m_pQuadTree->m_DrawObjNodeList.size(); iNode++)
 			{
 				JH::KG_Node* pNode = JH::I_MapMgr.GetCurrentMap().m_pQuadTree->m_DrawObjNodeList[iNode];
@@ -127,7 +133,7 @@ bool main::Render()
 					JH::I_MapMgr.GetCurrentMap().m_ObjectList[iter->second->GetID()]->Render();
 				}
 			}
-		}
+		//}
 	}
 
 

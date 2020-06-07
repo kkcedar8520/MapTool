@@ -1,10 +1,16 @@
 #define MAX_BONE_MATRICES 255
+#define g_iLightNum 1
+
 struct VS_OUT
 {
 	float4 p : SV_POSITION;
 	float3 n : NORMAL;
 	float4 c : COLOR0;
-	float2 t : TEXCOORD0;	
+	float2 t : TEXCOORD0;
+	float4 shadow : TEXCOORD1;
+	float3 vEye			: TEXCOORD2;
+	float3 vHalf		: TEXCOORD3;
+	float3 vLightDir	: TEXCOORD4;
 };
 struct VS_IN
 {
@@ -12,8 +18,9 @@ struct VS_IN
 	float3 n : NORMAL;
 	float4 c : COLOR;
 	float2 t : TEXCOORD0;
-	float4 i : TEXCOORD1;
-	float4 w : TEXCOORD2;
+	float3 tan :TEXCOORD1;
+	float4 i : TEXCOORD2;
+	float4 w : TEXCOORD3;
 };
 
 cbuffer cb_Data : register(b0)
@@ -21,19 +28,49 @@ cbuffer cb_Data : register(b0)
 	float4x4 g_matWorld : packoffset(c0);
 	float4x4 g_matView : packoffset(c4);
 	float4x4 g_matProj : packoffset(c8);
-	float4 time : packoffset(c12);	
+	float4x4 g_matNorm : packoffset(c12);	
+	float4 time : packoffset(c16);	
 };
 cbuffer cb_AnimMatrices : register(b1)
 {
 	matrix g_matBoneWorld[MAX_BONE_MATRICES];
 }
+
+cbuffer cb_Light : register(b2)
+{
+	float4 vAmbinentLightColor[g_iLightNum];
+	float4 vDiffuseLightColor[g_iLightNum];
+	float4 vSpecularLightColor[g_iLightNum];
+	float4 vSpotLightColor[g_iLightNum];
+	float4 vLightDirection[g_iLightNum];
+	float4 vLightPos[g_iLightNum];
+	float4 vEyeDirection[g_iLightNum];
+	float4 vEyePos[g_iLightNum];
+	float4 vSpotLight[g_iLightNum];
+	float4x4 matLTM[g_iLightNum];
+	
+};
+
+/*cbuffer m_Light : register(b2)
+{
+	float4 g_cAmbientLightColor;
+	float4 g_cDifuseLightColor;
+	float4 g_cSpecularLightColor;
+	float4 g_vLightDir;	//감쇠
+	float4 g_vLightPos;	//반지름
+	float4 g_vEyeDir;	//w 강도
+	float4 g_vEyePos;	//반지름
+	float4 g_vSpot;
+	float4x4 g_LTM;
+};*/
+
 VS_OUT VSSKIN(VS_IN inData)
 {
 	VS_OUT vOut;
 	float4 vLocal = float4(inData.p,1.0f);
 	float4 vAnim = float4(0,0,0,0);
 	float3 vNormal = float3(0,0,0);
-	for( int iBiped=0; iBiped < 1; iBiped++)
+	for( int iBiped=0; iBiped < 4; iBiped++)
 	{
 		uint iBoneIndex = (uint)inData.i[iBiped];
 		vAnim += mul(vLocal,
@@ -47,7 +84,22 @@ VS_OUT VSSKIN(VS_IN inData)
 	vOut.p = vProj;
 	vOut.c = inData.c;
 	vOut.t = inData.t;
-	vOut.n = normalize(mul( vNormal, (float3x3)g_matWorld ));
+	vOut.n = normalize(mul( vNormal, (float3x3)g_matNorm ));
+	vOut.shadow = mul(vLocal,matLTM[0]);
+	//vOut.shadow=float4(0,0,0,0);
+
+	float3 fTan=normalize(mul(inData.tan,(float3x3)g_matNorm));
+	float3 B=cross(fTan,inData.n);
+	float3x3 tanMat={fTan.x,B.x,vOut.n.x,
+		fTan.y,B.y,vOut.n.y,
+		fTan.z,B.z,vOut.n.z,};
+
+	vOut.vEye = normalize(vEyePos[0].xyz);
+
+	float3 vLightDir = vLightDirection[0].xyz;// normalize(cb_vLightVector.xyz - vWorldPos);
+	vOut.vHalf = normalize(mul(normalize(vLightDir + vOut.vEye), tanMat));
+	vOut.vLightDir = normalize(mul(-vLightDir, tanMat));
+	vOut.vEye = normalize(mul(vOut.vEye, tanMat));
 	return vOut;
 }
 
@@ -66,7 +118,12 @@ VS_OUT VSOBJECT(VS_IN inData)
 }
 
 Texture2D		g_txDiffuseA : register(t0);
+Texture2D		g_txNormalMap : register(t1);
+Texture2D		g_txSpecColorMap : register(t2);
+Texture2D		g_txEmsColorMap : register(t3);
+Texture2D		g_txShadow : register(t4);
 SamplerState	g_Sample0 : register(s0);
+SamplerState	g_ShdowSample : register(s1);
 
 struct PS_IN
 {
@@ -74,12 +131,56 @@ struct PS_IN
 	float3 n : NORMAL;
 	float4 c : COLOR0;
 	float2 t : TEXCOORD0;
+	float4 shadow : TEXCOORD1;
+	float3 vEye			: TEXCOORD2;
+	float3 vHalf		: TEXCOORD3;
+	float3 vLightDir	: TEXCOORD4;
 };
 
 float4 PS(PS_IN inData): SV_TARGET0
 {
-	float4 vFinalA = g_txDiffuseA.Sample(g_Sample0, inData.t);
-	return vFinalA;
+	//Diffuse
+	float4 DiffuseColor = g_txDiffuseA.Sample(g_Sample0, inData.t);
+	
+	float4 specpower = g_txSpecColorMap.Sample(g_Sample0, inData.t);
+	// 디퓨즈 조명 
+	float4 normal = g_txNormalMap.Sample(g_Sample0, inData.t);
+	
+	normal = normalize((normal - 0.5f) * 2.0f);
+	float  fDot = saturate(dot(normal.xyz, inData.vLightDir));
+	float3 LightColor = vDiffuseLightColor[0].rgb * fDot;// * (specpower.r);
+	fDot = saturate(dot(inData.n, inData.vLightDir));
+	LightColor =  LightColor + vDiffuseLightColor[0].rgb * fDot;
+
+	// 스펙큘러 조명 		
+	float3 R = reflect(-inData.vLightDir, normal.xyz);
+	float power= 1-specpower.b;
+	float3 SpecColor = vSpecularLightColor[0].rgb * pow(saturate(dot(R, inData.vEye)), power);
+
+	//
+	float4 EmsColor = g_txEmsColorMap.Sample(g_Sample0, inData.t);// * specpower.r;
+
+	// 전체 컬러 조합  	
+	float4 vFinalColor = DiffuseColor * float4(LightColor+  vAmbinentLightColor[0] + SpecColor + EmsColor.xyz, 1.0f);
+	//float4 vFinalColor = DiffuseColor;
+	//return vFinalColor;// *input.c;
+	
+	
+	
+	//////Shadow
+	/*float3 tex;
+	tex.x = inData.shadow.x / inData.shadow.w;
+	tex.y = inData.shadow.y / inData.shadow.w;
+	tex.z = inData.shadow.z / inData.shadow.w;
+
+	float sh = g_txShadow.Sample(g_ShdowSample, tex.xy);
+	
+	if(sh < tex.z)
+	{
+		vFinalColor *= float4(0.5,0.5,0.5,1);
+	}*/
+
+	return vFinalColor;
 }
 
 float4 PSBone(PS_IN inData): SV_TARGET0

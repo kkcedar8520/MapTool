@@ -69,7 +69,7 @@ namespace CBY
 
 		return hr;
 	}
-	void    CBY_Obj::Convert(std::vector<PNCTIW_VERTEX>& list)
+	void    CBY_Obj::Convert(std::vector<PNCT2IW_VERTEX>& list)
 	{
 		int iBaseVertex = 0;
 		int iBaseIndex = 0;
@@ -192,7 +192,7 @@ namespace CBY
 	HRESULT CBY_Obj::CreateVertexData()
 	{
 		HRESULT hr = S_OK;
-		m_obj.m_VertexSize = sizeof(PNCTIW_VERTEX);
+		m_obj.m_VertexSize = sizeof(PNCT2IW_VERTEX);
 
 		return hr;
 	}

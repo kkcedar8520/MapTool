@@ -4,6 +4,15 @@ namespace CBY
 {
 	bool CBY_Weapon::Update(D3DXMATRIX* parmat)
 	{
+		D3DXMATRIX poaworld;
+		D3DXVECTOR3 vScale, vPos;
+		D3DXQUATERNION qRot;
+		D3DXMatrixDecompose(&vScale, &qRot, &vPos, parmat);
+		D3DXMatrixRotationQuaternion(&poaworld, &qRot);
+		poaworld._41 = vPos.x+ m_vMovePos.x;
+		poaworld._42 = vPos.y+ m_vMovePos.y;
+		poaworld._43 = vPos.z+ m_vMovePos.z;
+
 		m_fElapseTick = 0;
 		if (m_dwAniType == CHAR_FRAMETYPE)
 		{
@@ -13,7 +22,7 @@ namespace CBY
 
 		else if (m_dwAniType == CHAR_MTRTYPE)
 		{
-			m_Bone->ObjUpdate(0, 0, 0, m_pMatrixList, parmat, m_iObjSocket);
+			m_Bone->ObjUpdate(0, 0, 0, m_pMatrixList, &poaworld, m_iObjSocket);
 		}
 
 		for (int iBone = 0; iBone < m_ObjList[0]->m_matBoneBindPoss.size(); iBone++)

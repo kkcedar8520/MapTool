@@ -10,6 +10,7 @@ namespace CBY
 		int m_iObjSocket;
 		int m_iFireSocket;
 		D3DXVECTOR3 m_vFirePos;
+		D3DXVECTOR3 m_vMovePos;
 
 	protected:
 		std::vector<int> m_SocketList;
@@ -23,10 +24,13 @@ namespace CBY
 
 	public:
 		void SetSocket(int i);		//캐릭터와 연결된 캐릭터의 소켓
-		int GetSocket();
 		void SetObjSocke(int i);	//오브젝트의 소켓
-		int GetObjSocke();	//오브젝트의 소켓
 		void SetFireSocket(int i);
+		inline void SetMovePos(D3DXVECTOR3 pos) { m_vMovePos = pos; }
+
+	public:
+		int GetSocket();
+		int GetObjSocke();	//오브젝트의 소켓
 		int GetFireSocket();
 		D3DXVECTOR3 GetFirePos();
 

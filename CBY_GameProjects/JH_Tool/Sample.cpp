@@ -7,6 +7,7 @@
 #include"LightMgr.h"
 
 
+
 #pragma warning( disable:4005 )
 //void Sample::ResetComponent()
 //{
@@ -535,7 +536,7 @@ INT Sample::AddObject(OBJECT OBJ)
 	MapObj->SetID(m_ObjID++);
 	m_QuadTree->FindObjectNode(m_QuadTree->m_pRootNode, MapObj);
 	m_QuadTree->m_pFindNode->m_ObjList.insert(std::make_pair(MapObj->GetID(),MapObj));
-	m_QuadTree->CreateBB(m_QuadTree->m_pFindNode);
+	//m_QuadTree->CreateBB(m_QuadTree->m_pFindNode);
 
 	m_ObjectList.insert(std::make_pair(MapObj->GetID(), Object));
 	return 1;
@@ -1158,7 +1159,7 @@ int Sample::CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName, D3
 
 		
 		m_CurrentMapObj= std::make_shared<JH::JH_MapObj>();
-		m_CurrentMapObj->SetID(m_ObjID++);
+	m_CurrentMapObj->SetID(m_ObjID++);
 		m_CurrentMapObj->SetSkinName(pSkinFileName);
 		m_CurrentMapObj->SetBoneName(pBoneFileName);
 	
@@ -1185,39 +1186,7 @@ int Sample::CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName, D3
 		m_CurrentMapObj->m_Box.fExtent[0] = D3DXVec3Dot(&m_CurrentMapObj->m_Box.vAxis[0], &vHalf);
 		m_CurrentMapObj->m_Box.fExtent[1] = D3DXVec3Dot(&m_CurrentMapObj->m_Box.vAxis[1], &vHalf);
 		m_CurrentMapObj->m_Box.fExtent[2] = D3DXVec3Dot(&m_CurrentMapObj->m_Box.vAxis[2], &vHalf);
-		//D3DXVECTOR3 vHalf = m_CurrentMapObj->m_Box.vMax - m_CurrentMapObj->m_Box.vCenter;
-		//m_CurrentMapObj->m_Box.fExtent[0] = D3DXVec3Dot(&m_CurrentMapObj->m_Box.vAxis[0], &vHalf);
-		//m_CurrentMapObj->m_Box.fExtent[1] = D3DXVec3Dot(&m_CurrentMapObj->m_Box.vAxis[1], &vHalf);
-		//m_CurrentMapObj->m_Box.fExtent[2] = D3DXVec3Dot(&m_CurrentMapObj->m_Box.vAxis[2], &vHalf);
 
-		//D3DXVECTOR3 Max = m_CurrentMapObj->m_Box.vAxis[0] +
-		//	m_CurrentMapObj->m_Box.vAxis[1]
-		//	+ m_CurrentMapObj->m_Box.vAxis[2];
-
-		//D3DXVECTOR3 Min = -m_CurrentMapObj->m_Box.vAxis[0] +
-		//	-m_CurrentMapObj->m_Box.vAxis[1]
-		//	+ -m_CurrentMapObj->m_Box.vAxis[2];
-		//if (Max.x > Min.x)
-		//{
-		//	m_CurrentMapObj->m_Box.vMax.x = Max.x;
-		//	m_CurrentMapObj->m_Box.vMin.x = Min.x;
-		//}
-		//else
-		//{
-		//	m_CurrentMapObj->m_Box.vMax.x = Min.x;
-		//	m_CurrentMapObj->m_Box.vMin.x = Max.x;
-		//}
-
-		//if (Max.z > Min.z)
-		//{
-		//	m_CurrentMapObj->m_Box.vMax.z = Max.z;
-		//	m_CurrentMapObj->m_Box.vMin.z = Min.z;
-		//}
-		//else
-		//{
-		//	m_CurrentMapObj->m_Box.vMax.z = Min.z;
-		//	m_CurrentMapObj->m_Box.vMin.z = Max.z;
-		//}
 
 
 	return 1;
@@ -1250,6 +1219,11 @@ bool Sample::Init()
 	float fAspect = (float)Winrt.right / Winrt.bottom;
 	m_pMainCamera->CreateProjMatrix(0.1F, 2000.0F, D3DX_PI*0.5F, fAspect);
 
+
+	JH::I_LIGHT_MGR.GetDevice(m_pd3dDevice);
+	JH::I_LIGHT_MGR.GetContext(m_pContext);
+	JH::I_LIGHT_MGR.SetCamera(m_pMainCamera);
+	JH::I_LIGHT_MGR.Create(L"../../data/Shader/JHMapShader.txt", L"../../data/LightSrc/LightInfo.txt");
 
 	//ComPuteShader
 	(CDXH::CreateComputeShader( L"ComputeShader.HLSL", "CSMAIN", m_pd3dDevice, m_pCS.GetAddressOf()));

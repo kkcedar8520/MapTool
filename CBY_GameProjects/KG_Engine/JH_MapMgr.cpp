@@ -227,7 +227,6 @@ namespace JH {
 		I_ObjMgr.AddObject(MapObj);
 		m_CurrentMap.m_pQuadTree->FindObjectNode(m_CurrentMap.m_pQuadTree->m_pRootNode, MapObj);
 		m_CurrentMap.m_pQuadTree->m_pFindNode->m_ObjList.insert(make_pair(MapObj->GetID(), MapObj));
-		m_CurrentMap.m_pQuadTree->CreateBB(m_CurrentMap.m_pQuadTree->m_pFindNode);
 		m_CurrentMap.m_ObjectList.insert(make_pair(MapObj->GetID(), Object));
 		return 1;
 

@@ -23,7 +23,7 @@ namespace JH {
 
 
 
-		m_LightObj.Create(pDevice, pContext, L"../../data/Shader/LightShader.txt", L"../../data/Resource/powerbattles_title.gif");
+		m_LightObj.Create(pDevice, pContext, L"../../data/Shader/LightShader.txt", L"../../data/Resource/powerbattles_title.gif","VS","PS");
 
 
 		m_Info = light;
@@ -73,7 +73,7 @@ namespace JH {
 	}
 	bool LightObj::Frame()
 	{
-		float Angle = g_SecondTime * D3DX_PI / 5.0f;
+		float Angle = g_SecondTime * D3DX_PI / 2000.0f;
 		D3DXMATRIX matRot;
 		D3DXMatrixRotationY(&matRot, Angle);
 

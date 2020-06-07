@@ -58,7 +58,9 @@ namespace JH {
 		void CreateIndexList(KG_Node* pNode);
 		void CreateBB(KG_Node* pNode);
 		void ChangeBB(KG_Node* pNode, KG_Box Box);
+		void GetMinMax(KG_Box& Obj);
 		JH_MapObj* UpdateBB(KG_Node* pNode, JH_MapObj* Obj);
+		
 		void DirectSelect(KG_Node* pNode);
 		void Set();
 		bool Frame();

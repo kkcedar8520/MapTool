@@ -22,18 +22,23 @@ namespace CBY
 		D3DXMATRIX m_pMatrixList[MAX_BONE_MATRICES];
 		std::vector<CBY_MeshSkin*> m_ObjList;
 		std::vector<D3DXMATRIX> m_matBoneBindPoss;
-		std::vector<PNCTIW_VERTEX>	m_VertexDataSkin;
+		std::vector<PNCT2IW_VERTEX>	m_VertexDataSkin;
 		float m_fMove;
 		std::wstring m_szname;
 
 
 	public:
 		bool Load(T_STR pszLoad, ID3D11Device* pd3dDevice, ID3D11DeviceContext* Context);
-		void ConvertSkin(std::vector<PNCTIW_VERTEX>& list);
+		void ConvertSkin(std::vector<PNCT2IW_VERTEX>& list);
 		void CreateVIData(CBY_MeshSkin* mesh);
 		void Draw(CBY_MeshSkin* mesh);
 		bool SkinCreate();
 		void PrePender();
+		void VertexDataTan(CBY_MeshSkin* mesh);
+		void CreateTangentSpaceVectors(D3DXVECTOR3 *v0,
+			D3DXVECTOR3 *v1, D3DXVECTOR3 *v2, D3DXVECTOR2 uv0,
+			D3DXVECTOR2 uv1, D3DXVECTOR2 uv2,
+			D3DXVECTOR3 *vTangent, D3DXVECTOR3 *vBiNormal, D3DXVECTOR3 *vNormal);
 
 	public:
 		HRESULT CreateVertexData() override;

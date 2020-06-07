@@ -37,6 +37,7 @@ namespace CBY
 		int Socket;
 		int ObjSocket;
 		int FireSocket;
+		D3DXVECTOR3 vpos;
 	};
 
 	class CBY_DataCtrl

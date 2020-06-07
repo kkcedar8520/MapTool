@@ -5,6 +5,7 @@ namespace CBY
 {
 	CBY_Mesh::CBY_Mesh()
 	{
+		m_iTexsize = 0;
 		m_bBone = false;
 		m_bRoot = false;
 		m_iParentIndex = -1;

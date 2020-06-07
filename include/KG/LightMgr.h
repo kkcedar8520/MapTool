@@ -1,5 +1,6 @@
 #pragma once
 #include"LightObj.h"
+#include"KG_Camera.h"
 namespace JH 
 {
 	struct LightConstantBuffer
@@ -28,6 +29,7 @@ namespace JH
 		int m_iLightNum;
 		ID3D11Device*			m_pDevice;
 		ID3D11DeviceContext*	m_pContext;
+		KG_Camera*				m_pCamera;
 
 	public:
 		static LightMgr& Get()
@@ -38,6 +40,7 @@ namespace JH
 	public:
 		int LightDataLoad(const TCHAR* pszLoad);
 		void Create(const TCHAR* pszShaderFile, const TCHAR* pszLightInfoFile);
+		void SetCamera(KG_Camera* pCamera);
 		void GetDevice(ID3D11Device* pdevcie);
 		void GetContext(ID3D11DeviceContext* pContext);
 	public:

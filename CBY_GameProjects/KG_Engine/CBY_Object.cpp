@@ -70,9 +70,10 @@ namespace CBY
 			{ "NORMAL",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "COLOR",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT, 0, 40,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD",  1, DXGI_FORMAT_R32G32B32_FLOAT, 0, 48,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 
-			{ "TEXCOORD",  1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 48,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD",  2, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 64,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD",  2, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 60,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD",  3, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 76,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 		UINT iElementCount = sizeof(layout) /
 			sizeof(layout[0]);
@@ -101,9 +102,9 @@ namespace CBY
 	}
 
 	void CBY_Object::SetMatrix(D3DXMATRIX* world, D3DXMATRIX* view, D3DXMATRIX* proj)
-	{		
+	{
 		KG_Model::SetMatrix(world, view, proj);
-
+		if(world!=nullptr)
 		{	//캐릭터를 감싼 바운딩 박스의 움직임을 제어하는 곳
 			D3DXMATRIX matRot;
 			D3DXVECTOR3 vScale, vPos, vSize;
@@ -111,18 +112,20 @@ namespace CBY
 			D3DXMatrixDecompose(&vScale, &qRot, &vPos, world);
 			D3DXMatrixRotationQuaternion(&matRot, &qRot);
 
-			vSize = m_SkinOriginalBox.vMax - m_SkinOriginalBox.vCenter;
+			D3DXVECTOR3 vmax = m_SkinOriginalBox.vMax, vCenter = m_SkinOriginalBox.vCenter;
+
+			vSize = vmax - vCenter;
 			vSize.x *= vScale.x;
 			vSize.y *= vScale.y;
 			vSize.z *= vScale.z;
 			//vPos += m_ObjList[0]->m_ObjList[0]->m_CharBox.vCenter;
-
 
 			m_CharBox.CreateBox(0, vPos, vSize.x, vSize.y, vSize.z, matRot);		//박스 업데이트
 
 			m_CharBox.UpdateBoxAxis(matRot);
 		}
 
+		if (world != nullptr)
 		{
 			for (int iBox = 0; iBox < m_BoxList.size(); iBox++)
 			{
@@ -196,8 +199,14 @@ namespace CBY
 	{
 		PreRender();
 		CharPostRender();
-		//m_CharBox.SetMatrix(nullptr, &m_matView, &m_matProj);
-		//m_CharBox.Render();
+		ID3D11ShaderResourceView* ppSRVNULL[1] = { NULL };
+		m_obj.m_pContext->PSSetShaderResources(0, 1, ppSRVNULL);
+		m_obj.m_pContext->PSSetShaderResources(1, 1, ppSRVNULL);
+		m_obj.m_pContext->PSSetShaderResources(2, 1, ppSRVNULL);
+		m_obj.m_pContext->PSSetShaderResources(3, 1, ppSRVNULL);
+		m_obj.m_pContext->PSSetShaderResources(4, 1, ppSRVNULL);
+		m_CharBox.SetMatrix(nullptr, &m_matView, &m_matProj);
+		m_CharBox.Render();
 		return true;
 	}
 
@@ -342,7 +351,7 @@ namespace CBY
 		D3DXMATRIX mat;
 		D3DXMatrixIdentity(&mat);
 		D3DXVECTOR3 size = m_SkinOriginalBox.vMax- m_SkinOriginalBox.vCenter;
-		//m_CharBox.Create(m_obj.m_pd3dDevice, m_obj.m_pContext,L"../../data/shader/DefaultShader.txt", nullptr, "VSmat", "PSVC");	//디버깅용 박스
+		m_CharBox.Create(m_obj.m_pd3dDevice, m_obj.m_pContext,L"../../data/shader/DefaultShader.txt", nullptr, "VSmat", "PSVC");	//디버깅용 박스
 		m_CharBox.CreateBox(0,
 			m_ObjList[0]->m_ObjList[0]->m_CharBox.vCenter, size.x, size.y, size.z, mat);
 
@@ -376,7 +385,7 @@ namespace CBY
 		D3DXMatrixIdentity(&mat);
 		for (int iBox = 0; iBox < m_BoxList.size(); iBox++)
 		{
-			//m_BoxList[iBox].Create(m_obj.m_pd3dDevice, m_obj.m_pContext, L"../../data/shader/DefaultShader.txt", nullptr, "VSmat", "PSVC");	//디버깅용 박스
+			m_BoxList[iBox].Create(m_obj.m_pd3dDevice, m_obj.m_pContext, L"../../data/shader/DefaultShader.txt", nullptr, "VSmat", "PSVC");	//디버깅용 박스
 			D3DXVECTOR3 size = m_BoxList[iBox].GetSize();
 			m_BoxList[iBox].SetInitBoxSize(size);						//초기 박스 사이즈
 			m_BoxList[iBox].SetInitPos(m_BoxList[iBox].GetPos());		//초기 위치

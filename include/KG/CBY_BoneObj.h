@@ -16,7 +16,7 @@ namespace CBY
 	public:
 		bool BoneCreate();
 		bool Load(T_STR pszLoad, ID3D11Device* pd3dDevice, ID3D11DeviceContext* Context) override;
-		void Convert(std::vector<PNCTIW_VERTEX>& list);
+		void Convert(std::vector<PNCT2IW_VERTEX>& list);
 		void Update(int iStart, int iEnd, float fTime, D3DXMATRIX* pMatrixList);
 		void MTRUpdate(int iStart, int iEnd, float fTime, D3DXMATRIX* pMatrixList);
 		void ObjUpdate(int iStart, int iEnd, float fTime, D3DXMATRIX* pMatrixList, D3DXMATRIX* parmat, int socket);

@@ -6,8 +6,8 @@ namespace CBY
 	{
 	public:
 		std::vector<CBY_MeshSkin> subMeshSkin;
-		std::vector<PNCTIW_VERTEX> listSkin;
-		std::vector<PNCTIW_VERTEX> vblistSkin;
+		std::vector<PNCT2IW_VERTEX> listSkin;
+		std::vector<PNCT2IW_VERTEX> vblistSkin;
 		std::vector<DWORD> iblistSkin;
 		std::vector<CBY_MeshSkin*> m_Child;
 		CBY_MeshSkin* m_Parent;

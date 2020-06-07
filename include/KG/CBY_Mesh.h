@@ -79,23 +79,24 @@ namespace CBY
 		D3DXVECTOR3	m_vPos;
 	};
 
-	struct PNCTIW_VERTEX
+	struct PNCT2IW_VERTEX
 	{
 		D3DXVECTOR3 p;
 		D3DXVECTOR3 n;
 		D3DXVECTOR4 c;
 		D3DXVECTOR2 t;
+		D3DXVECTOR3 tan;
 		D3DXVECTOR4 i;
 		D3DXVECTOR4 w;
-		bool inline operator == (const PNCTIW_VERTEX& v)
+		bool inline operator == (const PNCT2IW_VERTEX& v)
 		{
-			if (p == v.p && c == v.c && t == v.t && n == v.n)
+			if (p == v.p && c == v.c && t == v.t && n == v.n && tan == v.tan)
 			{
 				return true;
 			}
 			return false;
 		}
-		inline PNCTIW_VERTEX() {
+		inline PNCT2IW_VERTEX() {
 			i[0] = 0;
 			i[1] = 0;
 			i[2] = 0;
@@ -105,13 +106,14 @@ namespace CBY
 			w[2] = 0;
 			w[3] = 0;
 		}
-		inline PNCTIW_VERTEX(D3DXVECTOR3 p0, D3DXVECTOR3 n0, D3DXVECTOR4 c0, D3DXVECTOR2 t0,
+		inline PNCT2IW_VERTEX(D3DXVECTOR3 p0, D3DXVECTOR3 n0, D3DXVECTOR4 c0, D3DXVECTOR2 t0, D3DXVECTOR3 tan0,
 			D3DXVECTOR4 i0, D3DXVECTOR4 w0)
 		{
 			p = p0;
 			n = n0;
 			c = c0;
 			t = t0;
+			tan = tan0;
 			i[0] = i0.x;
 			i[1] = i0.y;
 			i[2] = i0.z;
@@ -170,6 +172,7 @@ namespace CBY
 		UINT m_iBaseIndex;
 		UINT m_iNumIndex;
 		int m_iType;
+		int m_iTexsize;
 		KG_Box m_CharBox;
 		CBY_Bone m_Bone;
 		CBY_BoneBox m_BoneBox;
@@ -179,6 +182,9 @@ namespace CBY
 		D3DXMATRIX m_matWorld;
 		D3DXMATRIX m_matInverse;
 		CTexture* m_pTexture;
+		CTexture* m_pNormalTexture;
+		CTexture* m_pSpecTexture;
+		CTexture* m_pEmsTexture;
 		CONDATA m_cbData;
 		std::vector<CBY_Mesh> m_subMesh;
 		std::vector<PNCT_VERTEX> m_vtlist;

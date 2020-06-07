@@ -1,7 +1,7 @@
 *SCENE 0 100 30 160 1 1
 *MATERIAL 0 0
 TEXTURE 0 1
-*TEXTURE 0 1 Rockwall_Planet_A_BaseColor_A.tif
+*TEXTURE 0 1 Rockwall_Planet_A_BaseColor_A.png
 *OBJECT 2 5646 0 0 0 0 0
 *NAME Geom_Rock_Planet_C_LOD00 Rock_Planet_C 
 *MATWORLD     1.0000     0.0000     0.0000     0.0000     0.0000     1.0000     0.0000     0.0000     0.0000     0.0000     1.0000     0.0000     0.0000     0.0000     0.0000     1.0000

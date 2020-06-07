@@ -14,13 +14,13 @@ namespace CBY
 		std::vector<CBY_MeshSkin*> m_ObjectList;
 		float m_fElapseTick;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_pCBConstBoneWorld;
-		std::vector<PNCTIW_VERTEX>	m_VertexDataSkin;
+		std::vector<PNCT2IW_VERTEX>	m_VertexDataSkin;
 		std::vector<D3DXMATRIX> m_matBoneBindPoss;
 		std::wstring m_szname;
 
 	public:
 		virtual bool Load(T_STR pszLoad, ID3D11Device* pd3dDevice, ID3D11DeviceContext* Context);
-		virtual void Convert(std::vector<PNCTIW_VERTEX>& list);
+		virtual void Convert(std::vector<PNCT2IW_VERTEX>& list);
 		virtual bool AniTrackSet(CMatSetData& matdata, CAnimationTrack start, int iobj, std::vector<CAnimationTrack>& AniTrack, int tracktype);
 		virtual void CreateVIData(CBY_MeshSkin* mesh);
 		virtual void Draw(CBY_MeshSkin* mesh);

@@ -107,6 +107,7 @@ namespace CBY
 
 			SetObjectSocket(m_CharData.m_data.ObjList[dw].Socket, m_CharData.m_data.ObjList[dw].ObjSocket, m_CharData. m_data.ObjList[dw].FireSocket,dw);
 			m_ObjectList[dw]->SetState(0);
+			m_ObjectList[dw]->SetMovePos(m_CharData.m_data.ObjList[dw].vpos);
 		}
 
 		SetState(0);
@@ -179,12 +180,19 @@ namespace CBY
 		//{
 		//	m_CharBox.SetMatrix(nullptr, &m_matView, &m_matProj);		//µð¹ö±ë¿ë
 		//	m_CharBox.Render();
-		//	for (int iBox = 0; iBox < m_BoxList.size(); iBox++)
-		//	{
-		//		m_BoxList[iBox].SetMatrix(nullptr, &m_matView, &m_matProj);
-		//		m_BoxList[iBox].Render();
-		//	}
-		//}
+			/*for (int iBox = 0; iBox < m_BoxList.size(); iBox++)
+			{
+				m_BoxList[iBox].SetMatrix(nullptr, &m_matView, &m_matProj);
+				m_BoxList[iBox].Render();
+			}*/
+		
+
+		ID3D11ShaderResourceView* ppSRVNULL[1] = { NULL };
+		m_obj.m_pContext->PSSetShaderResources(0, 1, ppSRVNULL);
+		m_obj.m_pContext->PSSetShaderResources(1, 1, ppSRVNULL);
+		m_obj.m_pContext->PSSetShaderResources(2, 1, ppSRVNULL);
+		m_obj.m_pContext->PSSetShaderResources(3, 1, ppSRVNULL);
+		m_obj.m_pContext->PSSetShaderResources(4, 1, ppSRVNULL);
 		return true;
 	}
 
@@ -207,6 +215,11 @@ namespace CBY
 		{
 			m_ObjectList[i]->Render();
 		}
+		//for (int iBox = 0; iBox < m_BoxList.size(); iBox++)
+		//{
+			//m_BoxList[iBox].SetMatrix(nullptr, &m_matView, &m_matProj);
+			//m_BoxList[iBox].Render();
+		//}
 		return true;
 	}
 
@@ -235,24 +248,51 @@ namespace CBY
 
 		for (int i = 0; i < m_ObjectList.size(); i++)
 		{
-			D3DXMATRIX mat;
+			D3DXMATRIX mat, rot;
+			//D3DXMatrixRotationY(&mat, 90);
 			D3DXMatrixScaling(&mat, 0.5, 0.5, 0.5);
-
+			D3DXMatrixRotationYawPitchRoll(&rot, 3, 1.5, 0);
+			rot._41 = 0;
+			rot._42 = 0;
+			rot._43 = 0;
+			mat *= rot;
+		
 			if (m_ObjectList[i]->GetSocket() == -1)
 			{
 				m_ObjectList[i]->Frame();
 			}
 			else
 			{
-				mat._41 += m_pMatrixList[m_ObjectList[i]->GetSocket()]._41 / 2;
-				mat._42 += m_pMatrixList[m_ObjectList[i]->GetSocket()]._42 / 2;
-				mat._43 += m_pMatrixList[m_ObjectList[i]->GetSocket()]._43 / 2;
+				mat._41 += m_pMatrixList[m_ObjectList[i]->GetSocket()]._41 - m_pMatrixList[m_ObjectList[i]->GetSocket()]._41 / 4;
+				mat._42 += m_pMatrixList[m_ObjectList[i]->GetSocket()]._42 - m_pMatrixList[m_ObjectList[i]->GetSocket()]._42 / 4;
+				mat._43 += m_pMatrixList[m_ObjectList[i]->GetSocket()]._43 - m_pMatrixList[m_ObjectList[i]->GetSocket()]._43 / 4;
 				m_ObjectList[i]->Update(&m_pMatrixList[m_ObjectList[i]->GetSocket()]);
 			}
 
 			//m_ObjectList[i]->SetMatrix(&(mat*m_matWorld), &m_matView, &m_matProj);
-			m_ObjectList[i]->SetMatrix(&m_matWorld, &m_matView, &m_matProj);
+			m_ObjectList[i]->SetMatrix(&(m_matWorld), &m_matView, &m_matProj);
 		}
+
+		//for (int i = 0; i < m_ObjectList.size(); i++)
+		//{
+		//	D3DXMATRIX mat;
+		//	D3DXMatrixScaling(&mat, 0.5, 0.5, 0.5);
+
+		//	if (m_ObjectList[i]->GetSocket() == -1)
+		//	{
+		//		m_ObjectList[i]->Frame();
+		//	}
+		//	else
+		//	{
+		//		mat._41 += m_pMatrixList[m_ObjectList[i]->GetSocket()]._41 / 2;
+		//		mat._42 += m_pMatrixList[m_ObjectList[i]->GetSocket()]._42 / 2;
+		//		mat._43 += m_pMatrixList[m_ObjectList[i]->GetSocket()]._43 / 2;
+		//		m_ObjectList[i]->Update(&m_pMatrixList[m_ObjectList[i]->GetSocket()]);
+		//	}
+
+		//	//m_ObjectList[i]->SetMatrix(&(mat*m_matWorld), &m_matView, &m_matProj);
+		//	m_ObjectList[i]->SetMatrix(&m_matWorld, &m_matView, &m_matProj);
+		//}
 
 	}
 

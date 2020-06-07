@@ -42,7 +42,7 @@ namespace CBY
 		return hr;
 	}
 
-	void    CBY_SkinObj::ConvertSkin(std::vector<PNCTIW_VERTEX>& list)
+	void    CBY_SkinObj::ConvertSkin(std::vector<PNCT2IW_VERTEX>& list)
 	{
 		int iBaseVertex = 0;
 		int iBaseIndex = 0;
@@ -87,14 +87,51 @@ namespace CBY
 				{
 					if (iRef >= 0)
 					{
-						if (m_Loader.m_MtlList[iRef].SubMaterial[iSubMesh].texList.size() > 0)
+						mesh->subMeshSkin[iSubMesh].m_pTexture = nullptr;
+						mesh->subMeshSkin[iSubMesh].m_pNormalTexture = nullptr;
+						mesh->subMeshSkin[iSubMesh].m_pSpecTexture = nullptr;
+						mesh->subMeshSkin[iSubMesh].m_pEmsTexture = nullptr;
+
+						for (int i = 0; i < m_Loader.m_MtlList[iRef].SubMaterial[iSubMesh].texList.size(); i++)
 						{
 							mesh->subMeshSkin[iSubMesh].m_iTexIndex =
 								I_Texture.Add(m_obj.m_pd3dDevice,
-									m_Loader.m_MtlList[iRef].SubMaterial[iSubMesh].texList[0].szTextureName,
-									L"../../data/Char/texture/");
-							mesh->subMeshSkin[iSubMesh].m_pTexture =
-								I_Texture.GetPtr(mesh->subMeshSkin[iSubMesh].m_iTexIndex);
+									m_Loader.m_MtlList[iRef].SubMaterial[iSubMesh].texList[i].szTextureName,
+									L"../../data/obj/");
+
+							switch (mesh->subMeshSkin[iSubMesh].m_iTexsize)
+							{
+							case 0:
+							{
+								mesh->subMeshSkin[iSubMesh].m_pTexture =
+									I_Texture.GetPtr(mesh->subMeshSkin[iSubMesh].m_iTexIndex);
+							}
+							break;
+
+							case 1:
+							{
+								mesh->subMeshSkin[iSubMesh].m_pNormalTexture =
+									I_Texture.GetPtr(mesh->subMeshSkin[iSubMesh].m_iTexIndex);
+							}
+							break;
+
+							case 2:
+							{
+								mesh->subMeshSkin[iSubMesh].m_pSpecTexture =
+									I_Texture.GetPtr(mesh->subMeshSkin[iSubMesh].m_iTexIndex);
+							}
+							break;
+
+							case 3:
+							{
+								mesh->subMeshSkin[iSubMesh].m_pEmsTexture =
+									I_Texture.GetPtr(mesh->subMeshSkin[iSubMesh].m_iTexIndex);
+							}
+							break;
+							}
+							mesh->subMeshSkin[iSubMesh].m_iTexsize++;
+
+
 						}
 					}
 
@@ -102,6 +139,7 @@ namespace CBY
 						mesh->subMeshSkin[iSubMesh].listSkin.size();
 
 					CreateVIData(&mesh->subMeshSkin[iSubMesh]);
+					VertexDataTan(&mesh->subMeshSkin[iSubMesh]);
 
 					mesh->subMeshSkin[iSubMesh].m_iBaseIndex = iBaseIndex;
 					mesh->subMeshSkin[iSubMesh].m_iBaseVertex = iBaseVertex;
@@ -126,14 +164,53 @@ namespace CBY
 			{
 				if (iRef >= 0)
 				{
-					mesh->m_iTexIndex =
-						I_Texture.Add(m_obj.m_pd3dDevice,
-							m_Loader.m_MtlList[iRef].texList[0].szTextureName,
-							L"../../data/Char/texture/");
-					mesh->m_pTexture = I_Texture.GetPtr(mesh->m_iTexIndex);
+
+					mesh->m_pTexture = nullptr;
+					mesh->m_pNormalTexture = nullptr;
+					mesh->m_pSpecTexture = nullptr;
+					mesh->m_pEmsTexture = nullptr;
+
+					for (int i = 0; i < m_Loader.m_MtlList[iRef].texList.size(); i++)
+					{
+						mesh->m_iTexIndex =
+							I_Texture.Add(m_obj.m_pd3dDevice,
+								m_Loader.m_MtlList[iRef].texList[i].szTextureName,
+								L"../../data/obj/");
+
+						switch (mesh->m_iTexsize)
+						{
+						case 0:
+						{
+							mesh->m_pTexture = I_Texture.GetPtr(mesh->m_iTexIndex);
+						}
+						break;
+
+						case 1:
+						{
+							mesh->m_pNormalTexture = I_Texture.GetPtr(mesh->m_iTexIndex);
+						}
+						break;
+
+						case 2:
+						{
+							mesh->m_pSpecTexture = I_Texture.GetPtr(mesh->m_iTexIndex);
+						}
+						break;
+
+						case 3:
+						{
+							mesh->m_pEmsTexture = I_Texture.GetPtr(mesh->m_iTexIndex);
+						}
+						break;
+						}
+
+						mesh->m_iTexsize++;
+					}
+		
 				}
 
 				CreateVIData(mesh);
+				VertexDataTan(mesh);
 
 
 				mesh->m_iBaseVertex = iBaseVertex;
@@ -157,7 +234,7 @@ namespace CBY
 	HRESULT CBY_SkinObj::CreateVertexData()
 	{
 		HRESULT hr = S_OK;
-		m_obj.m_VertexSize = sizeof(PNCTIW_VERTEX);
+		m_obj.m_VertexSize = sizeof(PNCT2IW_VERTEX);
 
 		return hr;
 	}
@@ -194,6 +271,15 @@ namespace CBY
 		{
 			m_obj.m_pContext->PSSetShaderResources(0, 1,
 				&mesh->m_pTexture->m_pTextureRV);
+			if (mesh->m_pNormalTexture != nullptr)
+				m_obj.m_pContext->PSSetShaderResources(1, 1,
+					&mesh->m_pNormalTexture->m_pTextureRV);
+			if (mesh->m_pSpecTexture != nullptr)
+				m_obj.m_pContext->PSSetShaderResources(2, 1,
+					&mesh->m_pSpecTexture->m_pTextureRV);
+			if (mesh->m_pEmsTexture != nullptr)
+				m_obj.m_pContext->PSSetShaderResources(3, 1,
+					&mesh->m_pEmsTexture->m_pTextureRV);
 		}
 		if (mesh->m_iNumIndex > 0)
 		{
@@ -265,6 +351,88 @@ namespace CBY
 			}
 			mesh->iblistSkin.push_back(iPos);
 		}
+	}
+
+	void CBY_SkinObj::VertexDataTan(CBY_MeshSkin* mesh)
+	{
+		D3DXVECTOR3 vTangent, vBiNormal, vNormal;
+
+		int iIndex = 0;
+		int i0, i1, i2, i3, i4, i5;
+
+		for (int iIndex = 0; iIndex < mesh->iblistSkin.size(); iIndex += 3)
+		{
+			i0 = mesh->iblistSkin[iIndex + 0];
+			i1 = mesh->iblistSkin[iIndex + 1];
+			i2 = mesh->iblistSkin[iIndex + 2];
+
+			CreateTangentSpaceVectors(&mesh->vblistSkin[i0].p, &mesh->vblistSkin[i1].p, &mesh->vblistSkin[i2].p,
+				mesh->vblistSkin[i0].t, mesh->vblistSkin[i1].t, mesh->vblistSkin[i2].t,
+				&vTangent, &vBiNormal, &mesh->vblistSkin[i0].n);
+
+			mesh->vblistSkin[i0].tan += vTangent;
+
+			i0 = mesh->iblistSkin[iIndex + 1];
+			i1 = mesh->iblistSkin[iIndex + 2];
+			i2 = mesh->iblistSkin[iIndex + 0];
+
+			CreateTangentSpaceVectors(&mesh->vblistSkin[i0].p, &mesh->vblistSkin[i1].p, &mesh->vblistSkin[i2].p,
+				mesh->vblistSkin[i0].t, mesh->vblistSkin[i1].t, mesh->vblistSkin[i2].t,
+				&vTangent, &vBiNormal, &mesh->vblistSkin[i0].n);
+
+			mesh->vblistSkin[i0].tan += vTangent;
+
+			i0 = mesh->iblistSkin[iIndex + 2];
+			i1 = mesh->iblistSkin[iIndex + 0];
+			i2 = mesh->iblistSkin[iIndex + 1];
+
+			CreateTangentSpaceVectors(&mesh->vblistSkin[i0].p, &mesh->vblistSkin[i1].p, &mesh->vblistSkin[i2].p,
+				mesh->vblistSkin[i0].t, mesh->vblistSkin[i1].t, mesh->vblistSkin[i2].t,
+				&vTangent, &vBiNormal, &mesh->vblistSkin[i0].n);
+
+			mesh->vblistSkin[i0].tan += vTangent;
+
+		}
+		for (int i = 0; i < mesh->vblistSkin.size(); i++)
+		{
+			D3DXVec3Normalize(&mesh->vblistSkin[i].tan, &mesh->vblistSkin[i].tan);
+		}
+	}
+
+	void CBY_SkinObj::CreateTangentSpaceVectors(D3DXVECTOR3 *v0,
+		D3DXVECTOR3 *v1, D3DXVECTOR3 *v2, D3DXVECTOR2 uv0,
+		D3DXVECTOR2 uv1, D3DXVECTOR2 uv2,
+		D3DXVECTOR3 *vTangent, D3DXVECTOR3 *vBiNormal, D3DXVECTOR3 *vNormal)
+	{
+		D3DXVECTOR3 vEdge1 = *v1 - *v0;
+		D3DXVECTOR3 vEdge2 = *v2 - *v0;
+		D3DXVec3Normalize(&vEdge1, &vEdge1);
+		D3DXVec3Normalize(&vEdge2, &vEdge2);
+		// UV delta
+		D3DXVECTOR2 deltaUV1 = uv1 - uv0;
+		D3DXVECTOR2 deltaUV2 = uv2 - uv0;
+		D3DXVec2Normalize(&deltaUV1, &deltaUV1);
+		D3DXVec2Normalize(&deltaUV2, &deltaUV2);
+
+
+		D3DXVECTOR3 biNormal;
+		float fDet = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+		if (fabsf(fDet) < 1e-6f)
+		{
+			*vTangent = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+			biNormal = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+		}
+		else
+		{
+			*vTangent = (vEdge1 * deltaUV2.y - vEdge2 * deltaUV1.y)*fDet;
+			biNormal = (vEdge2 * deltaUV1.x - vEdge1 * deltaUV2.x)*fDet;
+		}
+		D3DXVec3Normalize(vTangent, vTangent);
+		D3DXVec3Normalize(&biNormal, &biNormal);
+
+		D3DXVec3Cross(vBiNormal, vNormal, vTangent);
+		float crossinv = (D3DXVec3Dot(vBiNormal, &biNormal) < 0.0f) ? -1.0f : 1.0f;
+		*vBiNormal *= crossinv;
 	}
 
 	void CBY_SkinObj::PrePender()

@@ -62,10 +62,12 @@ void KG_Model::SetMatrix(D3DXMATRIX* world, D3DXMATRIX* view, D3DXMATRIX* proj)	
 	{
 		m_matProj = *proj;
 	}
+	D3DXMatrixInverse(&m_ConData.Normal, 0, &m_matWorld);
 
 	D3DXMatrixTranspose(&m_ConData.World, &m_matWorld);
 	D3DXMatrixTranspose(&m_ConData.View, &m_matView);
 	D3DXMatrixTranspose(&m_ConData.Proj, &m_matProj);
+	D3DXMatrixTranspose(&m_ConData.Normal, &m_ConData.Normal);
 
 
 	if (m_obj.iCBBufferType == CB_DYNAMIC)
@@ -194,12 +196,22 @@ HRESULT KG_Model::CreateIndexData()					//인덱스 버퍼 데이터 생성
 	return hr;
 }
 
-void KG_Model::UpdateVertexData()
+void KG_Model::UpdateVertexData(std::vector<PNCT_VERTEX>& list)
 {
-	m_VerTex[0].p = D3DXVECTOR3(-1.0f, 1.0f, 0.0f);
-	m_VerTex[1].p = D3DXVECTOR3(1.0f, 1.0f, 0.0f);
-	m_VerTex[2].p = D3DXVECTOR3(-1.0f, -1.0f, 0.0f);
-	m_VerTex[3].p = D3DXVECTOR3(1.0f, -1.0f, 0.0f);				//정점 좌표 입력
+	int size = list.size();
+	m_VerTex.clear();
+	m_VerTex.resize(size);
+
+	for (int i = 0; i < size; i++)
+	{
+		m_VerTex[i] = list[i];
+	}
+
+
+	if (m_obj.m_pVertexBuffer != nullptr)
+	{
+		m_obj.m_pContext->UpdateSubresource(m_obj.m_pVertexBuffer.Get(), 0, nullptr, &m_VerTex.at(0), 0, 0);
+	}
 }
 
 HRESULT KG_Model::CreateVertexBuffer()				//정점 버퍼 생성
@@ -218,7 +230,7 @@ HRESULT KG_Model::CreateVertexBuffer()				//정점 버퍼 생성
 	ZeroMemory(&InitData, sizeof(D3D11_SUBRESOURCE_DATA));
 	InitData.pSysMem = &m_VerTex.at(0);							//초기화 데이터에 대한 포인터
 
-	hr = m_obj.m_pd3dDevice->CreateBuffer(&bd, &InitData, &m_obj.m_pVertexBuffer);			//버퍼생성
+	hr = m_obj.m_pd3dDevice->CreateBuffer(&bd, &InitData, m_obj.m_pVertexBuffer.GetAddressOf());			//버퍼생성
 
 	return hr;
 }
@@ -239,7 +251,7 @@ HRESULT KG_Model::CreateIndexBuffer()					//인덱스 버퍼 생성
 	ZeroMemory(&InitData, sizeof(D3D11_SUBRESOURCE_DATA));
 	InitData.pSysMem = &m_IndexData.at(0);							//초기화 데이터에 대한 포인터
 
-	hr = m_obj.m_pd3dDevice->CreateBuffer(&bd, &InitData, &m_obj.m_pIndexBuffer);			//버퍼생성
+	hr = m_obj.m_pd3dDevice->CreateBuffer(&bd, &InitData, m_obj.m_pIndexBuffer.GetAddressOf());			//버퍼생성
 
 	return hr;
 }
@@ -284,7 +296,7 @@ HRESULT KG_Model::CreateInputLayout()					//레이아웃 생성
 	};
 
 	UINT layoutCount = sizeof(layout) / sizeof(layout[0]);
-	hr = m_obj.m_pd3dDevice->CreateInputLayout(layout, layoutCount, m_obj.m_pVertexCode->GetBufferPointer(), m_obj.m_pVertexCode->GetBufferSize(), &m_obj.m_pVertexLayout);	//레이 아웃 생성
+	hr = m_obj.m_pd3dDevice->CreateInputLayout(layout, layoutCount, m_obj.m_pVertexCode->GetBufferPointer(), m_obj.m_pVertexCode->GetBufferSize(), m_obj.m_pVertexLayout.GetAddressOf());	//레이 아웃 생성
 	if (FAILED(hr))
 	{
 		return hr;
@@ -298,7 +310,25 @@ HRESULT KG_Model::LoadTexture(const TCHAR* TexFileName)		//텍스쳐 로드
 {
 	HRESULT hr = S_OK;
 	if (TexFileName == NULL) return S_OK;
-	hr = D3DX11CreateShaderResourceViewFromFile(m_obj.m_pd3dDevice, TexFileName, NULL, NULL, &m_obj.m_pSRV, NULL);
+	TCHAR szFileName[MAX_PATH];
+	TCHAR Drive[MAX_PATH];
+	TCHAR Dir[MAX_PATH];
+	TCHAR FName[MAX_PATH];
+	TCHAR Ext[MAX_PATH];
+	
+	_tsplitpath(TexFileName, Drive, Dir, FName, Ext);
+	DirectX::TexMetadata imageMetadata;
+	DirectX::ScratchImage* pScratchImage = new DirectX::ScratchImage();
+
+	if (_tcsicmp(Ext, _T(".tga")) == 0)
+	{
+		hr = DirectX::LoadFromTGAFile(TexFileName, &imageMetadata, *pScratchImage);
+		hr = DirectX::CreateShaderResourceView(m_obj.m_pd3dDevice, pScratchImage->GetImages(), pScratchImage->GetImageCount(), pScratchImage->GetMetadata(), m_obj.m_pSRV.GetAddressOf());
+	}
+	else
+	{
+		hr = D3DX11CreateShaderResourceViewFromFile(m_obj.m_pd3dDevice, TexFileName, NULL, NULL, m_obj.m_pSRV.GetAddressOf(), NULL);
+	}
 
 	return hr;
 }
@@ -308,7 +338,7 @@ HRESULT KG_Model::LoadShader(const TCHAR* ShaderFileName, const CHAR* VSName, co
 	HRESULT hr = S_OK;
 	ID3DBlob* pErrorBlob;
 
-	hr = D3DX11CompileFromFile(ShaderFileName, NULL, NULL, VSName, "vs_5_0", 0, 0, NULL, &m_obj.m_pVertexCode, &pErrorBlob, NULL);		//정점 쉐이더 컴파일
+	hr = D3DX11CompileFromFile(ShaderFileName, NULL, NULL, VSName, "vs_5_0", 0, 0, NULL, m_obj.m_pVertexCode.GetAddressOf(), &pErrorBlob, NULL);		//정점 쉐이더 컴파일
 	if (FAILED(hr))
 	{
 		if (pErrorBlob == nullptr)
@@ -316,14 +346,14 @@ HRESULT KG_Model::LoadShader(const TCHAR* ShaderFileName, const CHAR* VSName, co
 		OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
 		return hr;
 	}
-	hr = m_obj.m_pd3dDevice->CreateVertexShader(m_obj.m_pVertexCode->GetBufferPointer(), m_obj.m_pVertexCode->GetBufferSize(), NULL, &m_obj.m_pVS);	//정점 쉐이더 생성
+	hr = m_obj.m_pd3dDevice->CreateVertexShader(m_obj.m_pVertexCode->GetBufferPointer(), m_obj.m_pVertexCode->GetBufferSize(), NULL, m_obj.m_pVS.GetAddressOf());	//정점 쉐이더 생성
 	if (FAILED(hr))
 	{
 		return hr;
 	}
 
 
-	hr = D3DX11CompileFromFile(ShaderFileName, NULL, NULL, PSName, "ps_5_0", 0, 0, NULL, &m_obj.m_pPixelCode, &pErrorBlob, NULL);			//픽셀 쉐이더 컴파일
+	hr = D3DX11CompileFromFile(ShaderFileName, NULL, NULL, PSName, "ps_5_0", 0, 0, NULL, m_obj.m_pPixelCode.GetAddressOf(), &pErrorBlob, NULL);			//픽셀 쉐이더 컴파일
 	if (FAILED(hr))
 	{
 		if (pErrorBlob == nullptr)
@@ -331,7 +361,7 @@ HRESULT KG_Model::LoadShader(const TCHAR* ShaderFileName, const CHAR* VSName, co
 		OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
 		return hr;
 	}
-	hr = m_obj.m_pd3dDevice->CreatePixelShader(m_obj.m_pPixelCode->GetBufferPointer(), m_obj.m_pPixelCode->GetBufferSize(), NULL, &m_obj.m_pPS);		//픽셀 쉐이더 생성
+	hr = m_obj.m_pd3dDevice->CreatePixelShader(m_obj.m_pPixelCode->GetBufferPointer(), m_obj.m_pPixelCode->GetBufferSize(), NULL, m_obj.m_pPS.GetAddressOf());		//픽셀 쉐이더 생성
 	if (FAILED(hr))
 	{
 		return hr;
@@ -339,48 +369,6 @@ HRESULT KG_Model::LoadShader(const TCHAR* ShaderFileName, const CHAR* VSName, co
 
 	return hr;
 }
-
-//HRESULT KG_Model::CreateComputeShader()
-//{
-//	HRESULT hr;
-//
-//	DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
-//#if defined( DEBUG ) || defined( _DEBUG ) 
-//	dwShaderFlags |= D3DCOMPILE_DEBUG;
-//#endif
-//
-//	const D3D_SHADER_MACRO defines[] =
-//	{
-//#ifdef USE_STRUCTURED_BUFFERS
-//		"USE_STRUCTURED_BUFFERS", "1",
-//#endif
-//		NULL, NULL
-//	};
-//
-//	// We generally prefer to use the higher CS shader profile when possible as CS 5.0 is better performance on 11-class hardware
-//	LPCSTR pProfile = (m_obj.m_pd3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_11_0) ? "cs_5_0" : "cs_4_0";
-//
-//	ID3DBlob* pErrorBlob = NULL;
-//	ID3DBlob* pBlob = m_obj.m_pCSCode;
-//	hr = D3DX11CompileFromFile(L"../../data/shader/BasicCompute.hlsl", defines, NULL, "main", pProfile, dwShaderFlags, NULL, NULL, &pBlob, &pErrorBlob, NULL);
-//	if (FAILED(hr))
-//	{
-//		if (pErrorBlob)
-//			OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
-//
-//		SAFE_RELEASE(pErrorBlob);
-//		SAFE_RELEASE(pBlob);
-//
-//		return hr;
-//	}
-//
-//	hr = m_obj.m_pd3dDevice->CreateComputeShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &m_obj.m_pCS);
-//
-//	SAFE_RELEASE(pErrorBlob);
-//	SAFE_RELEASE(pBlob);
-//
-//	return hr;
-//}
 
 void KG_Model::Convert(std::vector<PT_VERTEX>& list)
 {
@@ -538,5 +526,4 @@ D3DXVECTOR4 KG_Model::SetUV(RECT& Rect)
 void KG_Model::UpdatePSShader(ID3D11ShaderResourceView* textview)
 {
 	m_obj.m_pContext->PSSetShaderResources(0, 1, &textview);
-	
 }

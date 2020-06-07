@@ -39,7 +39,7 @@ namespace CBY
 		m_VertexList[22] = PNCT_VERTEX(D3DXVECTOR3(m_vMin.x, m_vMin.y, m_vMin.z), D3DXVECTOR3(0.0f, -1.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(0.0f, 1.0f));
 		m_VertexList[23] = PNCT_VERTEX(D3DXVECTOR3(m_vMax.x, m_vMin.y, m_vMin.z), D3DXVECTOR3(0.0f, -1.0f, 0.0f), D3DXVECTOR4(1.0f, 1.0f, 1.0f, 0.5f), D3DXVECTOR2(1.0f, 1.0f));
 
-		UpdateVertexData();
+		UpdateVertexData(m_VertexList);
 
 		return hr;
 	}
@@ -77,11 +77,11 @@ namespace CBY
 		m_vPos = vPos;
 		m_Box.vCenter = vPos;
 
-		D3DXVec3TransformNormal(&m_vBoxSize, &m_vBoxSize, &mRot);
-
 		m_vBoxSize.x = fXsize;
 		m_vBoxSize.y = fYsize;
 		m_vBoxSize.z = fZsize;
+
+		//D3DXVec3TransformNormal(&m_vBoxSize, &m_vBoxSize, &mRot);
 
 		m_vMax = vPos + m_vBoxSize;
 		m_vMin = vPos - m_vBoxSize;
@@ -114,9 +114,9 @@ namespace CBY
 		D3DXVECTOR3 vY = D3DXVECTOR3(0, 1, 0);
 		D3DXVECTOR3 vZ = D3DXVECTOR3(0, 0, 1);
 
-		D3DXVec3TransformCoord(&vX, &vX, &mat);
-		D3DXVec3TransformCoord(&vY, &vY, &mat);
-		D3DXVec3TransformCoord(&vZ, &vZ, &mat);
+		D3DXVec3TransformNormal(&vX, &vX, &mat);
+		D3DXVec3TransformNormal(&vY, &vY, &mat);
+		D3DXVec3TransformNormal(&vZ, &vZ, &mat);
 
 		m_Box.vAxis[0] = vX;
 		m_Box.vAxis[1] = vY;

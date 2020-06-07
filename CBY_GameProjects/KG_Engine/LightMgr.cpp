@@ -1,7 +1,10 @@
 #pragma once
 #include "LightMgr.h"
 namespace JH {
-
+	void LightMgr::SetCamera(KG_Camera* pCamera)
+	{
+		m_pCamera = pCamera;
+	}
 	void LightMgr::GetDevice(ID3D11Device* pdevcie)
 	{
 		m_pDevice = pdevcie;
@@ -131,6 +134,11 @@ namespace JH {
 	}
 	bool LightMgr::Render()
 	{
+		for (int i = 0; i < g_iLightNum; i++)
+		{
+			m_LightObjList[i].SetMatrix(nullptr, &m_pCamera->m_View,&m_pCamera->m_Proj);
+			m_LightObjList[i].Render();
+		}
 
 		return true;
 	}

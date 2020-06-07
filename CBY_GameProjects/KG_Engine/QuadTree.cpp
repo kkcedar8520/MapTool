@@ -207,8 +207,10 @@ namespace JH {
 	KG_Box HQuadTree::SetBB(JH_MapObj* Obj)
 	{
 		KG_Box Box;
-		D3DXVec3TransformCoord(&Box.vMax, &Obj->m_Box.vMax, &Obj->m_matWorld);
-		D3DXVec3TransformCoord(&Box.vMin, &Obj->m_Box.vMin, &Obj->m_matWorld);
+		//D3DXVec3TransformCoord(&Box.vMax, &Obj->m_Box.vMax, &Obj->m_matWorld);
+		//D3DXVec3TransformCoord(&Box.vMin, &Obj->m_Box.vMin, &Obj->m_matWorld);
+
+		
 
 		Box.vCenter.x = Obj->m_matWorld._41;
 		Box.vCenter.y = Obj->m_matWorld._42;
@@ -231,6 +233,16 @@ namespace JH {
 		Box.fExtent[0] = Obj->m_Box.fExtent[0];
 		Box.fExtent[1] = Obj->m_Box.fExtent[1];
 		Box.fExtent[2] = Obj->m_Box.fExtent[2];
+
+		D3DXVECTOR3 vEAxisX, vEAxisY, vEAxisZ;
+
+		D3DXVECTOR3 TRANS = D3DXVECTOR3(Obj->m_matWorld._41, Obj->m_matWorld._42, Obj->m_matWorld._43);
+
+		vEAxisX = (Box.vAxis[0] * Box.fExtent[0]);
+		vEAxisY = (Box.vAxis[1] * Box.fExtent[1]);
+		vEAxisZ = (Box.vAxis[2] * Box.fExtent[2]);
+
+
 		return Box;
 	}
 	void HQuadTree::ChangeBB(KG_Node* pNode, KG_Box Box)
@@ -538,6 +550,7 @@ namespace JH {
 	{
 
 		if (pNode == nullptr) return;
+	
 		if (m_pSelect->OBBToRay(&pNode->m_Box) == false) return;
 
 		if (pNode->m_isLeaf)
@@ -567,6 +580,7 @@ namespace JH {
 		}
 		return true;
 	}
+
 	void HQuadTree::GetSelectObj(KG_Node* pNode)
 	{
 		if (pNode == nullptr) return;
@@ -723,23 +737,13 @@ namespace JH {
 	}
 	bool HQuadTree::CheckRect(KG_Node* pNode, JH_MapObj* Obj)
 	{
-		//if (pNode->m_Box.vMin.x <= Obj->m_Box.vMin.x&&pNode->m_Box.vMax.x >= Obj->m_Box.vMax.x)
-		//{
-		//	//if (pNode->m_Box.vMin.y <= Obj.m_Box.vMin.y &&
-		//	//	pNode->m_Box.vMax.y >= Obj.m_Box.vMax.y)
-		//	{
-		//		if (pNode->m_Box.vMin.z <= Obj->m_Box.vMin.z &&pNode->m_Box.vMax.z >= Obj->m_Box.vMax.z)
-		//		{
-		//			return true;
-		//		}
-		//	}
-		//}
-		if (pNode->m_Box.vMax.x >= Obj->m_Box.vMin.x &&pNode->m_Box.vMin.x <= Obj->m_Box.vMax.x)
+		KG_Box Box=SetBB(Obj);
+		if (pNode->m_Box.vMax.x >= Box.vMin.x &&pNode->m_Box.vMin.x <= Box.vMax.x)
 		{
 			//if (pNode->m_Box.vMin.y <= Obj.m_Box.vMin.y &&
 			//	pNode->m_Box.vMax.y >= Obj.m_Box.vMax.y)
 			{
-				if (pNode->m_Box.vMax.z >= Obj->m_Box.vMin.z && pNode->m_Box.vMin.z <= Obj->m_Box.vMax.z)
+				if (pNode->m_Box.vMax.z >= Box.vMin.z && pNode->m_Box.vMin.z <= Box.vMax.z)
 				{
 					return true;
 				}

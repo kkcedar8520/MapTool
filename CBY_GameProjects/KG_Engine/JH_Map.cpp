@@ -304,7 +304,7 @@ namespace JH
 
 
 
-		if (!Create(pD3D11Device, pD3D11DeviceContext, m_MapDesc.ShaderFileName, m_MapDesc.TextureFileName, "VS"))
+		if (!Create(pD3D11Device, pD3D11DeviceContext, m_MapDesc.ShaderFileName, m_MapDesc.TextureFileName, "VS","PS"))
 		{
 			return  false;
 		}
@@ -313,9 +313,6 @@ namespace JH
 		m_SkyBox->CreateSkyBox(m_obj.m_pd3dDevice, m_obj.m_pContext, L"SkyObj.hlsl");
 		m_SkyBox->CreateTexuture(m_obj.m_pd3dDevice, m_obj.m_pContext, L"../../data/sky/StarFiled2.dds");
 
-		I_LIGHT_MGR.GetDevice(m_obj.m_pd3dDevice);
-		I_LIGHT_MGR.GetContext(m_obj.m_pContext);
-		I_LIGHT_MGR.Create(L"../../data/Shader/JHMapShader.txt", L"../../data/LightSrc/LightInfo.txt");
 
 
 		UpdateTangentBuffer();
@@ -492,6 +489,7 @@ namespace JH
 		LightConstantBuffer mcb = I_LIGHT_MGR.m_cbLight;
 		UpdateConstantBuffer(I_LIGHT_MGR.m_pLightConstantBuffer[0].Get(), &I_LIGHT_MGR.m_cbLight);
 		m_obj.m_pContext->PSSetConstantBuffers(1, 1, pBuffers);
+		m_obj.m_pContext->PSSetConstantBuffers(1, 1, pBuffers);
 		UINT offset = 0;
 		UINT stride = sizeof(D3DXVECTOR3);
 		if (m_pNormMapFileName)
@@ -499,6 +497,7 @@ namespace JH
 			m_obj.m_pContext->PSSetShaderResources(1, 1, &m_pTexture->m_pTextureRV);
 			m_obj.m_pContext->IASetVertexBuffers(1, 1, &m_pTangentVB, &stride, &offset);
 		}
+		I_LIGHT_MGR.Render();
 		return true;
 	}
 	bool JH_Map::Release()

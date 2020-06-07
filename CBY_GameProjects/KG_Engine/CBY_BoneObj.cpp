@@ -295,7 +295,7 @@ void CBY_BoneObj::ObjUpdate(int iStart, int iEnd, float fTime, D3DXMATRIX* pMatr
 	}
 }
 
-void    CBY_BoneObj::Convert(std::vector<PNCTIW_VERTEX>& list)
+void    CBY_BoneObj::Convert(std::vector<PNCT2IW_VERTEX>& list)
 {
 	int iBaseVertex = 0;
 	int iBaseIndex = 0;

@@ -210,6 +210,13 @@ namespace JH {
 		D3DXVec3TransformCoord(&Box.vMax, &Obj->m_Box.vMax, &Obj->m_matWorld);
 		D3DXVec3TransformCoord(&Box.vMin, &Obj->m_Box.vMin, &Obj->m_matWorld);
 
+		D3DXVECTOR3 vScale,vTrans;
+		
+		D3DXQUATERNION qQuat;
+		D3DXMATRIX matRot;
+	
+		D3DXMatrixDecompose(&vScale,&qQuat,&vTrans,&Obj->m_matWorld);
+
 		
 
 		Box.vCenter.x = Obj->m_matWorld._41;
@@ -221,26 +228,20 @@ namespace JH {
 		D3DXVECTOR3 vY = D3DXVECTOR3(0, 1, 0);
 		D3DXVECTOR3 vZ = D3DXVECTOR3(0, 0, 1);
 
-		D3DXVec3TransformNormal(&vX, &vX, &Obj->m_matWorld);
-		D3DXVec3TransformNormal(&vY, &vY, &Obj->m_matWorld);
-		D3DXVec3TransformNormal(&vZ, &vZ, &Obj->m_matWorld);
+		D3DXMatrixRotationQuaternion(&matRot,&qQuat);
+		D3DXVec3TransformNormal(&vX, &vX, &matRot);
+		D3DXVec3TransformNormal(&vY, &vY, &matRot);
+		D3DXVec3TransformNormal(&vZ, &vZ, &matRot);
 
 		Box.vAxis[0] = vX;
 		Box.vAxis[1] = vY;
 		Box.vAxis[2] = vZ;
 
 
-		Box.fExtent[0] = Obj->m_Box.fExtent[0];
-		Box.fExtent[1] = Obj->m_Box.fExtent[1];
-		Box.fExtent[2] = Obj->m_Box.fExtent[2];
+		Box.fExtent[0] = Obj->m_Box.fExtent[0]*vScale.x;
+		Box.fExtent[1] = Obj->m_Box.fExtent[1]*vScale.y;
+		Box.fExtent[2] = Obj->m_Box.fExtent[2]*vScale.z;
 
-		D3DXVECTOR3 vEAxisX, vEAxisY, vEAxisZ;
-
-		D3DXVECTOR3 TRANS = D3DXVECTOR3(Obj->m_matWorld._41, Obj->m_matWorld._42, Obj->m_matWorld._43);
-
-		vEAxisX = (Box.vAxis[0] * Box.fExtent[0]);
-		vEAxisY = (Box.vAxis[1] * Box.fExtent[1]);
-		vEAxisZ = (Box.vAxis[2] * Box.fExtent[2]);
 
 
 		return Box;
@@ -626,7 +627,7 @@ namespace JH {
 				
 				Obj->SetQuadIndex(pNode->m_iQuadTreeIndex);
 				pNode->m_ObjList.insert(make_pair(Obj->GetID(), Obj));
-				//CreateBB(pNode);
+				CreateBB(pNode);
 				b = true;
 				return b;
 			}

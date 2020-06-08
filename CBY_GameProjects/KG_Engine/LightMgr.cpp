@@ -24,7 +24,7 @@ namespace JH {
 		if (fp_src == NULL) return false;
 
 		_fgetts(pBuffer, _countof(pBuffer), fp_src);
-		_stscanf_s(pBuffer, _T("%s%d%s"), pTemp, _countof(pTemp), &iNumSprite);
+		_stscanf_s(pBuffer, _T("%s%d"), pTemp, _countof(pTemp), &iNumSprite);
 		m_LightInfoList.resize(iNumSprite);
 
 		for (int iCnt = 0; iCnt < iNumSprite; iCnt++)

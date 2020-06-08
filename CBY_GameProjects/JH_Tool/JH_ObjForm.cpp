@@ -108,7 +108,6 @@ void JH_ObjForm::OnBnClickedButton2()
 	}
 
 
-	UpdateData(FALSE);
 }
 void JH_ObjForm::OnBnClickedButton3()
 {

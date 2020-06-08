@@ -532,8 +532,8 @@ INT Sample::AddObject(OBJECT OBJ)
 	*MapObj=OBJ.m_MapObj;
 
 	MapObj->SetID(m_ObjID++);
-	m_QuadTree->FindObjectNode(m_QuadTree->m_pRootNode, MapObj);
-	m_QuadTree->m_pFindNode->m_ObjList.insert(std::make_pair(MapObj->GetID(),MapObj));
+	m_QuadTree->GetObjectAddNode(MapObj);
+	
 	//m_QuadTree->CreateBB(m_QuadTree->m_pFindNode);
 
 	m_ObjectList.insert(std::make_pair(MapObj->GetID(), Object));
@@ -854,7 +854,7 @@ void Sample::SelectObject()
 		KG_Box Box = m_QuadTree->SetBB(m_QuadTree->m_SelectObjList[iObj].get());
 		if (m_Select.OBBToRay(&Box))
 		{
-			FLOAT fDistance=D3DXVec3Length(&(m_QuadTree->m_pSelect->m_vIntersection));
+			FLOAT fDistance=D3DXVec3Length(&(m_QuadTree->m_pSelect->m_vIntersection-m_pMainCamera->m_Pos));
 			if (m_Interval> fDistance)
 			{
 				m_pSelectMapObj = m_QuadTree->m_SelectObjList[iObj];

@@ -207,8 +207,8 @@ namespace JH {
 	KG_Box HQuadTree::SetBB(JH_MapObj* Obj)
 	{
 		KG_Box Box;
-		//D3DXVec3TransformCoord(&Box.vMax, &Obj->m_Box.vMax, &Obj->m_matWorld);
-		//D3DXVec3TransformCoord(&Box.vMin, &Obj->m_Box.vMin, &Obj->m_matWorld);
+		D3DXVec3TransformCoord(&Box.vMax, &Obj->m_Box.vMax, &Obj->m_matWorld);
+		D3DXVec3TransformCoord(&Box.vMin, &Obj->m_Box.vMin, &Obj->m_matWorld);
 
 		
 

@@ -47,7 +47,7 @@ bool main::Init()
 	JH::I_LIGHT_MGR.Create(L"../../data/Shader/JHMapShader.txt", L"../../data/LightSrc/LightInfo.txt");
 
 	JH::I_MapMgr.Set(m_pd3dDevice, m_pContext, m_pMainCamera, m_Select);
-	JH::I_MapMgr.AddMap(L"../../MapSave/desertMap.Map");
+	JH::I_MapMgr.AddMap(L"../../MapSave/desetr129.Map");
 	float fAspect = (float)Winrt.right / Winrt.bottom;
 	m_pMainCamera->CreateProjMatrix(0.1F, 1000.0F, D3DX_PI*0.4F, fAspect);
 	

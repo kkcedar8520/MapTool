@@ -505,11 +505,9 @@ bool  Sample::LoadMapData(const TCHAR* LoadFile)
 
 
 
-	//if (SUCCEEDED(hr = D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice,
-	//	m_sMapData.m_pSplattAlphaTextureFile.data(), NULL, NULL, m_Map->m_pCopySrv.GetAddressOf(), NULL)))
-	//	m_pLoadAlphaSrv->GetResource((ID3D11Resource**)pReadTexture.GetAddressOf());
+	if (SUCCEEDED(hr = D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice,
+		m_sMapData.m_pSplattAlphaTextureFile.data(), NULL, NULL, m_Map->m_pCopySrv.GetAddressOf(), NULL)))
 
-	//m_pContext->CopyResource((ID3D11Resource*)pUAVTexture.Get(), (ID3D11Resource*)pReadTexture.Get());
 
 
 	for (int i = 0; i < m_sMapData.m_sQTData.m_ObjList.size(); i++)

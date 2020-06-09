@@ -47,4 +47,13 @@ public:
 public:
 	afx_msg void OnBnClickedTransLation();
 	float m_Value;
+	float m_fScaleX;
+	float m_fScaleY;
+	float m_fScaleZ;
+	float m_fTransX;
+	float m_fTransZ;
+	float m_fRotYaw;
+	float m_fRotPit;
+	float m_fRotRol;
+	float m_fTransY;
 };

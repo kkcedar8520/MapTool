@@ -1,0 +1,314 @@
+﻿  CBY_BoneBox.cpp
+  CBY_BoneObj.cpp
+d:\maptool\cby_gameprojects\kg_engine\cby_boneobj.cpp(43): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_boneobj.cpp(56): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_boneobj.cpp(73): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_boneobj.cpp(124): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_boneobj.cpp(136): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_boneobj.cpp(201): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_boneobj.cpp(245): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_boneobj.cpp(350): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_boneobj.cpp(357): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_boneobj.cpp(358): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_boneobj.cpp(390): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_boneobj.cpp(391): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CBY_BoneParser.cpp
+  CBY_Character.cpp
+d:\maptool\cby_gameprojects\kg_engine\cby_character.cpp(13): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_character.cpp(41): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_character.cpp(40): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_character.cpp(82): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_character.cpp(81): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_character.cpp(232): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_character.cpp(233): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_character.cpp(238): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_character.cpp(239): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CBY_CharacterCamera.cpp
+d:\maptool\cby_gameprojects\kg_engine\cby_charactercamera.cpp(122): warning C4244: '=': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_charactercamera.cpp(123): warning C4244: '=': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_charactercamera.cpp(143): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  CBY_CharBox.cpp
+  CBY_CharMgr.cpp
+d:\maptool\cby_gameprojects\kg_engine\cby_charmgr.cpp(25): warning C4804: '>=': 연산에 'bool' 형식을 사용하는 것은 안전하지 않습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_charmgr.cpp(53): warning C4804: '>=': 연산에 'bool' 형식을 사용하는 것은 안전하지 않습니다.
+  CBY_DataCtrl.cpp
+d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(7): warning C4267: '=': 'size_t'에서 'DWORD'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(10): warning C4477: 'fwprintf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(10): note: 서식 문자열에서 '%zd'을(를) 사용하는 것이 좋습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(10): warning C4477: 'fwprintf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 3의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(10): note: 서식 문자열에서 '%zd'을(를) 사용하는 것이 좋습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(10): warning C4477: 'fwprintf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 5의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(10): note: 서식 문자열에서 '%zd'을(를) 사용하는 것이 좋습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(10): warning C4477: 'fwprintf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 6의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(10): note: 서식 문자열에서 '%zd'을(를) 사용하는 것이 좋습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(56): warning C4477: 'fwprintf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(56): note: 서식 문자열에서 '%zd'을(를) 사용하는 것이 좋습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(56): warning C4477: 'fwprintf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 3의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(56): note: 서식 문자열에서 '%zd'을(를) 사용하는 것이 좋습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(56): warning C4477: 'fwprintf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 5의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(56): note: 서식 문자열에서 '%zd'을(를) 사용하는 것이 좋습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(56): warning C4477: 'fwprintf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 6의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(56): note: 서식 문자열에서 '%zd'을(를) 사용하는 것이 좋습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(124): warning C4477: 'swscanf_s' : 서식 문자열 '%s'에 'unsigned int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(124): note: 이 인수는 버퍼 크기로 사용됩니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(134): warning C4477: 'swscanf_s' : 서식 문자열 '%s'에 'unsigned int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(134): note: 이 인수는 버퍼 크기로 사용됩니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(152): warning C4477: 'swscanf_s' : 서식 문자열 '%s'에 'unsigned int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(152): note: 이 인수는 버퍼 크기로 사용됩니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(184): warning C4477: 'swscanf_s' : 서식 문자열 '%s'에 'unsigned int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(184): note: 이 인수는 버퍼 크기로 사용됩니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(193): warning C4477: 'swscanf_s' : 서식 문자열 '%s'에 'unsigned int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(193): note: 이 인수는 버퍼 크기로 사용됩니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(211): warning C4477: 'swscanf_s' : 서식 문자열 '%s'에 'unsigned int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(211): note: 이 인수는 버퍼 크기로 사용됩니다.
+  CBY_Mesh.cpp
+  CBY_MeshSkin.cpp
+  CBY_Obj.cpp
+d:\maptool\cby_gameprojects\kg_engine\cby_obj.cpp(30): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_obj.cpp(34): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_obj.cpp(124): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_obj.cpp(131): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_obj.cpp(132): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_obj.cpp(164): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_obj.cpp(165): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_obj.cpp(231): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_obj.cpp(298): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_obj.cpp(370): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_obj.cpp(474): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CBY_Object.cpp
+d:\maptool\cby_gameprojects\kg_engine\cby_object.cpp(12): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_object.cpp(275): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_object.cpp(284): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_object.cpp(301): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_object.cpp(312): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_object.cpp(326): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_object.cpp(327): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_object.cpp(332): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_object.cpp(333): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_object.cpp(378): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CBY_ObjectMgr.cpp
+d:\maptool\cby_gameprojects\kg_engine\cby_objectmgr.cpp(24): warning C4804: '>=': 연산에 'bool' 형식을 사용하는 것은 안전하지 않습니다.
+  CBY_Parser.cpp
+d:\maptool\cby_gameprojects\kg_engine\cby_parser.cpp(162): warning C4474: 'swscanf' : 서식 문자열에 전달된 인수가 너무 많습니다.
+  d:\maptool\cby_gameprojects\kg_engine\cby_parser.cpp(162): note: 자리 표시자 및 해당 매개 변수에는 variadic 인수가 7개 필요하지만 8개가 제공되었습니다.
+  CBY_SkinObj.cpp
+d:\maptool\cby_gameprojects\kg_engine\cby_skinobj.cpp(29): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_skinobj.cpp(33): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_skinobj.cpp(139): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_skinobj.cpp(147): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_skinobj.cpp(148): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_skinobj.cpp(219): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_skinobj.cpp(220): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_skinobj.cpp(303): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_skinobj.cpp(350): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_skinobj.cpp(361): warning C4101: 'i5' :참조되지 않은 지역 변수입니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_skinobj.cpp(361): warning C4101: 'i3' :참조되지 않은 지역 변수입니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_skinobj.cpp(361): warning C4101: 'i4' :참조되지 않은 지역 변수입니다.
+  CBY_SkinParser.cpp
+d:\maptool\cby_gameprojects\kg_engine\cby_skinparser.cpp(153): warning C4474: 'swscanf' : 서식 문자열에 전달된 인수가 너무 많습니다.
+  d:\maptool\cby_gameprojects\kg_engine\cby_skinparser.cpp(153): note: 자리 표시자 및 해당 매개 변수에는 variadic 인수가 7개 필요하지만 8개가 제공되었습니다.
+  CBY_Weapon.cpp
+  JH_BaseObj.cpp
+  JH_Map.cpp
+d:\maptool\cby_gameprojects\kg_engine\jh_map.cpp(37): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\maptool\cby_gameprojects\kg_engine\jh_map.cpp(83): warning C4267: '인수': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\jh_map.cpp(33): warning C4101: 'i5' :참조되지 않은 지역 변수입니다.
+d:\maptool\cby_gameprojects\kg_engine\jh_map.cpp(33): warning C4101: 'i3' :참조되지 않은 지역 변수입니다.
+d:\maptool\cby_gameprojects\kg_engine\jh_map.cpp(33): warning C4101: 'i4' :참조되지 않은 지역 변수입니다.
+d:\maptool\cby_gameprojects\kg_engine\jh_map.cpp(271): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\maptool\cby_gameprojects\kg_engine\jh_map.cpp(274): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  JH_MapMgr.cpp
+d:\maptool\cby_gameprojects\kg_engine\jh_mapmgr.cpp(274): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
+d:\maptool\cby_gameprojects\kg_engine\jh_mapmgr.cpp(209): warning C4715: 'JH::JH_MapMgr::AddMap': 모든 제어 경로에서 값을 반환하지는 않습니다.
+d:\maptool\cby_gameprojects\kg_engine\jh_map.cpp(289): warning C4715: 'JH::JH_Map::CreateHeightMap': 모든 제어 경로에서 값을 반환하지는 않습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_skinobj.cpp(23): warning C4715: 'CBY::CBY_SkinObj::SkinCreate': 모든 제어 경로에서 값을 반환하지는 않습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_obj.cpp(23): warning C4715: 'CBY::CBY_Obj::ObjCreate': 모든 제어 경로에서 값을 반환하지는 않습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_datactrl.cpp(259): warning C4172: 지역 변수 또는 임시: szFile의 주소를 반환하고 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_character.cpp(303): warning C4715: 'CBY::CBY_Character::GetFirePos': 모든 제어 경로에서 값을 반환하지는 않습니다.
+d:\maptool\cby_gameprojects\kg_engine\cby_boneobj.cpp(22): warning C4715: 'CBY::CBY_BoneObj::BoneCreate': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  컴파일하고 있습니다...
+  JH_MapObj.cpp
+  JH_ObjMgr.cpp
+  KG_ArcBall.cpp
+d:\maptool\cby_gameprojects\kg_engine\kg_arcball.cpp(36): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_arcball.cpp(42): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  KG_BackViewCamera.cpp
+  KG_Camera.cpp
+d:\maptool\cby_gameprojects\kg_engine\kg_camera.cpp(47): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_camera.cpp(71): warning C4244: '인수': 'LONG'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_camera.cpp(70): warning C4244: '인수': 'LONG'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  KG_Core.cpp
+  KG_DebugCamera.cpp
+  KG_Device.cpp
+d:\maptool\cby_gameprojects\kg_engine\kg_device.cpp(176): warning C4244: '=': 'LONG'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_device.cpp(177): warning C4244: '=': 'LONG'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  KG_DxHelperEx.cpp
+  KG_DxHeper.cpp
+  KG_DxRT.cpp
+d:\maptool\cby_gameprojects\kg_engine\kg_dxrt.cpp(43): warning C4244: '인수': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_dxrt.cpp(55): warning C4244: '=': 'UINT'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_dxrt.cpp(56): warning C4244: '=': 'UINT'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  KG_DxState.cpp
+  KG_DXWrite.cpp
+d:\maptool\cby_gameprojects\kg_engine\kg_dxwrite.cpp(136): warning C4267: '인수': 'size_t'에서 'UINT32'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  KG_Frusutm.cpp
+  KG_Input.cpp
+  KG_MapLod.cpp
+d:\maptool\cby_gameprojects\kg_engine\kg_maplod.cpp(9): warning C4244: '인수': 'float'에서 'const unsigned __int64'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  KG_Math.cpp
+  KG_Minimap.cpp
+d:\maptool\cby_gameprojects\kg_engine\kg_minimap.cpp(18): warning C4305: '인수': 'double'에서 'FLOAT'(으)로 잘립니다.
+  KG_Model.cpp
+d:\maptool\cby_gameprojects\kg_engine\kg_model.cpp(14): warning C4477: 'swscanf_s' : 서식 문자열 '%s'에 'unsigned int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\kg_model.cpp(14): note: 이 인수는 버퍼 크기로 사용됩니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_model.cpp(14): warning C4473: 'swscanf_s': 서식 문자열에 대한 인수가 충분하게 전달되지 않았습니다.
+  d:\maptool\cby_gameprojects\kg_engine\kg_model.cpp(14): note: 자리 표시자 및 해당 매개 변수에는 variadic 인수가 5개 필요하지만 3개가 제공되었습니다.
+  d:\maptool\cby_gameprojects\kg_engine\kg_model.cpp(14): note: 누락된 variadic 인수 4이(가) 서식 문자열 '%s'에 필요합니다.
+  d:\maptool\cby_gameprojects\kg_engine\kg_model.cpp(14): note: 이 인수는 변환 지정자에서 사용됩니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_model.cpp(23): warning C4477: 'swscanf_s' : 서식 문자열 '%s'에 'unsigned int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\kg_model.cpp(23): note: 이 인수는 버퍼 크기로 사용됩니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_model.cpp(30): warning C4477: 'swscanf_s' : 서식 문자열 '%s'에 'unsigned int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\kg_model.cpp(30): note: 이 인수는 버퍼 크기로 사용됩니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_model.cpp(39): warning C4244: '=': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_model.cpp(40): warning C4244: '=': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_model.cpp(201): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_model.cpp(221): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_model.cpp(225): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_model.cpp(242): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_model.cpp(246): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_model.cpp(313): warning C4101: 'szFileName' :참조되지 않은 지역 변수입니다.
+  KG_ModelViewCamera.cpp
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  KG_Node.cpp
+  KG_Select.cpp
+  KG_Shadow.cpp
+  KG_ShapeBox.cpp
+  KG_ShapeLine.cpp
+d:\maptool\cby_gameprojects\kg_engine\kg_shapeline.cpp(39): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_shapeline.cpp(43): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  KG_ShapeMap.cpp
+d:\maptool\cby_gameprojects\kg_engine\kg_shapemap.cpp(51): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  KG_ShapeObject.cpp
+d:\maptool\cby_gameprojects\kg_engine\kg_shapeobject.cpp(45): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  KG_SkyBox.cpp
+d:\maptool\cby_gameprojects\kg_engine\kg_skybox.cpp(82): warning C4390: ';': 제어된 빈 문이 있습니다. 이 문이 필요합니까?
+d:\maptool\cby_gameprojects\kg_engine\kg_skybox.cpp(87): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  KG_Sound.cpp
+  KG_SoundMgr.cpp
+d:\maptool\cby_gameprojects\kg_engine\kg_soundmgr.cpp(31): warning C4804: '>=': 연산에 'bool' 형식을 사용하는 것은 안전하지 않습니다.
+  KG_Sprite.cpp
+d:\maptool\cby_gameprojects\kg_engine\kg_sprite.cpp(16): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_sprite.cpp(34): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_sprite.cpp(53): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_sprite.cpp(69): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_sprite.cpp(75): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_sprite.cpp(76): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_sprite.cpp(77): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_sprite.cpp(78): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_sprite.cpp(86): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_sprite.cpp(87): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_sprite.cpp(88): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_sprite.cpp(89): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\kg_sprite.cpp(160): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  KG_TextureMgr.cpp
+  KG_Time.cpp
+  KG_Window.cpp
+  LightMgr.cpp
+d:\maptool\cby_gameprojects\kg_engine\lightmgr.cpp(27): warning C4477: 'swscanf_s' : 서식 문자열 '%s'에 'unsigned int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\lightmgr.cpp(27): note: 이 인수는 버퍼 크기로 사용됩니다.
+d:\maptool\cby_gameprojects\kg_engine\lightmgr.cpp(34): warning C4477: 'swscanf_s' : 서식 문자열 '%s'에 'unsigned int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\lightmgr.cpp(34): note: 이 인수는 버퍼 크기로 사용됩니다.
+d:\maptool\cby_gameprojects\kg_engine\lightmgr.cpp(42): warning C4477: 'swscanf_s' : 서식 문자열 '%s'에 'unsigned int' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'unsigned __int64'입니다.
+  d:\maptool\cby_gameprojects\kg_engine\lightmgr.cpp(42): note: 이 인수는 버퍼 크기로 사용됩니다.
+d:\maptool\cby_gameprojects\kg_engine\lightmgr.cpp(65): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\lightmgr.cpp(66): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\lightmgr.cpp(73): warning C4244: '=': 'FLOAT'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\lightmgr.cpp(109): warning C4244: '=': 'int'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  LightObj.cpp
+d:\maptool\cby_gameprojects\kg_engine\lightobj.cpp(76): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  NormalMap.cpp
+  QuadTree.cpp
+d:\maptool\cby_gameprojects\kg_engine\quadtree.cpp(18): warning C4267: '초기화 중': 'size_t'에서 'DWORD'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\quadtree.cpp(19): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\maptool\cby_gameprojects\kg_engine\quadtree.cpp(36): warning C4390: ';': 제어된 빈 문이 있습니다. 이 문이 필요합니까?
+d:\maptool\cby_gameprojects\kg_engine\quadtree.cpp(319): warning C4244: '초기화 중': 'double'에서 'DWORD'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\quadtree.cpp(848): warning C4554: '&': 연산자 우선 순위에 오류가 있는지 확인하세요. 괄호를 사용하여 우선 순위를 명확하게 지정하세요.
+d:\maptool\cby_gameprojects\kg_engine\quadtree.cpp(882): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\quadtree.cpp(901): warning C4244: '=': 'int'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\quadtree.cpp(915): warning C4267: '인수': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\quadtree.cpp(929): warning C4267: '인수': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\maptool\cby_gameprojects\kg_engine\quadtree.cpp(956): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\maptool\cby_gameprojects\kg_engine\quadtree.cpp(959): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\maptool\cby_gameprojects\kg_engine\quadtree.cpp(974): warning C4267: '인수': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
+d:\maptool\cby_gameprojects\kg_engine\quadtree.cpp(937): warning C4715: 'JH::HQuadTree::Draw': 모든 제어 경로에서 값을 반환하지는 않습니다.
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(1397,5): warning MSB8012: TargetPath(D:\MapTool\CBY_GameProjects\KG_Engine\../../output/Debug/KG_Engine/KG_Engine.lib)이(가) Library의 OutputFile 속성 값(D:\MapTool\CBY_GameProjects\KG_Engine\KG_Engine_D.lib)과 일치하지 않습니다. 이로 인해 프로젝트가 잘못 빌드될 수 있습니다. 이를 수정하려면 $(OutDir), $(TargetName) 및 $(TargetExt) 속성 값이 %(Lib.OutputFile)에 지정된 값과 일치해야 합니다.
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(1399,5): warning MSB8012: TargetName(KG_Engine)이(가) Library의 OutputFile 속성 값(KG_Engine_D)과 일치하지 않습니다. 이로 인해 프로젝트가 잘못 빌드될 수 있습니다. 이를 수정하려면 $(OutDir), $(TargetName) 및 $(TargetExt) 속성 값이 %(Lib.OutputFile)에 지정된 값과 일치해야 합니다.
+  KG_Engine.vcxproj -> D:\MapTool\CBY_GameProjects\KG_Engine\../../output/Debug/KG_Engine/KG_Engine.lib
+  KG_Engine_D.lib
+  KG_Engine_R.lib
+          2개 파일이 복사되었습니다.
+  CBY_BoneBox.h
+  CBY_BoneObj.h
+  CBY_BoneParser.h
+  CBY_Character.h
+  CBY_CharacterCamera.h
+  CBY_CharBox.h
+  CBY_CharMgr.h
+  CBY_DataCtrl.h
+  CBY_Mesh.h
+  CBY_MeshSkin.h
+  CBY_Obj.h
+  CBY_Object.h
+  CBY_ObjectMgr.h
+  CBY_ObjStd.h
+  CBY_Parser.h
+  CBY_SkinObj.h
+  CBY_SkinParser.h
+  CBY_Weapon.h
+  JH_BaseObj.h
+  JH_Map.h
+  JH_MapMgr.h
+  JH_MapObj.h
+  JH_ObjMgr.h
+  KG_ArcBall.h
+  KG_BackViewCamera.h
+  KG_Camera.h
+  KG_Core.h
+  KG_DebugCamera.h
+  KG_Device.h
+  KG_DxHelperEx.h
+  KG_DxHeper.h
+  KG_DxRT.h
+  KG_DxState.h
+  KG_DXWrite.h
+  KG_Frusutm.h
+  KG_Input.h
+  KG_MapLod.h
+  KG_Math.h
+  KG_Minimap.h
+  KG_Model.h
+  KG_ModelViewCamera.h
+  KG_Node.h
+  KG_ObjStd.h
+  KG_Select.h
+  KG_Shadow.h
+  KG_ShapeBox.h
+  KG_ShapeLine.h
+  KG_ShapeMap.h
+  KG_ShapeObject.h
+  KG_SkyBox.h
+  KG_Sound.h
+  KG_SoundMgr.h
+  KG_Sprite.h
+  KG_Std.h
+  KG_TextureMgr.h
+  KG_Time.h
+  KG_Window.h
+  LightMgr.h
+  LightObj.h
+  NormalMap.h
+  QuadTree.h
+         61개 파일이 복사되었습니다.

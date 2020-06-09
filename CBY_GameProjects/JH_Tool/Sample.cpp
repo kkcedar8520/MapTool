@@ -48,27 +48,6 @@ void Sample::ObjRotation()
 	D3DXMatrixIdentity(&matWorld);
 	ResetSRTValue();
 	if (!m_pSelectMapObj)  return;
-	if (I_Input.GetKeyCheck(VK_NUMPAD4))
-	{
-		
-		m_fYaw += g_SecondTime * m_fValue;
-	}
-	if(I_Input.GetKeyCheck(VK_NUMPAD6))
-	{
-		m_fYaw -= g_SecondTime * m_fValue;
-	}
-	if (I_Input.GetKeyCheck(VK_NUMPAD8))
-	{
-		m_fRoll += g_SecondTime * m_fValue;
-	}
-	if (I_Input.GetKeyCheck(VK_NUMPAD2))
-	{
-		m_fRoll -= g_SecondTime * m_fValue;
-	}
-	if (I_Input.GetKeyCheck(VK_NUMPAD5))
-	{
-		m_fPitch += g_SecondTime * m_fValue;
-	}
 
 
 	D3DXQuaternionRotationYawPitchRoll(&qRot, m_fYaw, m_fPitch, m_fRoll);
@@ -94,31 +73,6 @@ void Sample::ObjTranslation()
 	D3DXMATRIX matRot;
 	ResetSRTValue();
 	if (!m_pSelectMapObj)  return; 
-	if (I_Input.GetKeyCheck(VK_NUMPAD4))
-	{
-		m_matMove._41 += g_SecondTime * m_fValue;
-	}
-	if (I_Input.GetKeyCheck(VK_NUMPAD6))
-	{
-		m_matMove._41 -= g_SecondTime * m_fValue;
-	}
-	if (I_Input.GetKeyCheck(VK_NUMPAD8))
-	{
-		m_matMove._42 += g_SecondTime * m_fValue;
-	}
-	if (I_Input.GetKeyCheck(VK_NUMPAD2))
-	{
-		m_matMove._42 -= g_SecondTime * m_fValue;
-	}
-	if (I_Input.GetKeyCheck(VK_NUMPAD7))
-	{
-		m_matMove._43 += g_SecondTime * m_fValue;
-	}
-
-	if (I_Input.GetKeyCheck(VK_NUMPAD1))
-	{
-		m_matMove._43 -= g_SecondTime * m_fValue;
-	}
 
 	m_ObjectList[m_SelectObjID]->m_matWorld *= m_matMove;
 
@@ -137,31 +91,7 @@ void Sample::ObjScale()
 	D3DXMatrixIdentity(&matWorld);	
 	ResetSRTValue();
 	if (!m_pSelectMapObj)  return;
-	if (I_Input.GetKeyCheck(VK_NUMPAD4))
-	{
-		m_fScaleX += g_SecondTime * m_fValue;
-	}
-	if (I_Input.GetKeyCheck(VK_NUMPAD6))
-	{
-		m_fScaleX -= g_SecondTime * m_fValue;
-	}
-	if (I_Input.GetKeyCheck(VK_NUMPAD8))
-	{
-		m_fScaleY += g_SecondTime * m_fValue;
-	}
-	if (I_Input.GetKeyCheck(VK_NUMPAD2))
-	{
-		m_fScaleY -= g_SecondTime * m_fValue;
-	}
-	if (I_Input.GetKeyCheck(VK_NUMPAD7))
-	{
-		m_fScaleZ += g_SecondTime * m_fValue;
-	}
 
-	if (I_Input.GetKeyCheck(VK_NUMPAD1))
-	{
-		m_fScaleZ -= g_SecondTime * m_fValue;
-	}
 
 	D3DXMatrixDecompose(&vScale, &qRot, &vTrans, &m_ObjectList[m_SelectObjID]->m_matWorld);
 	D3DXMatrixScaling(&matDeSacle, vScale.x, vScale.y, vScale.z);
@@ -1327,21 +1257,8 @@ bool Sample::Frame()
 		{
 				SelectObject();
 		}
-		
-		break;
-	case ROTATION:
-		if (m_pSelectMapObj)
-		ObjRotation();
 		break;
 	case MOVE:
-		if (m_pSelectMapObj)
-		ObjTranslation();
-		break;
-	case SCALE:
-		if (m_pSelectMapObj)
-		ObjScale();
-		break;
-	case TRANSLATION:
 		if (!m_pSelectMapObj)break;
 		if (I_Input.KeyCheck(VK_LBUTTON))
 		{

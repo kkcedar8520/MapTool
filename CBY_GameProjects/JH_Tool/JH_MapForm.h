@@ -70,5 +70,5 @@ public:
 	afx_msg void OnMapFlatt();
 	float m_fRadius;
 	CString m_HeightMapFile;
-	afx_msg void OnEnChangeEdit21();
+
 };

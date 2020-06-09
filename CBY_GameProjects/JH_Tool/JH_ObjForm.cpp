@@ -18,6 +18,15 @@ JH_ObjForm::JH_ObjForm()
 	, m_bSet(false)
 	, m_BoneName(_T(""))
 	, m_Value(0)
+	, m_fScaleX(0)
+	, m_fScaleY(0)
+	, m_fScaleZ(0)
+	, m_fTransX(0)
+	, m_fTransZ(0)
+	, m_fRotYaw(0)
+	, m_fRotPit(0)
+	, m_fRotRol(0)
+	, m_fTransY(0)
 {
 
 }
@@ -40,6 +49,15 @@ void JH_ObjForm::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_SPIN, m_fSpin);
 	DDX_Text(pDX, IDC_EDIT2, m_BoneName);
 	DDX_Text(pDX, IDC_EDIT12, m_Value);
+	DDX_Text(pDX, IDC_EDIT14, m_fScaleX);
+	DDX_Text(pDX, IDC_EDIT15, m_fScaleY);
+	DDX_Text(pDX, IDC_EDIT24, m_fScaleZ);
+	DDX_Text(pDX, IDC_EDIT21, m_fTransX);
+	DDX_Text(pDX, IDC_EDIT16, m_fTransZ);
+	DDX_Text(pDX, IDC_EDIT22, m_fRotYaw);
+	DDX_Text(pDX, IDC_EDIT23, m_fRotPit);
+	DDX_Text(pDX, IDC_EDIT25, m_fRotRol);
+	DDX_Text(pDX, IDC_EDIT19, m_fTransY);
 }
 void JH_ObjForm::OnBnClickedButton2()
 {
@@ -163,23 +181,28 @@ void JH_ObjForm::OnBnClickedSet()
 }
 void JH_ObjForm::OnBnClickedRotation()
 {
+	UpdateData(TRUE);
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
 	
-		pApp->m_Sample.m_ToolState = ROTATION;
-	
+
+
+	pApp->m_Sample.m_fYaw =m_fRotYaw ;
+	pApp->m_Sample.m_fPitch = m_fRotPit;
+	pApp->m_Sample.m_fRoll = m_fRotRol;
+	pApp->m_Sample.ObjRotation();
+
+	UpdateData(FALSE);
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
 void JH_ObjForm::OnBnClickedMove()
 {
 	UpdateData(TRUE);
+
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
 	pApp->m_Sample.m_ToolState = MOVE;
 	pApp->m_Sample.m_fValue = m_Value;
-	if (pApp->m_Sample.m_pSelectMapObj)
-	{
-		pApp->m_Sample.m_pSelectMapObj->m_matWorld = pApp->m_Sample.m_ObjectList[pApp->m_Sample.m_SelectObjID]->m_matWorld;
-		pApp->m_Sample.ResetSRTValue();
-	}
+
+
 	UpdateData(FALSE);
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
@@ -187,8 +210,16 @@ void JH_ObjForm::OnBnClickedScale()
 {
 	UpdateData(TRUE);
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
-	pApp->m_Sample.m_ToolState = SCALE;
-	pApp->m_Sample.m_fValue = m_Value;
+
+
+
+	pApp->m_Sample.m_fScaleX = m_fScaleX;
+	pApp->m_Sample.m_fScaleY = m_fScaleY;
+	pApp->m_Sample.m_fScaleZ = m_fScaleZ;
+	pApp->m_Sample.ObjScale();
+
+
+
 	UpdateData(FALSE);
 }
 void JH_ObjForm::OnBnClickedDelete()
@@ -203,9 +234,12 @@ void JH_ObjForm::OnBnClickedTransLation()
 {
 	UpdateData(TRUE);
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
-	pApp->m_Sample.m_ToolState = TRANSLATION;
-		pApp->m_Sample.m_fValue = m_Value;
-		UpdateData(FALSE);
+	pApp->m_Sample.m_matMove._41 = m_fTransX;
+	pApp->m_Sample.m_matMove._42 = m_fTransY;
+	pApp->m_Sample.m_matMove._43 = m_fTransZ;
+	pApp->m_Sample.ObjTranslation();
+
+	UpdateData(FALSE);
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
 

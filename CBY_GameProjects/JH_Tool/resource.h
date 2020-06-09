@@ -120,9 +120,13 @@
 #define IDC_EDIT17                      1021
 #define IDC_SPIN1                       1021
 #define IDC_EDIT20                      1022
+#define IDC_EDIT22                      1022
 #define IDC_SLIDER2                     1023
 #define IDC_EDIT_SPIN                   1024
 #define IDC_EDIT_SLIDER                 1025
+#define IDC_EDIT23                      1026
+#define IDC_EDIT24                      1027
+#define IDC_EDIT25                      1028
 #define ID_TOOL_CREATEMAP               32771
 #define ID_TOOL_LOADOBJECT              32772
 

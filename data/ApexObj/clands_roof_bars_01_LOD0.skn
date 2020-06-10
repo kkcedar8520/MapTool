@@ -1,7 +1,7 @@
 *SCENE 0 100 30 160 1 4
 *MATERIAL 0 0
 TEXTURE 0 1
-*TEXTURE 0 1 0xccdbd4dafa337be2.dds
+*TEXTURE 0 1 0x69374d5a49ec2e6a.dds
 *OBJECT 2 0 -1 0 0 0 0
 *NAME Joints null 
 *MATWORLD     1.0000     0.0000     0.0000     0.0000     0.0000     1.0000     0.0000     0.0000     0.0000     0.0000     1.0000     0.0000     0.0000     0.0000     0.0000     1.0000

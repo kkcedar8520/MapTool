@@ -434,7 +434,7 @@ namespace CBY
 	}
 	BOOL  CBY_Parser::OpenStream(const TCHAR* filename)
 	{
-		m_pStream = _tfopen(filename, _T("rt"));
+		m_pStream = _tfopen(filename, _T("rb"));
 		if (m_pStream == nullptr)
 		{
 			return FALSE;

@@ -135,11 +135,10 @@ namespace CBY
 						}
 					}
 
-					mesh->subMeshSkin[iSubMesh].m_iNumVertex =
-						mesh->subMeshSkin[iSubMesh].listSkin.size();
+					//mesh->subMeshSkin[iSubMesh].m_iNumVertex =mesh->subMeshSkin[iSubMesh].listSkin.size();
 
-					CreateVIData(&mesh->subMeshSkin[iSubMesh]);
-					VertexDataTan(&mesh->subMeshSkin[iSubMesh]);
+					//CreateVIData(&mesh->subMeshSkin[iSubMesh]);
+					//VertexDataTan(&mesh->subMeshSkin[iSubMesh]);
 
 					mesh->subMeshSkin[iSubMesh].m_iBaseIndex = iBaseIndex;
 					mesh->subMeshSkin[iSubMesh].m_iBaseVertex = iBaseVertex;
@@ -209,8 +208,8 @@ namespace CBY
 		
 				}
 
-				CreateVIData(mesh);
-				VertexDataTan(mesh);
+				//CreateVIData(mesh);
+				//VertexDataTan(mesh);
 
 
 				mesh->m_iBaseVertex = iBaseVertex;

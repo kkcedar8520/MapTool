@@ -123,6 +123,11 @@ namespace CBY
 			m_CharBox.CreateBox(0, vPos, vSize.x, vSize.y, vSize.z, matRot);		//박스 업데이트
 
 			m_CharBox.UpdateBoxAxis(matRot);
+
+			matRot._41 = vPos.x;
+			matRot._42 = vPos.y;
+			matRot._43 = vPos.z;
+			//m_CharBox.SetMatrix(&matRot, &m_matView, &m_matProj);
 		}
 
 		if (world != nullptr)
@@ -205,8 +210,8 @@ namespace CBY
 		m_obj.m_pContext->PSSetShaderResources(2, 1, ppSRVNULL);
 		m_obj.m_pContext->PSSetShaderResources(3, 1, ppSRVNULL);
 		m_obj.m_pContext->PSSetShaderResources(4, 1, ppSRVNULL);
-		m_CharBox.SetMatrix(nullptr, &m_matView, &m_matProj);
-		m_CharBox.Render();
+		//m_CharBox.SetMatrix(nullptr, &m_matView, &m_matProj);
+		//m_CharBox.Render();
 		return true;
 	}
 
@@ -351,7 +356,7 @@ namespace CBY
 		D3DXMATRIX mat;
 		D3DXMatrixIdentity(&mat);
 		D3DXVECTOR3 size = m_SkinOriginalBox.vMax- m_SkinOriginalBox.vCenter;
-		m_CharBox.Create(m_obj.m_pd3dDevice, m_obj.m_pContext,L"../../data/shader/DefaultShader.txt", nullptr, "VSmat", "PSVC");	//디버깅용 박스
+		//m_CharBox.Create(m_obj.m_pd3dDevice, m_obj.m_pContext,L"../../data/shader/DefaultShader.txt", nullptr, "VSmat", "PSVC");	//디버깅용 박스
 		m_CharBox.CreateBox(0,
 			m_ObjList[0]->m_ObjList[0]->m_CharBox.vCenter, size.x, size.y, size.z, mat);
 

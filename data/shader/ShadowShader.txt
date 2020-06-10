@@ -98,7 +98,7 @@ float4 PS(PS_IN vsdata) : SV_TARGET0
 
 float4 PSDS(PS_IN vsdata) : SV_TARGET0
 {
-	float4 shadow = vsdata.tex.x/vsdata.tex.y;
-	return shadow;
-	//return float4(shadow, shadow, shadow, 1.0f);
+	float shadow = vsdata.tex.x/vsdata.tex.y;
+	//return shadow;
+	return float4(shadow, shadow, shadow, 1.0f);
 }

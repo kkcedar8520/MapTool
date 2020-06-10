@@ -23,6 +23,11 @@ public:
 	D3DXVECTOR3 m_LookDir;
 	D3DXVECTOR3 m_SideDir;
 	D3DXVECTOR3 m_ObjDir;
+	D3DXVECTOR3 m_vInitPos;
+
+	D3DXMATRIX m_orthoView;
+	D3DXVECTOR3 m_orthoPos;
+	D3DXVECTOR3 m_ortholook;
 
 public:
 	float m_fNear;
@@ -53,6 +58,13 @@ public:
 	virtual void MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	void	UpdateVector();
 	int	CheckOBBInPlane(KG_Box& box);
+
+	void UpdateOrthoData();
+public:
+	inline virtual void SetInitPos(D3DXVECTOR3 pos) { m_vInitPos = pos; }
+
+public:
+	inline virtual D3DXVECTOR3 GetInitPos() { return m_vInitPos; }
 
 public:
 	KG_Camera();

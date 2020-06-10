@@ -27,7 +27,7 @@ namespace CBY
 			m_fYaw += 2 * g_SecondTime;
 		}
 
-		if (I_Input.GetKeyCheck(VK_F1))
+		if (I_Input.GetKeyCheck(VK_NUMPAD9))
 		{
 			if (m_bClip)
 			{
@@ -103,6 +103,7 @@ namespace CBY
 			SetCursorPos(m_Center.x, m_Center.y);
 		}
 		UpdateVector();
+		KG_Camera::UpdateOrthoData();
 		return true;
 	}
 

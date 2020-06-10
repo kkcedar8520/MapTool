@@ -1,0 +1,583 @@
+struct BufType
+{
+	int i;
+	float f;
+};
+
+struct VS_OUT
+{
+	float4 p : SV_POSITION;
+	float3 n : NORMAL;
+	float4 c : COLOR0;
+	float2 t : TEXCOORDO;
+	float3 world : TEXCOORD1;
+	float2 tex :TEXCOORD2;
+	float time : TEXCOORD3;
+	float4 vlocal:TEXCOORD4;
+};
+
+struct VS_IN
+{
+	float3 p : POINT;
+	float3 n : NORMAL;
+	float4 c : COLOR;
+	float2 t : TEXT;
+};
+
+cbuffer m_ConData : register(b0)
+{
+	float4x4 g_matWorld : packoffset(c0);
+	float4x4 g_matView : packoffset(c4);
+	float4x4 g_matProj : packoffset(c8);
+	float4 time : packoffset(c12);
+	uint index : packoffset(c16);
+
+};
+
+cbuffer m_Light : register(b1)
+{
+	float4 g_cAmbientLightColor;
+	float4 g_cDifuseLightColor;
+	float4 g_cSpecularLightColor;
+	float4 g_vLightDir;	//감쇠
+	float4 g_vLightPos;	//반지름
+	float4 g_vEyeDir;	//w 강도
+	float4 g_vEyePos;	//반지름
+	float4 g_vSpot;
+	float4x4 g_LTM;
+};
+
+float4 Specular(float3 vNormal)
+{
+	float3 vReflect = reflect(g_vLightDir.xyz, vNormal);
+	float fdot = max(0, dot(vReflect, normalize(-g_vEyeDir.xyz)));
+	float fPower = pow(fdot, g_vEyeDir.w);
+	float4 Color = g_cAmbientLightColor + fPower * g_cSpecularLightColor;
+	Color.w = 1.0f;
+	return Color;
+}
+
+//vPos = world
+float4 ComputePointLight(float3 vPos, float3 vNormal)
+{
+	float Distance = distance(vPos, g_vLightPos.xyz);
+	float4 fDiffuse = g_cAmbientLightColor;
+
+	// (min)a~b(max), t의 값
+	float offset = smoothstep(Distance - 30, Distance, g_vLightPos.w);
+	float fdot = max(0, dot(vNormal, normalize(-g_vLightDir.xyz)));
+	fDiffuse = g_cAmbientLightColor + (offset * fdot * g_cDifuseLightColor);
+	fDiffuse.w = 1.0f;
+
+	return fDiffuse;
+
+}
+
+float4 ComputeSpotLight(float3 vPos, float3 vNormal)
+{
+	float Distance = distance(vPos, g_vLightPos.xyz);
+	float4 fDiffuse = g_cDifuseLightColor;
+
+	float fInner = g_vSpot.x;
+	float fOutner = g_vSpot.y;
+	float fFalloff = g_vSpot.z;
+	float fRange = g_vLightPos.w;
+
+	float3 vLight = normalize(vPos - g_vLightPos.xyz);
+	//float Intensity = max(0, dot(vNormal, normalize(-g_vLightDir.xyz)));
+	//float fDot = saturate(dot(g_vLightDir.xyz, vNormal));
+	float fDot = saturate(dot(g_vLightDir.xyz, vLight));
+	float fOffset = smoothstep(Distance - fFalloff, Distance, fRange);
+	//float fOffset =smoothstep( g_vLightPos.w - fFalloff , g_vLightPos.w , fRange);
+	if (fDot > fInner)
+	{
+
+		return fDiffuse * fOffset;
+	}
+	else if (fDot > fOutner)
+	{
+		float fPhi = fOutner - fInner;
+		float fValue = 1.0f - ((fDot - fInner) / fPhi);
+		return fDiffuse * fValue * fOffset;
+	}
+	else
+	{
+		return float4(0, 0, 0, 1);
+	}
+
+	/*// (min)a~b(max), t의 값
+	float offset = smoothstep( Distance-30 , Distance , g_vLightPos.w);
+	float fIntensity = max(0, dot(vNormal, normalize(-g_vLightDir.xyz)));
+	fDiffuse = g_cAmbientLightColor + (offset * fIntensity * g_cDifuseLightColor);
+	fDiffuse.w = 1.0f;
+
+
+	return fDiffuse;*/
+
+}
+
+float4 Diffuse(float3 vNormal)
+{
+	float fdot = max(0, dot(vNormal, normalize(-g_vLightDir.xyz)));
+	float4 fDiffuse = g_cAmbientLightColor + fdot * g_cDifuseLightColor;
+	fDiffuse.w = 1.0f;
+	return fDiffuse;
+}
+
+VS_OUT VSmat(VS_IN data)
+{
+	VS_OUT vout;
+	float4 vLocal = float4(data.p, 1.0f);
+	float4 vWorld = mul(vLocal, g_matWorld);
+	float4 vView = mul(vWorld, g_matView);
+	float4 vProj = mul(vView, g_matProj);
+	vout.p = vProj;
+	vout.n = data.n;
+	//vout.world = vWorld.xyz;
+	vout.c = Diffuse(vout.n); //ComputePointLight(vWorld.xyz, vout.n);//+Specular(vout.n);
+	vout.t = data.t;
+	vout.tex.x = (1.0f / (time.x) * vWorld.x) * time.x/6;
+	vout.tex.y = -(1.0f / (time.z) * vWorld.z) * time.z/6;
+	
+	float4 vWorldProj = mul(vWorld, g_matProj);
+	vout.world.x = vWorldProj.x;
+	vout.world.y = vWorldProj.y;
+	vout.world.z = vWorldProj.z;
+
+	vout.vlocal = mul(vLocal,g_LTM);
+
+	return vout;
+}
+
+VS_OUT VSTile(VS_IN data)
+{
+	VS_OUT vout;
+	float4 vLocal = float4(data.p, 1.0f);
+	float4 vWorld = mul(vLocal, g_matWorld);
+	float4 vView = mul(vWorld, g_matView);
+	float4 vProj = mul(vView, g_matProj);
+	vout.p = vProj;
+	vout.n = data.n;
+	vout.world = vWorld.xyz;
+	vout.c = Diffuse(vout.n); //ComputePointLight(vWorld.xyz, vout.n);//+Specular(vout.n); 
+	//vout.t = data.t*10;
+	vout.t.x = (1.0f / (time.x-1) * vWorld.x) * time.x;			// / (time.x) * time.x;
+	vout.t.y = -(1.0f / (time.z-1) * vWorld.z) * time.z;		//		//vWorld.z / (time.z) * time.z;
+	//vout.time = index;
+	return vout;
+}
+
+
+
+Texture2D		g_txDiffuseA : register(t0);
+Texture2D		g_txAlpha : register(t1);
+StructuredBuffer<BufType> StructBuf : register(t2);
+Texture2D		BufResultSRV: register(t3);
+Texture2D		g_txDiffuseC[MAX_TILE] : register(t4);
+Texture2D		g_txSplatting[MAX_SPLATTING] : register(t7);
+Texture2D		g_txShadow : register(t11);
+SamplerState	g_Sample0 : register(s0);
+SamplerState	g_ShdowSample : register(s1);
+
+struct PS_IN
+{
+	float4 p : SV_POSITION;
+	float3 n : NORMAL;
+	float4 c : COLOR0;
+	float2 t : TEXCOORDO;
+	float3 world : TEXCOORD1;
+	float2 tex :TEXCOORD2;
+	float time : TEXCOORD3;
+	float4 vlocal:TEXCOORD4;
+};
+
+struct PS_OUT
+{
+	float4 add : SV_TARGET0;
+	float4 mul : SV_TARGET1;
+};
+
+float4 PS(PS_IN vsdata) : SV_TARGET0
+{
+	float4 FinalA = g_txDiffuseA.Sample(g_Sample0, vsdata.t);
+
+	return FinalA;
+}
+
+PS_OUT PSLight(PS_IN vsdata)
+{
+	PS_OUT pout;
+	float4 FinalA = g_txDiffuseA.Sample(g_Sample0, vsdata.t)*vsdata.c;
+	//float4 FinalA = g_txDiffuseA.Sample(g_Sample0, vsdata.t) * (g_cAmbientLightColor + ComputeSpotLight(vsdata.world, vsdata.n));//+Specular(vsdata.n));
+	pout.add = FinalA;
+	//pout.add=vsdata.c;
+	return pout;
+}
+
+PS_OUT PSBlend2(PS_IN vsdata)
+{
+	PS_OUT pout;
+	float4 SRC = g_txDiffuseA.Sample(g_Sample0, vsdata.t);
+	if (SRC.x == 1.0f)
+	{
+		if (SRC.y == 1.0f)
+		{
+			if (SRC.z == 1.0f)
+			{
+				SRC.w = 0.0f;
+			}
+		}
+	}
+
+	pout.add = SRC;
+	return pout;
+}
+
+float4 PSTile(PS_IN vsdata) : SV_TARGET0
+{
+	//PS_OUT pout;
+	float4 FinalA = float4(0,0,0,0);
+
+
+	switch (StructBuf[0].i)
+	{
+		case 0:
+		{
+		FinalA = g_txDiffuseA.Sample(g_Sample0, vsdata.t)*vsdata.c;
+		return FinalA;
+		}
+
+		case 1:
+		{
+		FinalA = g_txDiffuseC[0].Sample(g_Sample0, vsdata.t)*vsdata.c;
+		return FinalA;
+		}
+
+		case 2:
+		{
+		FinalA = g_txDiffuseC[1].Sample(g_Sample0, vsdata.t)*vsdata.c;
+		return FinalA;
+		}
+
+		case 3:
+		{
+		FinalA = g_txDiffuseC[2].Sample(g_Sample0, vsdata.t)*vsdata.c;
+		return FinalA;
+		}
+	}
+	return FinalA;
+
+}
+
+float4 PSCSAlpha(PS_IN vsdata): SV_TARGET0
+{
+	float4 FinalA;
+	float fy = smoothstep(0, 100, vsdata.world.y);
+	vsdata.t.y = lerp(vsdata.t.y, vsdata.t.y*10, fy);
+
+	float4 BaseColor = g_txDiffuseA.Sample(g_Sample0, vsdata.t);
+	float4 Alpha = BufResultSRV.Sample(g_Sample0, vsdata.t);
+	float4 Diffuse1 = g_txSplatting[0].Sample(g_Sample0, vsdata.t);
+	float4 Diffuse2 = g_txSplatting[1].Sample(g_Sample0, vsdata.t);
+	float4 Diffuse3 = g_txSplatting[2].Sample(g_Sample0, vsdata.t);
+	float4 Diffuse4 = g_txSplatting[3].Sample(g_Sample0, vsdata.t);
+
+	FinalA = lerp(BaseColor,Diffuse1,Alpha.x);
+	FinalA = lerp(FinalA,Diffuse2,Alpha.y);
+	FinalA = lerp(FinalA,Diffuse3,Alpha.z);
+	FinalA = lerp(FinalA,Diffuse4,Alpha.w);
+
+	return FinalA; 
+
+}
+
+PS_OUT PSCSHeight(PS_IN vIn)
+{
+	float fBlendAmount = 0.0f;
+	float fSlope = 1.0f - vIn.n.y;
+	PS_OUT vColor;
+
+	if (fSlope < 0.2f)
+	{
+		fBlendAmount = fSlope / 0.2f;
+		float4 a = g_txDiffuseA.Sample(g_Sample0, vIn.t);
+		float4 b = g_txDiffuseA.Sample(g_Sample0, vIn.t * 10);
+		vColor.add = lerp(a, b, fBlendAmount);
+
+		float4 Alpha = BufResultSRV.Sample(g_Sample0, vIn.t);
+		float4 Diffuse1 = g_txSplatting[0].Sample(g_Sample0, vIn.t);
+		float4 Diffuse1_1 = g_txSplatting[0].Sample(g_Sample0, vIn.t*10);
+		Diffuse1 = lerp(Diffuse1, Diffuse1_1, fBlendAmount);
+
+
+		float4 Diffuse2 = g_txSplatting[1].Sample(g_Sample0, vIn.t);
+		float4 Diffuse2_2 = g_txSplatting[1].Sample(g_Sample0, vIn.t*10);
+		Diffuse2 = lerp(Diffuse2, Diffuse2_2, fBlendAmount);
+
+		float4 Diffuse3 = g_txSplatting[2].Sample(g_Sample0, vIn.t);
+		float4 Diffuse3_3 = g_txSplatting[2].Sample(g_Sample0, vIn.t*10);
+		Diffuse3 = lerp(Diffuse3, Diffuse3_3, fBlendAmount);
+
+		float4 Diffuse4 = g_txSplatting[3].Sample(g_Sample0, vIn.t);
+		float4 Diffuse4_4 = g_txSplatting[3].Sample(g_Sample0, vIn.t*10);
+		Diffuse4 = lerp(Diffuse4, Diffuse4_4, fBlendAmount);
+
+		vColor.add = lerp(vColor.add,Diffuse1,Alpha.x);
+		vColor.add = lerp(vColor.add,Diffuse2,Alpha.y);
+		vColor.add = lerp(vColor.add,Diffuse3,Alpha.z);
+		vColor.add = lerp(vColor.add,Diffuse4,Alpha.w);
+	}
+	if (fSlope < 0.7f && fSlope >= 0.2f)
+	{
+		// 0.2 ~ 0.7 -> 0.0 ~ 1.0f
+		fBlendAmount = (fSlope - 0.2f) * (1.0f / (0.7f-0.2f));		 
+		float4 a = g_txDiffuseA.Sample(g_Sample0, vIn.t * 10);
+		float4 b = g_txDiffuseA.Sample(g_Sample0, vIn.t * 20);
+		vColor.add = lerp(a, b, fBlendAmount);//*vColor;
+
+		float4 Alpha = BufResultSRV.Sample(g_Sample0, vIn.t);
+		float4 Diffuse1 = g_txSplatting[0].Sample(g_Sample0, vIn.t*10);
+		float4 Diffuse1_1 = g_txSplatting[0].Sample(g_Sample0, vIn.t*20);
+		Diffuse1 = lerp(Diffuse1, Diffuse1_1, fBlendAmount);
+
+
+		float4 Diffuse2 = g_txSplatting[1].Sample(g_Sample0, vIn.t*10);
+		float4 Diffuse2_2 = g_txSplatting[1].Sample(g_Sample0, vIn.t*20);
+		Diffuse2 = lerp(Diffuse2, Diffuse2_2, fBlendAmount);
+
+		float4 Diffuse3 = g_txSplatting[2].Sample(g_Sample0, vIn.t*10);
+		float4 Diffuse3_3 = g_txSplatting[2].Sample(g_Sample0, vIn.t*20);
+		Diffuse3 = lerp(Diffuse3, Diffuse3_3, fBlendAmount);
+
+		float4 Diffuse4 = g_txSplatting[3].Sample(g_Sample0, vIn.t*10);
+		float4 Diffuse4_4 = g_txSplatting[3].Sample(g_Sample0, vIn.t*20);
+		Diffuse4 = lerp(Diffuse4, Diffuse4_4, fBlendAmount);
+
+		vColor.add = lerp(vColor.add,Diffuse1,Alpha.x);
+		vColor.add = lerp(vColor.add,Diffuse2,Alpha.y);
+		vColor.add = lerp(vColor.add,Diffuse3,Alpha.z);
+		vColor.add = lerp(vColor.add,Diffuse4,Alpha.w);
+	}
+	if (fSlope >= 0.7f)
+	{
+		vColor.add = g_txDiffuseA.Sample(g_Sample0, vIn.t * 20);//*vColorC;
+
+		float4 Alpha = BufResultSRV.Sample(g_Sample0, vIn.t);
+		float4 Diffuse1 = g_txSplatting[0].Sample(g_Sample0, vIn.t * 20);
+		float4 Diffuse2 = g_txSplatting[1].Sample(g_Sample0, vIn.t * 20);
+		float4 Diffuse3 = g_txSplatting[2].Sample(g_Sample0, vIn.t * 20);
+		float4 Diffuse4 = g_txSplatting[3].Sample(g_Sample0, vIn.t * 20);
+
+		vColor.add = lerp(vColor.add,Diffuse1,Alpha.x);
+		vColor.add = lerp(vColor.add,Diffuse2,Alpha.y);
+		vColor.add = lerp(vColor.add,Diffuse3,Alpha.z);
+		vColor.add = lerp(vColor.add,Diffuse4,Alpha.w);
+	}
+	vColor.mul=vColor.add;
+
+	return vColor;
+}
+
+PS_OUT PSShadow(PS_IN vIn)
+{
+	float fBlendAmount = 0.0f;
+	float fSlope = 1.0f - vIn.n.y;
+	PS_OUT vColor;
+
+	if (fSlope < 0.2f)
+	{
+		fBlendAmount = fSlope / 0.2f;
+		float4 a = g_txDiffuseA.Sample(g_Sample0, vIn.t);
+		float4 b = g_txDiffuseA.Sample(g_Sample0, vIn.t * 10);
+		vColor.add = lerp(a, b, fBlendAmount);
+
+		float4 Alpha = BufResultSRV.Sample(g_Sample0, vIn.t);
+		float4 Diffuse1 = g_txSplatting[0].Sample(g_Sample0, vIn.t);
+		float4 Diffuse1_1 = g_txSplatting[0].Sample(g_Sample0, vIn.t*10);
+		Diffuse1 = lerp(Diffuse1, Diffuse1_1, fBlendAmount);
+
+
+		float4 Diffuse2 = g_txSplatting[1].Sample(g_Sample0, vIn.t);
+		float4 Diffuse2_2 = g_txSplatting[1].Sample(g_Sample0, vIn.t*10);
+		Diffuse2 = lerp(Diffuse2, Diffuse2_2, fBlendAmount);
+
+		float4 Diffuse3 = g_txSplatting[2].Sample(g_Sample0, vIn.t);
+		float4 Diffuse3_3 = g_txSplatting[2].Sample(g_Sample0, vIn.t*10);
+		Diffuse3 = lerp(Diffuse3, Diffuse3_3, fBlendAmount);
+
+		float4 Diffuse4 = g_txSplatting[3].Sample(g_Sample0, vIn.t);
+		float4 Diffuse4_4 = g_txSplatting[3].Sample(g_Sample0, vIn.t*10);
+		Diffuse4 = lerp(Diffuse4, Diffuse4_4, fBlendAmount);
+
+		vColor.add = lerp(vColor.add,Diffuse1,Alpha.x);
+		vColor.add = lerp(vColor.add,Diffuse2,Alpha.y);
+		vColor.add = lerp(vColor.add,Diffuse3,Alpha.z);
+		vColor.add = lerp(vColor.add,Diffuse4,Alpha.w);
+	}
+	if (fSlope < 0.7f && fSlope >= 0.2f)
+	{
+		// 0.2 ~ 0.7 -> 0.0 ~ 1.0f
+		fBlendAmount = (fSlope - 0.2f) * (1.0f / (0.7f-0.2f));		 
+		float4 a = g_txDiffuseA.Sample(g_Sample0, vIn.t * 10);
+		float4 b = g_txDiffuseA.Sample(g_Sample0, vIn.t * 20);
+		vColor.add = lerp(a, b, fBlendAmount);//*vColor;
+
+		float4 Alpha = BufResultSRV.Sample(g_Sample0, vIn.t);
+		float4 Diffuse1 = g_txSplatting[0].Sample(g_Sample0, vIn.t*10);
+		float4 Diffuse1_1 = g_txSplatting[0].Sample(g_Sample0, vIn.t*20);
+		Diffuse1 = lerp(Diffuse1, Diffuse1_1, fBlendAmount);
+
+
+		float4 Diffuse2 = g_txSplatting[1].Sample(g_Sample0, vIn.t*10);
+		float4 Diffuse2_2 = g_txSplatting[1].Sample(g_Sample0, vIn.t*20);
+		Diffuse2 = lerp(Diffuse2, Diffuse2_2, fBlendAmount);
+
+		float4 Diffuse3 = g_txSplatting[2].Sample(g_Sample0, vIn.t*10);
+		float4 Diffuse3_3 = g_txSplatting[2].Sample(g_Sample0, vIn.t*20);
+		Diffuse3 = lerp(Diffuse3, Diffuse3_3, fBlendAmount);
+
+		float4 Diffuse4 = g_txSplatting[3].Sample(g_Sample0, vIn.t*10);
+		float4 Diffuse4_4 = g_txSplatting[3].Sample(g_Sample0, vIn.t*20);
+		Diffuse4 = lerp(Diffuse4, Diffuse4_4, fBlendAmount);
+
+		vColor.add = lerp(vColor.add,Diffuse1,Alpha.x);
+		vColor.add = lerp(vColor.add,Diffuse2,Alpha.y);
+		vColor.add = lerp(vColor.add,Diffuse3,Alpha.z);
+		vColor.add = lerp(vColor.add,Diffuse4,Alpha.w);
+	}
+	if (fSlope >= 0.7f)
+	{
+		vColor.add = g_txDiffuseA.Sample(g_Sample0, vIn.t * 20);//*vColorC;
+
+		float4 Alpha = BufResultSRV.Sample(g_Sample0, vIn.t);
+		float4 Diffuse1 = g_txSplatting[0].Sample(g_Sample0, vIn.t * 20);
+		float4 Diffuse2 = g_txSplatting[1].Sample(g_Sample0, vIn.t * 20);
+		float4 Diffuse3 = g_txSplatting[2].Sample(g_Sample0, vIn.t * 20);
+		float4 Diffuse4 = g_txSplatting[3].Sample(g_Sample0, vIn.t * 20);
+
+		vColor.add = lerp(vColor.add,Diffuse1,Alpha.x);
+		vColor.add = lerp(vColor.add,Diffuse2,Alpha.y);
+		vColor.add = lerp(vColor.add,Diffuse3,Alpha.z);
+		vColor.add = lerp(vColor.add,Diffuse4,Alpha.w);
+	}
+	
+	float2 tex;
+	tex.x = vIn.vlocal.x / vIn.vlocal.w;
+	tex.y = vIn.vlocal.y / vIn.vlocal.w;
+
+	float4 sh = g_txShadow.Sample(g_Sample0, tex);
+
+	vColor.add *= vIn.c;
+
+	if(sh.r>0.01f)
+	{
+		vColor.add *= float4(0.5,0.5,0.5,1);
+	}
+
+	vColor.mul=vColor.add;
+	return vColor;
+}
+
+PS_OUT PSDSShadow(PS_IN vIn)
+{
+	float fBlendAmount = 0.0f;
+	float fSlope = 1.0f - vIn.n.y;
+	PS_OUT vColor;
+
+	if (fSlope < 0.2f)
+	{
+		fBlendAmount = fSlope / 0.2f;
+		float4 a = g_txDiffuseA.Sample(g_Sample0, vIn.t);
+		float4 b = g_txDiffuseA.Sample(g_Sample0, vIn.t * 10);
+		vColor.add = lerp(a, b, fBlendAmount);
+
+		float4 Alpha = BufResultSRV.Sample(g_Sample0, vIn.t);
+		float4 Diffuse1 = g_txSplatting[0].Sample(g_Sample0, vIn.t);
+		float4 Diffuse1_1 = g_txSplatting[0].Sample(g_Sample0, vIn.t*10);
+		Diffuse1 = lerp(Diffuse1, Diffuse1_1, fBlendAmount);
+
+
+		float4 Diffuse2 = g_txSplatting[1].Sample(g_Sample0, vIn.t);
+		float4 Diffuse2_2 = g_txSplatting[1].Sample(g_Sample0, vIn.t*10);
+		Diffuse2 = lerp(Diffuse2, Diffuse2_2, fBlendAmount);
+
+		float4 Diffuse3 = g_txSplatting[2].Sample(g_Sample0, vIn.t);
+		float4 Diffuse3_3 = g_txSplatting[2].Sample(g_Sample0, vIn.t*10);
+		Diffuse3 = lerp(Diffuse3, Diffuse3_3, fBlendAmount);
+
+		float4 Diffuse4 = g_txSplatting[3].Sample(g_Sample0, vIn.t);
+		float4 Diffuse4_4 = g_txSplatting[3].Sample(g_Sample0, vIn.t*10);
+		Diffuse4 = lerp(Diffuse4, Diffuse4_4, fBlendAmount);
+
+		vColor.add = lerp(vColor.add,Diffuse1,Alpha.x);
+		vColor.add = lerp(vColor.add,Diffuse2,Alpha.y);
+		vColor.add = lerp(vColor.add,Diffuse3,Alpha.z);
+		vColor.add = lerp(vColor.add,Diffuse4,Alpha.w);
+	}
+	if (fSlope < 0.7f && fSlope >= 0.2f)
+	{
+		// 0.2 ~ 0.7 -> 0.0 ~ 1.0f
+		fBlendAmount = (fSlope - 0.2f) * (1.0f / (0.7f-0.2f));		 
+		float4 a = g_txDiffuseA.Sample(g_Sample0, vIn.t * 10);
+		float4 b = g_txDiffuseA.Sample(g_Sample0, vIn.t * 20);
+		vColor.add = lerp(a, b, fBlendAmount);//*vColor;
+
+		float4 Alpha = BufResultSRV.Sample(g_Sample0, vIn.t);
+		float4 Diffuse1 = g_txSplatting[0].Sample(g_Sample0, vIn.t*10);
+		float4 Diffuse1_1 = g_txSplatting[0].Sample(g_Sample0, vIn.t*20);
+		Diffuse1 = lerp(Diffuse1, Diffuse1_1, fBlendAmount);
+
+
+		float4 Diffuse2 = g_txSplatting[1].Sample(g_Sample0, vIn.t*10);
+		float4 Diffuse2_2 = g_txSplatting[1].Sample(g_Sample0, vIn.t*20);
+		Diffuse2 = lerp(Diffuse2, Diffuse2_2, fBlendAmount);
+
+		float4 Diffuse3 = g_txSplatting[2].Sample(g_Sample0, vIn.t*10);
+		float4 Diffuse3_3 = g_txSplatting[2].Sample(g_Sample0, vIn.t*20);
+		Diffuse3 = lerp(Diffuse3, Diffuse3_3, fBlendAmount);
+
+		float4 Diffuse4 = g_txSplatting[3].Sample(g_Sample0, vIn.t*10);
+		float4 Diffuse4_4 = g_txSplatting[3].Sample(g_Sample0, vIn.t*20);
+		Diffuse4 = lerp(Diffuse4, Diffuse4_4, fBlendAmount);
+
+		vColor.add = lerp(vColor.add,Diffuse1,Alpha.x);
+		vColor.add = lerp(vColor.add,Diffuse2,Alpha.y);
+		vColor.add = lerp(vColor.add,Diffuse3,Alpha.z);
+		vColor.add = lerp(vColor.add,Diffuse4,Alpha.w);
+	}
+	if (fSlope >= 0.7f)
+	{
+		vColor.add = g_txDiffuseA.Sample(g_Sample0, vIn.t * 20);//*vColorC;
+
+		float4 Alpha = BufResultSRV.Sample(g_Sample0, vIn.t);
+		float4 Diffuse1 = g_txSplatting[0].Sample(g_Sample0, vIn.t * 20);
+		float4 Diffuse2 = g_txSplatting[1].Sample(g_Sample0, vIn.t * 20);
+		float4 Diffuse3 = g_txSplatting[2].Sample(g_Sample0, vIn.t * 20);
+		float4 Diffuse4 = g_txSplatting[3].Sample(g_Sample0, vIn.t * 20);
+
+		vColor.add = lerp(vColor.add,Diffuse1,Alpha.x);
+		vColor.add = lerp(vColor.add,Diffuse2,Alpha.y);
+		vColor.add = lerp(vColor.add,Diffuse3,Alpha.z);
+		vColor.add = lerp(vColor.add,Diffuse4,Alpha.w);
+	}
+	
+	float3 tex;
+	tex.x = vIn.vlocal.x / vIn.vlocal.w;
+	tex.y = vIn.vlocal.y / vIn.vlocal.w;
+	tex.z = vIn.vlocal.z / vIn.vlocal.w;
+
+	float sh = g_txShadow.Sample(g_ShdowSample, tex.xy) + 0.013f;
+	//float sh = g_txShadow.Sample(g_ShdowSample, tex.xy) + 0.00000232f;
+
+
+
+	//vColor.add *= vIn.c;
+
+	if(sh < tex.z)
+	{
+		vColor.add *= float4(0.5,0.5,0.5,1);
+	}
+
+	vColor.mul=vColor.add;
+	return vColor;
+}

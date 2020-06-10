@@ -27,7 +27,7 @@ struct VS_OUT
 
 struct VS_IN
 {
-	float3 p : POINT;
+	float3 p : POSITION;
 	float4 c : COLOR;
 };
 

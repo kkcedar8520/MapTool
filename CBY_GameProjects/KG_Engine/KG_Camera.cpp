@@ -153,6 +153,14 @@ int	KG_Camera::CheckOBBInPlane(KG_Box& box)
 	}
 	return t_Pos;
 }
+void KG_Camera::UpdateOrthoData()
+{
+	D3DXVECTOR3 look = m_orthoPos;
+
+	look = m_orthoPos + m_ortholook;
+
+	D3DXMatrixLookAtLH(&m_orthoView, &m_orthoPos, &look, &D3DXVECTOR3(0, 1, 0));
+}
 bool KG_Camera::Render()
 {
 	return true;
@@ -181,6 +189,7 @@ KG_Camera::KG_Camera()
 	m_LookDir = D3DXVECTOR3(0, 0, 0);
 	m_SideDir = D3DXVECTOR3(0, 0, 0);
 	m_ObjDir = D3DXVECTOR3(0, 0, 0);
+	m_vInitPos = D3DXVECTOR3(0, 0, 0);
 }
 
 

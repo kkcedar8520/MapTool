@@ -19,6 +19,14 @@ PS_OUT PS(PS_IN vsdata)
 {
 	PS_OUT pout;
 	pout.c = g_txDiffuseA.Sample(g_Sample0, vsdata.t);
+	//pout.c = vsdata.c;
+	return pout;
+}
+PS_OUT PSVC(PS_IN vsdata)
+{
+	PS_OUT pout;
+	//pout.c = g_txDiffuseA.Sample(g_Sample0, vsdata.t);
+	pout.c = vsdata.c;
 	return pout;
 }
 

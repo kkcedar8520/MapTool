@@ -38,6 +38,7 @@ namespace CBY
 
 
 	public:
+		inline void SetBoxCenter(D3DXVECTOR3 vCenter) { m_Box.vCenter = vCenter; }
 		inline void SetInitPos(D3DXVECTOR3 pos)
 		{
 			m_vInitPos = pos;

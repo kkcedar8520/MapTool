@@ -82,17 +82,17 @@ namespace CBY
 		m_vBoxSize.z = fZsize;
 
 		//D3DXVec3TransformNormal(&m_vBoxSize, &m_vBoxSize, &mRot);
-
-		m_vMax = vPos + m_vBoxSize;
-		m_vMin = vPos - m_vBoxSize;
+		D3DXVECTOR3 center = D3DXVECTOR3(0, 0, 0);
+		m_vMax = center + m_vBoxSize;
+		m_vMin = center - m_vBoxSize;
 
 		//D3DXVec3TransformCoord(&m_vMax, &m_vMax, &mRot);
 		//D3DXVec3TransformCoord(&m_vMin, &m_vMin, &mRot);
 		//D3DXVec3TransformNormal(&m_vMax, &m_vMax, &mRot);
 		//D3DXVec3TransformNormal(&m_vMin, &m_vMin, &mRot);
 
-		m_Box.vMax = m_vMax;
-		m_Box.vMin = m_vMin;
+		m_Box.vMax = m_Box.vCenter + m_vBoxSize;
+		m_Box.vMin = m_Box.vCenter- m_vBoxSize;
 
 		m_Box.fExtent[0] = m_vBoxSize.x;
 		m_Box.fExtent[1] = m_vBoxSize.y;

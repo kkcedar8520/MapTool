@@ -113,26 +113,22 @@ bool main::Render()
 	/*	for (auto LightObj :JH::I_LIGHT_MGR.m_LightObjList)
 		{*/
 			/*m_pContext->PSSetShaderResources(11, 1, &LightObj.m_Shadow.m_Rt->m_pDsvSRV);*/
-			for (int iNode = 0; iNode < JH::I_MapMgr.GetCurrentMap().m_pQuadTree->m_DrawObjNodeList.size(); iNode++)
-			{
-				JH::KG_Node* pNode = JH::I_MapMgr.GetCurrentMap().m_pQuadTree->m_DrawObjNodeList[iNode];
-				std::map<int,std::shared_ptr<JH::JH_MapObj>>::iterator iter;
-				for (iter = pNode->m_ObjList.begin();
-					iter != pNode->m_ObjList.end();
-					iter++)
+	
+				for (auto Obj : JH::I_MapMgr.GetCurrentMap().m_pQuadTree->m_DrawObjectList)
 				{
-					KG_Box Box;
-					Box = m_QuadTree->SetBB(iter->second.get());
-					int pos = m_pMainCamera->CheckOBBInPlane(Box);
-					if (pos == P_BACK)  continue;
 
 
-					JH::I_MapMgr.GetCurrentMap().m_ObjectList[iter->second->GetID()]->SetMatrix(&JH::I_MapMgr.GetCurrentMap().m_ObjectList[iter->second->GetID()]->m_matWorld,
+
+					Obj->GetObj()->SetMatrix(&Obj->GetObj()->m_matWorld,
 						&m_pMainCamera->m_View,
 						&m_pMainCamera->m_Proj);
-					JH::I_MapMgr.GetCurrentMap().m_ObjectList[iter->second->GetID()]->Render();
+					Obj->GetObj()->Frame();
+					Obj->GetObj()->Render();
+
+
+
 				}
-			}
+			
 		//}
 	}
 

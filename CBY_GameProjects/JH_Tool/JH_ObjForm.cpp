@@ -48,7 +48,7 @@ void JH_ObjForm::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT1, m_SkinName);
 	DDX_Text(pDX, IDC_EDIT_SPIN, m_fSpin);
 	DDX_Text(pDX, IDC_EDIT2, m_BoneName);
-	DDX_Text(pDX, IDC_EDIT12, m_Value);
+	//DDX_Text(pDX, IDC_EDIT12, m_Value);
 	DDX_Text(pDX, IDC_EDIT14, m_fScaleX);
 	DDX_Text(pDX, IDC_EDIT15, m_fScaleY);
 	DDX_Text(pDX, IDC_EDIT24, m_fScaleZ);
@@ -59,6 +59,8 @@ void JH_ObjForm::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT25, m_fRotRol);
 	DDX_Text(pDX, IDC_EDIT19, m_fTransY);
 }
+
+
 void JH_ObjForm::OnBnClickedButton2()
 {
 	UpdateData(FALSE);
@@ -68,7 +70,7 @@ void JH_ObjForm::OnBnClickedButton2()
 	static int Tick = 0;
 
 	CFileDialog dlg(FALSE, L"bmp|jpg", NULL, OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST,
-		L"skn Files(*.skn)|*.cby|mtr Files(*.mtr)|*.cby |All Files(*.*)|*.*|", this);
+		L"skn Files(*.skn)|*.skn|mtr Files(*.mtr)|*.mtr|All Files(*.*)|*.*|", this);
 
 	TCHAR szFileName[MAX_PATH];
 	TCHAR Drive[MAX_PATH];
@@ -106,19 +108,12 @@ void JH_ObjForm::OnBnClickedButton2()
 		DirBuf += L"/";
 		_stprintf_s(szFileName, _T("%s%s%s"), DirBuf.c_str(), FName, Ext);
 
-		if (Tick)
-		{
-			FileName = szFileName;
-
-			m_BoneName = FileName;
-			Tick = 0;
-		}
-		else
-		{
+	
+		
 			FileName = szFileName;
 			Tick = 1;
 			m_SkinName = FileName;
-		}
+		
 
 
 
@@ -127,18 +122,85 @@ void JH_ObjForm::OnBnClickedButton2()
 
 
 }
+
+void JH_ObjForm::OnBnClickedBoneLoad()
+{
+
+	UpdateData(FALSE);
+
+	CString FileName;
+
+	static int Tick = 0;
+
+	CFileDialog dlg(FALSE, L"bmp|jpg", NULL, OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST,
+		L"mtr Files(*.mtr)|*.mtr|All Files(*.*)|*.*|", this);
+
+	TCHAR szFileName[MAX_PATH];
+	TCHAR Drive[MAX_PATH];
+	TCHAR Dir[MAX_PATH];
+	TCHAR FName[MAX_PATH];
+	TCHAR Ext[MAX_PATH];
+	T_STR DirBuf;
+	if (dlg.DoModal() == IDOK)
+	{
+		FileName = dlg.GetPathName();
+		_tsplitpath(FileName, Drive, Dir, FName, Ext);
+		Ext[4] = 0;
+		memset(szFileName, 0, sizeof(TCHAR) * MAX_PATH);
+		TCHAR Mdir[MAX_PATH] = L"../../data/Map/";
+		TCHAR* tok = wcstok(Dir, L"\\""");
+		bool b = false;
+		while (tok != nullptr)
+		{
+
+			tok = wcstok(NULL, L"\\""");
+			if (tok == nullptr)break;
+			if (b)
+			{
+				DirBuf += L"/";
+				DirBuf += tok;
+			}
+			if (StrStrW(tok, _T("data")))
+			{
+				b = true;
+				DirBuf += L"../../";
+				DirBuf += tok;
+			}
+
+		}
+		DirBuf += L"/";
+		_stprintf_s(szFileName, _T("%s%s%s"), DirBuf.c_str(), FName, Ext);
+
+
+
+		FileName = szFileName;
+		m_BoneName = FileName;
+		UpdateData(FALSE);
+	}
+
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
 void JH_ObjForm::OnBnClickedButton3()
 {
 	UpdateData(TRUE);
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
 	D3DXMATRIX mWorld;
 	D3DXMatrixIdentity(&mWorld);
+	if (m_SkinName == L"" || m_BoneName == L"")
+	{
+		pApp->m_Sample.CreateObj(
+			nullptr,
+			nullptr,
+			mWorld);
+	}
+	else
+	{
+		pApp->m_Sample.CreateObj(
+			m_SkinName,
+			m_BoneName,
+			mWorld);
+	}
 
-
-	pApp->m_Sample.CreateObj(
-		m_SkinName,
-		m_BoneName,
-		mWorld);
 	
 	pApp->m_Sample.m_ToolState = ADDOBJECT;
 }
@@ -166,6 +228,8 @@ void JH_ObjForm::OnBnClickedObjectSelect()
 
 	pApp->m_Sample.bSelect = true;
 	pApp->m_Sample.m_ToolState = SELECT;
+	if(pApp->m_Sample.m_pSelectMapObj)
+	pApp->m_Sample.m_pSelectMapObj = nullptr;
 
 }
 void JH_ObjForm::OnBnClickedSet()
@@ -185,11 +249,13 @@ void JH_ObjForm::OnBnClickedRotation()
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
 	
 
-
+	if (!pApp->m_Sample.m_pSelectMapObj)return;
 	pApp->m_Sample.m_fYaw =m_fRotYaw ;
 	pApp->m_Sample.m_fPitch = m_fRotPit;
 	pApp->m_Sample.m_fRoll = m_fRotRol;
 	pApp->m_Sample.ObjRotation();
+	pApp->m_Sample.m_QuadTree->ChangeObjectNode(pApp->m_Sample.m_pSelectMapObj);
+
 
 	UpdateData(FALSE);
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
@@ -197,8 +263,10 @@ void JH_ObjForm::OnBnClickedRotation()
 void JH_ObjForm::OnBnClickedMove()
 {
 	UpdateData(TRUE);
-
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
+
+	if (!pApp->m_Sample.m_pSelectMapObj)return;
+
 	pApp->m_Sample.m_ToolState = MOVE;
 	pApp->m_Sample.m_fValue = m_Value;
 
@@ -211,14 +279,15 @@ void JH_ObjForm::OnBnClickedScale()
 	UpdateData(TRUE);
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
 
-
-
-	pApp->m_Sample.m_fScaleX = m_fScaleX;
-	pApp->m_Sample.m_fScaleY = m_fScaleY;
-	pApp->m_Sample.m_fScaleZ = m_fScaleZ;
+	if (!pApp->m_Sample.m_pSelectMapObj)return;
+	if (m_fScaleX != 0.0f && m_fScaleY != 0.0f && m_fScaleZ != 0.0f)
+	{
+		pApp->m_Sample.m_fScaleX = m_fScaleX;
+		pApp->m_Sample.m_fScaleY = m_fScaleY;
+		pApp->m_Sample.m_fScaleZ = m_fScaleZ;
+	}
 	pApp->m_Sample.ObjScale();
-
-
+	pApp->m_Sample.m_QuadTree->ChangeObjectNode(pApp->m_Sample.m_pSelectMapObj);
 
 	UpdateData(FALSE);
 }
@@ -234,10 +303,12 @@ void JH_ObjForm::OnBnClickedTransLation()
 {
 	UpdateData(TRUE);
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
+	if (!pApp->m_Sample.m_pSelectMapObj)return;
 	pApp->m_Sample.m_matMove._41 = m_fTransX;
 	pApp->m_Sample.m_matMove._42 = m_fTransY;
 	pApp->m_Sample.m_matMove._43 = m_fTransZ;
 	pApp->m_Sample.ObjTranslation();
+	pApp->m_Sample.m_QuadTree->ChangeObjectNode(pApp->m_Sample.m_pSelectMapObj);
 
 	UpdateData(FALSE);
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
@@ -255,11 +326,14 @@ BEGIN_MESSAGE_MAP(JH_ObjForm, CFormView)
 	ON_BN_CLICKED(IDC_Move2, &JH_ObjForm::OnBnClickedMove)
 	ON_BN_CLICKED(IDC_Delete, &JH_ObjForm::OnBnClickedDelete)
 	ON_BN_CLICKED(IDC_SELECT4, &JH_ObjForm::OnBnClickedTransLation)
+	ON_BN_CLICKED(IDC_BUTTON4, &JH_ObjForm::OnBnClickedBoneLoad)
 END_MESSAGE_MAP()
 
 
 // JH_ObjForm 메시지 처리기
 #include"pch.h"
+
+
 
 
 

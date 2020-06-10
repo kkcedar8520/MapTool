@@ -26,14 +26,27 @@ enum TOOL_EVENT
 	SCALE,
 	SETTING,
 	TRANSLATION,
-	OBJECT_DELETE,
 	
+	
+};
+struct MAP_OBJ_DATA
+{
+	int			m_iQuadTreeIndex;
+	T_STR		m_BoneName;
+	T_STR		m_SkinName;
+	D3DXMATRIX	m_matWorld;
+	KG_Box		m_Box;
+
+	inline MAP_OBJ_DATA()
+	{
+		D3DXMatrixIdentity(&m_matWorld);
+	}
 };
 
 struct OBJECT
 {
-	JH::JH_MapObj		m_MapObj;
-	OBJECT()
+	std::shared_ptr<MAP_OBJ_DATA>		m_MapObj;
+	inline OBJECT()
 	{
 	}
 };
@@ -41,7 +54,7 @@ struct QuadTreeData
 {
 	
 	std::vector<OBJECT> m_ObjList;
-	QuadTreeData()
+	inline QuadTreeData()
 	{
 	
 	}

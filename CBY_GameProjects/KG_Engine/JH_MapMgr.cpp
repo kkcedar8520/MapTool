@@ -112,62 +112,62 @@ namespace JH {
 		TCHAR  Buf[255];
 		for (int iObj = 0; iObj < m_MapData.m_sQTData.m_ObjList.size(); iObj++)
 		{
-			OBJECT &OBJ =
-				m_MapData.m_sQTData.m_ObjList[iObj];
+			m_MapData.m_sQTData.m_ObjList[iObj].m_MapObj = std::make_shared<MAP_OBJ_DATA>();
+			OBJECT &OBJ = m_MapData.m_sQTData.m_ObjList[iObj];
 			_fgetts(m_pBuffer, 256, fp);
 			_stscanf(m_pBuffer, _T("%d \n"), &m_iTemp);
 
-			OBJ.m_MapObj.SetQuadIndex(m_iTemp);
+
+			OBJ.m_MapObj->m_iQuadTreeIndex = m_iTemp;
 
 			_fgetts(m_pBuffer, 256, fp);
 			_stscanf(m_pBuffer, _T("%s \n"), Buf);
-			OBJ.m_MapObj.SetSkinName(Buf);
+			OBJ.m_MapObj->m_SkinName = Buf;
 			_fgetts(m_pBuffer, 256, fp);
 			_stscanf(m_pBuffer, _T("%s \n"), Buf);
-			OBJ.m_MapObj.SetBoneName(Buf);
+			OBJ.m_MapObj->m_BoneName = Buf;
 
 			_fgetts(m_pBuffer, 256, fp);
 			_stscanf(m_pBuffer, _T("\t%s\n"), Buf);
 
 			_fgetts(m_pBuffer, 256, fp);
 			_stscanf(m_pBuffer, _T("\t%f %f %f %f\n"),
-				&OBJ.m_MapObj.m_matWorld._11, &OBJ.m_MapObj.m_matWorld._12, &OBJ.m_MapObj.m_matWorld._13, &OBJ.m_MapObj.m_matWorld._14);
+				&OBJ.m_MapObj->m_matWorld._11, &OBJ.m_MapObj->m_matWorld._12, &OBJ.m_MapObj->m_matWorld._13, &OBJ.m_MapObj->m_matWorld._14);
 			_fgetts(m_pBuffer, 256, fp);
 			_stscanf(m_pBuffer, _T("\t%f %f %f %f\n"),
-				&OBJ.m_MapObj.m_matWorld._21, &OBJ.m_MapObj.m_matWorld._22, &OBJ.m_MapObj.m_matWorld._23, &OBJ.m_MapObj.m_matWorld._24);
+				&OBJ.m_MapObj->m_matWorld._21, &OBJ.m_MapObj->m_matWorld._22, &OBJ.m_MapObj->m_matWorld._23, &OBJ.m_MapObj->m_matWorld._24);
 			_fgetts(m_pBuffer, 256, fp);
 			_stscanf(m_pBuffer, _T("\t%f %f %f %f\n"),
-				&OBJ.m_MapObj.m_matWorld._31, &OBJ.m_MapObj.m_matWorld._32, &OBJ.m_MapObj.m_matWorld._33, &OBJ.m_MapObj.m_matWorld._34);
+				&OBJ.m_MapObj->m_matWorld._31, &OBJ.m_MapObj->m_matWorld._32, &OBJ.m_MapObj->m_matWorld._33, &OBJ.m_MapObj->m_matWorld._34);
 			_fgetts(m_pBuffer, 256, fp);
 			_stscanf(m_pBuffer, _T("\t%f %f %f %f\n"),
-				&OBJ.m_MapObj.m_matWorld._41, &OBJ.m_MapObj.m_matWorld._42, &OBJ.m_MapObj.m_matWorld._43, &OBJ.m_MapObj.m_matWorld._44);
+				&OBJ.m_MapObj->m_matWorld._41, &OBJ.m_MapObj->m_matWorld._42, &OBJ.m_MapObj->m_matWorld._43, &OBJ.m_MapObj->m_matWorld._44);
+
+			KG_Box Box = OBJ.m_MapObj->m_Box;
+			_fgetts(m_pBuffer, 256, fp);
+			_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
+				&Box.vCenter.x, &Box.vCenter.y, &Box.vCenter.z);
+			_fgetts(m_pBuffer, 256, fp);
+			_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
+				&Box.vMin.x, &Box.vMin.y, &Box.vMin.z);
+			_fgetts(m_pBuffer, 256, fp);
+			_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
+				&Box.vMax.x, &Box.vMax.y, &Box.vMax.z);
 
 
+			_fgetts(m_pBuffer, 256, fp);
+			_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
+				&Box.vAxis[0].x, &Box.vAxis[0].y, &Box.vAxis[0].z);
+			_fgetts(m_pBuffer, 256, fp);
+			_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
+				&Box.vAxis[1].x, &Box.vAxis[1].y, &Box.vAxis[1].z);
+			_fgetts(m_pBuffer, 256, fp);
+			_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
+				&Box.vAxis[2].x, &Box.vAxis[2].y, &Box.vAxis[2].z);
 
 			_fgetts(m_pBuffer, 256, fp);
 			_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-				&OBJ.m_MapObj.m_Box.vCenter.x, &OBJ.m_MapObj.m_Box.vCenter.y, &OBJ.m_MapObj.m_Box.vCenter.z);
-			_fgetts(m_pBuffer, 256, fp);
-			_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-				&OBJ.m_MapObj.m_Box.vMin.x, &OBJ.m_MapObj.m_Box.vMin.y, &OBJ.m_MapObj.m_Box.vMin.z);
-			_fgetts(m_pBuffer, 256, fp);
-			_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-				&OBJ.m_MapObj.m_Box.vMax.x, &OBJ.m_MapObj.m_Box.vMax.y, &OBJ.m_MapObj.m_Box.vMax.z);
-
-
-			_fgetts(m_pBuffer, 256, fp);
-			_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-				&OBJ.m_MapObj.m_Box.vAxis[0].x, &OBJ.m_MapObj.m_Box.vAxis[0].y, &OBJ.m_MapObj.m_Box.vAxis[0].z);
-			_fgetts(m_pBuffer, 256, fp);
-			_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-				&OBJ.m_MapObj.m_Box.vAxis[1].x, &OBJ.m_MapObj.m_Box.vAxis[1].y, &OBJ.m_MapObj.m_Box.vAxis[1].z);
-			_fgetts(m_pBuffer, 256, fp);
-			_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-				&OBJ.m_MapObj.m_Box.vAxis[2].x, &OBJ.m_MapObj.m_Box.vAxis[2].y, &OBJ.m_MapObj.m_Box.vAxis[2].z);
-
-			_fgetts(m_pBuffer, 256, fp);
-			_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-				&OBJ.m_MapObj.m_Box.fExtent[0], &OBJ.m_MapObj.m_Box.fExtent[1], &OBJ.m_MapObj.m_Box.fExtent[2]);
+				&Box.fExtent[0], &Box.fExtent[1], &Box.fExtent[2]);
 		}
 
 		const TCHAR* HeightFile;
@@ -214,20 +214,22 @@ namespace JH {
 		std::shared_ptr<CBY::CBY_Object> Object;
 		Object =std::make_shared<CBY::CBY_Object>();
 		Object->Create(m_pd3dDevice, m_pContext, L"../../data/shader/ObjectShader.txt", nullptr, "VSOBJECT", "PS");
-		Object->SkinLoad(Obj.m_MapObj.GetSkinName());
-		Object->BoneLoad(Obj.m_MapObj.GetBoneName());
+		Object->SkinLoad(Obj.m_MapObj->m_SkinName);
+		Object->BoneLoad(Obj.m_MapObj->m_BoneName);
 
-		Object->m_matWorld = Obj.m_MapObj.m_matWorld;
-		std::shared_ptr<JH_MapObj> MapObj;
-		MapObj = std::make_shared< JH_MapObj>();
-		*MapObj = Obj.m_MapObj;
-
+		Object->m_matWorld = Obj.m_MapObj->m_matWorld;
+		std::shared_ptr<JH_MapObj> MapObj= std::make_shared< JH_MapObj>();
+		MapObj->SetBoneName(Obj.m_MapObj->m_BoneName);
+		MapObj->SetSkinName(Obj.m_MapObj->m_SkinName);
+		MapObj->SetQuadIndex(Obj.m_MapObj->m_iQuadTreeIndex);
+		MapObj->SetObj(Object);
 		MapObj->SetID(ID++);
+		
+
+		
 
 		I_ObjMgr.AddObject(MapObj);
-		m_CurrentMap.m_pQuadTree->FindObjectNode(m_CurrentMap.m_pQuadTree->m_pRootNode, MapObj);
-		m_CurrentMap.m_pQuadTree->m_pFindNode->m_ObjList.insert(make_pair(MapObj->GetID(), MapObj));
-		m_CurrentMap.m_ObjectList.insert(make_pair(MapObj->GetID(), Object));
+		m_CurrentMap.m_pQuadTree->GetObjectAddNode(MapObj);
 		return 1;
 
 	}

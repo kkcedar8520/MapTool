@@ -8,10 +8,24 @@
 #include"KG_Select.h"
 
 namespace JH {
+	struct MAP_OBJ_DATA
+	{
+		int			m_iQuadTreeIndex;
+		T_STR		m_BoneName;
+		T_STR		m_SkinName;
+		D3DXMATRIX	m_matWorld;
+		KG_Box		m_Box;
+
+		inline MAP_OBJ_DATA()
+		{
+			D3DXMatrixIdentity(&m_matWorld);
+		}
+	};
+
 	struct OBJECT
 	{
-		JH_MapObj		m_MapObj;
-		OBJECT()
+		std::shared_ptr<MAP_OBJ_DATA>		m_MapObj;
+		inline OBJECT()
 		{
 		}
 	};
@@ -19,7 +33,7 @@ namespace JH {
 	{
 
 		std::vector<OBJECT> m_ObjList;
-		QuadTreeData()
+		inline QuadTreeData()
 		{
 
 		}
@@ -40,7 +54,7 @@ namespace JH {
 		std::vector<T_STR>		m_pSplattTextureFile;
 
 		QuadTreeData		m_sQTData;
-		void Reset()
+		inline void Reset()
 		{
 			m_BaseTextureFile.clear();
 			m_NormalMapFile.clear();

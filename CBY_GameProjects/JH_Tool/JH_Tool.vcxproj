@@ -278,11 +278,6 @@
     </Text>
     <Text Include="ComputeShader.hlsl" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\KG_Engine\KG_Engine.vcxproj">
-      <Project>{91d7d87f-713d-4233-94e4-30ffb9799350}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

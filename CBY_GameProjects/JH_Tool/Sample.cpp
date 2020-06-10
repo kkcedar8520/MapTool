@@ -7,6 +7,7 @@
 #include"LightMgr.h"
 
 
+	
 
 #pragma warning( disable:4005 )
 //void Sample::ResetComponent()
@@ -18,9 +19,9 @@
 bool Sample::ObjectDelete()
 {
 	if (!m_pSelectMapObj)  return false;
-
-	m_QuadTree->m_pFindNode->m_ObjList.erase(m_pSelectMapObj->GetID());
-	m_ObjectList.erase(m_pSelectMapObj->GetID());
+	JH::KG_Node* pNode=(JH::KG_Node*)m_pSelectMapObj->GetNode();
+	pNode->m_ObjList.erase(m_pSelectMapObj->GetID());
+	m_QuadTree->m_ObjectList.erase(m_pSelectMapObj->GetID());
 
 	m_pSelectMapObj = nullptr;
 	return true;
@@ -46,37 +47,40 @@ void Sample::ObjRotation()
 	D3DXMatrixIdentity(&matScale);
 	D3DXMatrixIdentity(&matTrans);
 	D3DXMatrixIdentity(&matWorld);
-	ResetSRTValue();
 	if (!m_pSelectMapObj)  return;
 
+	float fYaw = m_fYaw * D3DX_PI;
+	float fPit = m_fPitch * D3DX_PI;
+	float fRoll = m_fRoll * D3DX_PI;
 
-	D3DXQuaternionRotationYawPitchRoll(&qRot, m_fYaw, m_fPitch, m_fRoll);
-	D3DXMatrixAffineTransformation(&matRot, 1.0f, NULL, &qRot, &m_pSelectMapObj->m_Box.vCenter);
-	D3DXMatrixDecompose(&vScale, &qRot, &vTrans, &m_ObjectList[m_SelectObjID]->m_matWorld);
+
+	D3DXQuaternionRotationYawPitchRoll(&qRot, fYaw, fPit, fRoll);
+	D3DXVECTOR3 vCenter= m_pSelectMapObj->GetObj()->GetCharBox().vCenter;
+	D3DXMatrixAffineTransformation(&matRot, 1.0f, NULL, &qRot, &vCenter);
+	D3DXMatrixDecompose(&vScale, &qRot, &vTrans, &m_pSelectMapObj->GetObj()->m_matWorld);
 	
 	D3DXMatrixScaling(&matScale, vScale.x, vScale.y, vScale.z); 
 	D3DXMatrixRotationQuaternion(&matDecomposRot, &qRot);
 
-//	m_CurrentMapObj->m_matWorld._41 = m_CurrentMapObj->m_Box.vCenter.x;
-	//m_CurrentMapObj->m_matWorld._42 = m_CurrentMapObj->m_Box.vCenter.y;
-	//m_CurrentMapObj->m_matWorld._43 = m_CurrentMapObj->m_Box.vCenter.z;
+	
 	matWorld = matScale* matRot* matDecomposRot;
 	matWorld._41 = vTrans.x;
 	matWorld._42 = vTrans.y;
 	matWorld._43 = vTrans.z;
-	m_ObjectList[m_SelectObjID]->m_matWorld = matWorld;
-	m_pSelectMapObj->m_matWorld = m_ObjectList[m_SelectObjID]->m_matWorld;
+	m_pSelectMapObj->GetObj()->m_matWorld = matWorld;
 }
 void Sample::ObjTranslation()
 {
 	D3DXQUATERNION qRot;
 	D3DXMATRIX matRot;
-	ResetSRTValue();
 	if (!m_pSelectMapObj)  return; 
 
-	m_ObjectList[m_SelectObjID]->m_matWorld *= m_matMove;
+	m_pSelectMapObj->GetObj()->m_matWorld ._41= m_matMove._41;
+	m_pSelectMapObj->GetObj()->m_matWorld._42 = m_matMove._42;
+	m_pSelectMapObj->GetObj()->m_matWorld._43 = m_matMove._43;
 
-	m_pSelectMapObj->m_matWorld = m_ObjectList[m_SelectObjID]->m_matWorld;
+
+
 }
 void Sample::ObjScale()
 {
@@ -89,11 +93,10 @@ void Sample::ObjScale()
 	D3DXMatrixIdentity(&matDeSacle);
 	D3DXMatrixIdentity(&matTrans);
 	D3DXMatrixIdentity(&matWorld);	
-	ResetSRTValue();
 	if (!m_pSelectMapObj)  return;
 
 
-	D3DXMatrixDecompose(&vScale, &qRot, &vTrans, &m_ObjectList[m_SelectObjID]->m_matWorld);
+	D3DXMatrixDecompose(&vScale, &qRot, &vTrans, &m_pSelectMapObj->GetObj()->m_matWorld);
 	D3DXMatrixScaling(&matDeSacle, vScale.x, vScale.y, vScale.z);
 	D3DXMatrixRotationQuaternion(&matDecomposRot, &qRot);
 	D3DXMatrixScaling(&matScale, m_fScaleX, m_fScaleY, m_fScaleZ);
@@ -101,9 +104,8 @@ void Sample::ObjScale()
 	matWorld = matScale*matDeSacle*matDecomposRot;
 	matWorld._41 = vTrans.x;
 	matWorld._42 = vTrans.y;
-	matWorld._43 = vTrans.z;
-	m_ObjectList[m_SelectObjID]->m_matWorld = matWorld;
-	m_pSelectMapObj->m_matWorld = m_ObjectList[m_SelectObjID]->m_matWorld;
+	matWorld._43 = vTrans.z;	
+	m_pSelectMapObj->GetObj()->m_matWorld = matWorld;
 }
 TCHAR* Sample::FixupName(T_STR name)
 {
@@ -168,18 +170,20 @@ bool  Sample::SaveMapData(const TCHAR* LoadFile)
 {
 	m_sMapData.Reset();
 
-	m_QuadTree->GetCotainObjNode(m_QuadTree->m_pRootNode);
-	for ( int iNode = 0; iNode < m_QuadTree->m_ContainObjNode.size(); iNode++)
-	{
-		OBJECT OBJ;
-		for (auto Obj :  m_QuadTree->m_ContainObjNode[iNode]->m_ObjList)
-		{
-			 OBJ.m_MapObj= *Obj.second;
 
-			 //OBJ.m_MapObj.m_Box = m_QuadTree->SetBB(&OBJ.m_MapObj);
+	
+		OBJECT OBJ;
+		for (auto Obj :  m_QuadTree->m_ObjectList)
+		{
+			OBJ.m_MapObj = std::make_shared<MAP_OBJ_DATA>();
+			 OBJ.m_MapObj->m_matWorld = Obj.second->GetObj()->m_matWorld;
+			 OBJ.m_MapObj->m_BoneName = Obj.second->GetBoneName();
+			 OBJ.m_MapObj->m_SkinName = Obj.second->GetSkinName();
+			 OBJ.m_MapObj->m_iQuadTreeIndex = Obj.second->GetQuadIndex();
+			 OBJ.m_MapObj->m_Box = Obj.second->GetObj()->GetCharBox();
 			m_sMapData.m_sQTData.m_ObjList.push_back(OBJ);
 		}
-	}
+	
 
 	m_sMapData.m_pSplattAlphaTextureFile=m_pSPTAFile;
 	FILE* fp;
@@ -234,43 +238,43 @@ bool  Sample::SaveMapData(const TCHAR* LoadFile)
 	{
 		OBJECT &OBJ=
 			m_sMapData.m_sQTData.m_ObjList[iObj];
-		_ftprintf(fp, _T("%d \n"),  OBJ.m_MapObj.GetQuadIndex());
-		_ftprintf(fp, _T("%s \n"),  OBJ.m_MapObj.GetSkinName().data());
-		_ftprintf(fp, _T("%s \n"),  OBJ.m_MapObj.GetBoneName().data());
+		_ftprintf(fp, _T("%d \n"),  OBJ.m_MapObj->m_iQuadTreeIndex);
+		_ftprintf(fp, _T("%s \n"),  OBJ.m_MapObj->m_SkinName.data());
+		_ftprintf(fp, _T("%s \n"),  OBJ.m_MapObj->m_BoneName.data());
 
 		_ftprintf(fp, _T("\t%s\n"), _T("WORLD_MATRIX"));
 		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f %10.4f\n"),
-			 OBJ.m_MapObj.m_matWorld._11,  OBJ.m_MapObj.m_matWorld._12,  OBJ.m_MapObj.m_matWorld._13,  OBJ.m_MapObj.m_matWorld._14);
+			 OBJ.m_MapObj->m_matWorld._11,  OBJ.m_MapObj->m_matWorld._12,  OBJ.m_MapObj->m_matWorld._13,  OBJ.m_MapObj->m_matWorld._14);
 		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f %10.4f\n"),
-			 OBJ.m_MapObj.m_matWorld._21,  OBJ.m_MapObj.m_matWorld._22,  OBJ.m_MapObj.m_matWorld._23,  OBJ.m_MapObj.m_matWorld._24);
+			 OBJ.m_MapObj->m_matWorld._21,  OBJ.m_MapObj->m_matWorld._22,  OBJ.m_MapObj->m_matWorld._23,  OBJ.m_MapObj->m_matWorld._24);
 		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f %10.4f\n"),
-			 OBJ.m_MapObj.m_matWorld._31,  OBJ.m_MapObj.m_matWorld._32,  OBJ.m_MapObj.m_matWorld._33,  OBJ.m_MapObj.m_matWorld._34);
+			 OBJ.m_MapObj->m_matWorld._31,  OBJ.m_MapObj->m_matWorld._32,  OBJ.m_MapObj->m_matWorld._33,  OBJ.m_MapObj->m_matWorld._34);
 		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f %10.4f\n"),
-			 OBJ.m_MapObj.m_matWorld._41,  OBJ.m_MapObj.m_matWorld._42,  OBJ.m_MapObj.m_matWorld._43,  OBJ.m_MapObj.m_matWorld._44);
+			 OBJ.m_MapObj->m_matWorld._41,  OBJ.m_MapObj->m_matWorld._42,  OBJ.m_MapObj->m_matWorld._43,  OBJ.m_MapObj->m_matWorld._44);
 
 		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),
-			 OBJ.m_MapObj.m_Box.vCenter.x,  OBJ.m_MapObj.m_Box.vCenter.y,  OBJ.m_MapObj.m_Box.vCenter.z);
+			 OBJ.m_MapObj->m_Box.vCenter.x,  OBJ.m_MapObj->m_Box.vCenter.y,  OBJ.m_MapObj->m_Box.vCenter.z);
 		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),
-			 OBJ.m_MapObj.m_Box.vMin.x,  OBJ.m_MapObj.m_Box.vMin.y,  OBJ.m_MapObj.m_Box.vMin.z);
+			 OBJ.m_MapObj->m_Box.vMin.x,  OBJ.m_MapObj->m_Box.vMin.y,  OBJ.m_MapObj->m_Box.vMin.z);
 		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),
-			 OBJ.m_MapObj.m_Box.vMax.x,  OBJ.m_MapObj.m_Box.vMax.y,  OBJ.m_MapObj.m_Box.vMax.z);
+			 OBJ.m_MapObj->m_Box.vMax.x,  OBJ.m_MapObj->m_Box.vMax.y,  OBJ.m_MapObj->m_Box.vMax.z);
 
 
 		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),
-			 OBJ.m_MapObj.m_Box.vAxis[0].x,  OBJ.m_MapObj.m_Box.vAxis[0].y,  OBJ.m_MapObj.m_Box.vAxis[0].z);
+			 OBJ.m_MapObj->m_Box.vAxis[0].x,  OBJ.m_MapObj->m_Box.vAxis[0].y,  OBJ.m_MapObj->m_Box.vAxis[0].z);
 		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),									   
-			 OBJ.m_MapObj.m_Box.vAxis[1].x,  OBJ.m_MapObj.m_Box.vAxis[1].y,  OBJ.m_MapObj.m_Box.vAxis[1].z);
+			 OBJ.m_MapObj->m_Box.vAxis[1].x,  OBJ.m_MapObj->m_Box.vAxis[1].y,  OBJ.m_MapObj->m_Box.vAxis[1].z);
 		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),									   
-			 OBJ.m_MapObj.m_Box.vAxis[2].x,  OBJ.m_MapObj.m_Box.vAxis[2].y,  OBJ.m_MapObj.m_Box.vAxis[2].z);
+			 OBJ.m_MapObj->m_Box.vAxis[2].x,  OBJ.m_MapObj->m_Box.vAxis[2].y,  OBJ.m_MapObj->m_Box.vAxis[2].z);
 
 		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),
-			 OBJ.m_MapObj.m_Box.fExtent[0],  OBJ.m_MapObj.m_Box.fExtent[1],  OBJ.m_MapObj.m_Box.fExtent[2]);
+			 OBJ.m_MapObj->m_Box.fExtent[0],  OBJ.m_MapObj->m_Box.fExtent[1],  OBJ.m_MapObj->m_Box.fExtent[2]);
 	}
 
 
 
 	fclose(fp);
-	//m_sMapData.Reset();
+	m_sMapData.Reset();
 	return true;
 }
 bool  Sample::LoadMapData(const TCHAR* LoadFile)
@@ -357,62 +361,63 @@ bool  Sample::LoadMapData(const TCHAR* LoadFile)
 	TCHAR  Buf[255];
 	for (int iObj = 0; iObj < m_sMapData.m_sQTData.m_ObjList.size(); iObj++)
 	{
+		m_sMapData.m_sQTData.m_ObjList[iObj].m_MapObj = std::make_shared<MAP_OBJ_DATA>();
 		OBJECT &OBJ =
 			m_sMapData.m_sQTData.m_ObjList[iObj];
 		_fgetts(m_pBuffer, 256, fp);
 		_stscanf(m_pBuffer, _T("%d \n"),&m_iTemp);
 
-		 OBJ.m_MapObj.SetQuadIndex(m_iTemp);
+		 OBJ.m_MapObj->m_iQuadTreeIndex=m_iTemp;
 
 		_fgetts(m_pBuffer, 256, fp);
 		_stscanf(m_pBuffer, _T("%s \n"), Buf);
-		 OBJ.m_MapObj.SetSkinName(Buf);
+		 OBJ.m_MapObj->m_SkinName=Buf;
 		_fgetts(m_pBuffer, 256, fp);
 		_stscanf(m_pBuffer, _T("%s \n"), Buf);
-		 OBJ.m_MapObj.SetBoneName(Buf);
+		 OBJ.m_MapObj->m_BoneName=Buf;
 
 		_fgetts(m_pBuffer, 256, fp);
 		_stscanf(m_pBuffer, _T("\t%s\n"), Buf);
 
 		_fgetts(m_pBuffer, 256, fp);
 		_stscanf(m_pBuffer, _T("\t%f %f %f %f\n"),
-			& OBJ.m_MapObj.m_matWorld._11, & OBJ.m_MapObj.m_matWorld._12, & OBJ.m_MapObj.m_matWorld._13,& OBJ.m_MapObj.m_matWorld._14);
+			& OBJ.m_MapObj->m_matWorld._11, & OBJ.m_MapObj->m_matWorld._12, & OBJ.m_MapObj->m_matWorld._13,& OBJ.m_MapObj->m_matWorld._14);
 		_fgetts(m_pBuffer, 256, fp);
 		_stscanf(m_pBuffer, _T("\t%f %f %f %f\n"),
-			& OBJ.m_MapObj.m_matWorld._21, & OBJ.m_MapObj.m_matWorld._22, & OBJ.m_MapObj.m_matWorld._23, & OBJ.m_MapObj.m_matWorld._24);
+			& OBJ.m_MapObj->m_matWorld._21, & OBJ.m_MapObj->m_matWorld._22, & OBJ.m_MapObj->m_matWorld._23, & OBJ.m_MapObj->m_matWorld._24);
 		_fgetts(m_pBuffer, 256, fp);
 		_stscanf(m_pBuffer, _T("\t%f %f %f %f\n"),
-			& OBJ.m_MapObj.m_matWorld._31, & OBJ.m_MapObj.m_matWorld._32, & OBJ.m_MapObj.m_matWorld._33, & OBJ.m_MapObj.m_matWorld._34);
+			& OBJ.m_MapObj->m_matWorld._31, & OBJ.m_MapObj->m_matWorld._32, & OBJ.m_MapObj->m_matWorld._33, & OBJ.m_MapObj->m_matWorld._34);
 		_fgetts(m_pBuffer, 256, fp);
 		_stscanf(m_pBuffer, _T("\t%f %f %f %f\n"),
-			& OBJ.m_MapObj.m_matWorld._41, & OBJ.m_MapObj.m_matWorld._42, & OBJ.m_MapObj.m_matWorld._43, & OBJ.m_MapObj.m_matWorld._44);
+			& OBJ.m_MapObj->m_matWorld._41, & OBJ.m_MapObj->m_matWorld._42, & OBJ.m_MapObj->m_matWorld._43, & OBJ.m_MapObj->m_matWorld._44);
 
 
+		KG_Box Box = OBJ.m_MapObj->m_Box;
+		_fgetts(m_pBuffer, 256, fp);
+		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
+			&Box.vCenter.x, &Box.vCenter.y, &Box.vCenter.z);
+		_fgetts(m_pBuffer, 256, fp);
+		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
+			&Box.vMin.x, &Box.vMin.y, &Box.vMin.z);
+		_fgetts(m_pBuffer, 256, fp);
+		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
+			&Box.vMax.x, &Box.vMax.y, &Box.vMax.z);
+
 
 		_fgetts(m_pBuffer, 256, fp);
 		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-			& OBJ.m_MapObj.m_Box.vCenter.x, & OBJ.m_MapObj.m_Box.vCenter.y, & OBJ.m_MapObj.m_Box.vCenter.z);
+			&Box.vAxis[0].x, &Box.vAxis[0].y, &Box.vAxis[0].z);
 		_fgetts(m_pBuffer, 256, fp);
 		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-			& OBJ.m_MapObj.m_Box.vMin.x, & OBJ.m_MapObj.m_Box.vMin.y, & OBJ.m_MapObj.m_Box.vMin.z);
+			&Box.vAxis[1].x, &Box.vAxis[1].y, &Box.vAxis[1].z);
 		_fgetts(m_pBuffer, 256, fp);
 		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-			& OBJ.m_MapObj.m_Box.vMax.x, & OBJ.m_MapObj.m_Box.vMax.y, & OBJ.m_MapObj.m_Box.vMax.z);
-
-
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-			& OBJ.m_MapObj.m_Box.vAxis[0].x, & OBJ.m_MapObj.m_Box.vAxis[0].y, & OBJ.m_MapObj.m_Box.vAxis[0].z);
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-			& OBJ.m_MapObj.m_Box.vAxis[1].x, & OBJ.m_MapObj.m_Box.vAxis[1].y, & OBJ.m_MapObj.m_Box.vAxis[1].z);
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-			& OBJ.m_MapObj.m_Box.vAxis[2].x, & OBJ.m_MapObj.m_Box.vAxis[2].y, & OBJ.m_MapObj.m_Box.vAxis[2].z);
+			&Box.vAxis[2].x, &Box.vAxis[2].y, &Box.vAxis[2].z);
 
 		_fgetts(m_pBuffer, 256, fp);
 		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-			& OBJ.m_MapObj.m_Box.fExtent[0], & OBJ.m_MapObj.m_Box.fExtent[1], & OBJ.m_MapObj.m_Box.fExtent[2]);
+			&Box.fExtent[0], &Box.fExtent[1], &Box.fExtent[2]);
 	}
 	const TCHAR* HeightFile;
 	if (StrStrW(m_sMapData.m_HeightMapFile.c_str(),L"(null)"))
@@ -453,20 +458,21 @@ INT Sample::AddObject(OBJECT OBJ)
 	std::shared_ptr<CBY::CBY_Object> Object;
 	Object = std::make_shared<CBY::CBY_Object>();
 	Object->Create(m_pd3dDevice, m_pContext, L"../../data/shader/ObjectShader.txt", nullptr, "VSOBJECT", "PS");
-	Object->SkinLoad( OBJ.m_MapObj.GetSkinName());
-	Object->BoneLoad( OBJ.m_MapObj.GetBoneName());
+	Object->SkinLoad( OBJ.m_MapObj->m_SkinName);
+	Object->BoneLoad( OBJ.m_MapObj->m_BoneName);
 
-	Object->m_matWorld =  OBJ.m_MapObj.m_matWorld;
-	std::shared_ptr<JH::JH_MapObj> MapObj;
-	MapObj =std::make_shared <JH::JH_MapObj>();
-	*MapObj=OBJ.m_MapObj;
-
-	MapObj->SetID(m_ObjID++);
-	m_QuadTree->GetObjectAddNode(MapObj);
+	Object->m_matWorld =  OBJ.m_MapObj->m_matWorld;
 	
-	//m_QuadTree->CreateBB(m_QuadTree->m_pFindNode);
+	//OBJ.m_MapObj->SetObj(Object);
+	//OBJ.m_MapObj->SetID(m_ObjID++);
 
-	m_ObjectList.insert(std::make_pair(MapObj->GetID(), Object));
+	std::shared_ptr < JH::JH_MapObj> MapObj = std::make_shared<JH::JH_MapObj>();
+	MapObj->SetBoneName(OBJ.m_MapObj->m_BoneName);
+	MapObj->SetSkinName(OBJ.m_MapObj->m_SkinName);
+	MapObj->SetID(m_ObjID++);
+	MapObj->SetObj(Object);
+	MapObj->SetQuadIndex(OBJ.m_MapObj->m_iQuadTreeIndex);
+	m_QuadTree->GetObjectAddNode(MapObj);
 	return 1;
 }
 void 	Sample::RunComputeShaderSplatting(ID3D11ComputeShader* pCS, ID3D11ShaderResourceView* pShaderResourceView,
@@ -778,25 +784,9 @@ void Sample::SelectObject()
 
 	m_QuadTree->GetSelectObj(m_QuadTree->m_pRootNode);
 
-	
-	for (int iObj = 0; iObj <m_QuadTree->m_SelectObjList.size(); iObj++)
+	if (m_QuadTree->m_pSelectObj)
 	{
-		KG_Box Box = m_QuadTree->SetBB(m_QuadTree->m_SelectObjList[iObj].get());
-		if (m_Select.OBBToRay(&Box))
-		{
-			FLOAT fDistance=D3DXVec3Length(&(m_QuadTree->m_pSelect->m_vIntersection-m_pMainCamera->m_Pos));
-			if (m_Interval> fDistance)
-			{
-				m_pSelectMapObj = m_QuadTree->m_SelectObjList[iObj];
-				bSel = true;
-				m_Interval = fDistance;
-			}
-			
-		}
-	}
-	if (bSel)
-	{
-		m_QuadTree->FindObjectNode(m_QuadTree->m_pRootNode, m_pSelectMapObj);
+		m_pSelectMapObj = m_QuadTree->m_pSelectObj;
 		m_SelectObjID=m_pSelectMapObj->GetID();
 	}
 
@@ -1073,8 +1063,9 @@ int Sample::CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName, D3
 		return -1;
 	}
 
-		
+	if (pSkinFileName == nullptr || pBoneFileName == nullptr) { return -1; }
 		m_pSelectMapObj = nullptr;
+		m_QuadTree->m_pFindNode = nullptr;
 		m_Object=std::make_shared<CBY::CBY_Object>();
 		m_Object->Create(m_pd3dDevice, m_pContext, L"../../data/shader/ObjectShader.txt", nullptr, "VSOBJECT", "PS");
 		m_Object->SkinLoad(pSkinFileName);
@@ -1086,34 +1077,22 @@ int Sample::CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName, D3
 		assert(true); // false
 
 		
-		m_CurrentMapObj= std::make_shared<JH::JH_MapObj>();
-	m_CurrentMapObj->SetID(m_ObjID++);
+		m_CurrentMapObj = std::make_shared<JH::JH_MapObj>();
+		//m_QuadTree->= std::make_shared<JH::JH_MapObj>();
+		m_CurrentMapObj->SetObj(m_Object);
+		m_CurrentMapObj->SetID(m_ObjID++);
 		m_CurrentMapObj->SetSkinName(pSkinFileName);
 		m_CurrentMapObj->SetBoneName(pBoneFileName);
 	
-		m_CurrentMapObj->m_matWorld=m_Object->m_ObjList[0]->m_ObjList[0]->m_matWorld;
+		m_CurrentMapObj->GetObj()->m_matWorld=m_Object->m_ObjList[0]->m_ObjList[0]->m_matWorld;
 	
-		m_CurrentMapObj->m_Box = m_Object->GetCharBox();
+		m_CurrentMapObj->GetObj()->GetCharBox() = m_Object->GetCharBox();
 
-		D3DXVec3TransformCoord(&m_CurrentMapObj->m_Box.vMax, &m_CurrentMapObj->m_Box.vMax, &m_Object->m_matWorld);
-		D3DXVec3TransformCoord(&m_CurrentMapObj->m_Box.vMin, &m_CurrentMapObj->m_Box.vMin, &m_Object->m_matWorld);
 
-		D3DXVECTOR3 vX = D3DXVECTOR3(1, 0, 0);
-		D3DXVECTOR3 vY = D3DXVECTOR3(0, 1, 0);
-		D3DXVECTOR3 vZ = D3DXVECTOR3(0, 0, 1);
+		m_CurrentMapObj->GetObj()->SetMatrix(&m_CurrentMapObj->GetObj()->m_matWorld, &m_pMainCamera->m_View, &m_pMainCamera->m_Proj);
+		
 
-		D3DXVec3TransformNormal(&vX, &vX, &m_Object->m_matWorld);
-		D3DXVec3TransformNormal(&vY, &vY, &m_Object->m_matWorld);
-		D3DXVec3TransformNormal(&vZ, &vZ, &m_Object->m_matWorld);
-
-		m_CurrentMapObj->m_Box.vAxis[0] = vX;
-		m_CurrentMapObj->m_Box.vAxis[1] = vY;
-		m_CurrentMapObj->m_Box.vAxis[2] = vZ;
-
-		D3DXVECTOR3 vHalf = m_CurrentMapObj->m_Box.vMax - m_CurrentMapObj->m_Box.vCenter;
-		m_CurrentMapObj->m_Box.fExtent[0] = D3DXVec3Dot(&m_CurrentMapObj->m_Box.vAxis[0], &vHalf);
-		m_CurrentMapObj->m_Box.fExtent[1] = D3DXVec3Dot(&m_CurrentMapObj->m_Box.vAxis[1], &vHalf);
-		m_CurrentMapObj->m_Box.fExtent[2] = D3DXVec3Dot(&m_CurrentMapObj->m_Box.vAxis[2], &vHalf);
+		
 
 
 
@@ -1216,19 +1195,14 @@ bool Sample::Frame()
 		if (I_Input.KeyCheck(VK_LBUTTON))
 		{
 			GetNearPoint();
-			D3DXVECTOR3 before = m_CurrentMapObj->m_Box.vCenter;
 
-			m_CurrentMapObj->m_matWorld._41 = m_NearPoint.x;
-			m_CurrentMapObj->m_matWorld._42 = m_NearPoint.y;
-			m_CurrentMapObj->m_matWorld._43 = m_NearPoint.z;
 
-			m_Object->m_matWorld._41 = m_NearPoint.x;
-			m_Object->m_matWorld._42 = m_NearPoint.y;
-			m_Object->m_matWorld._43 = m_NearPoint.z;
+			m_CurrentMapObj->GetObj()-> m_matWorld._41 = m_NearPoint.x;
+			m_CurrentMapObj->GetObj()->m_matWorld._42 = m_NearPoint.y;
+			m_CurrentMapObj->GetObj()->m_matWorld._43 = m_NearPoint.z;
 
 			if (m_QuadTree->GetObjectAddNode(m_CurrentMapObj))
 			{
-				m_ObjectList.insert(make_pair(m_CurrentMapObj->GetID(), m_Object));
 				m_CurrentMapObj = nullptr;
 				m_Object = nullptr;
 				m_ToolState = NORMAL;
@@ -1237,7 +1211,7 @@ bool Sample::Frame()
 		}
 		break;
 	case SETTING:
-		if (!m_pSelectMapObj)break;
+		/*if (!m_pSelectMapObj)break;
 		{
 			if (m_QuadTree->ChangeObjectNode(m_pSelectMapObj))
 			{
@@ -1249,11 +1223,11 @@ bool Sample::Frame()
 				bObjectAdd = false;
 			}
 			
-		}
+		}*/
 		break;
 	case SELECT:
 		if(!m_pSelectMapObj)
-		if (I_Input.KeyCheck(VK_LBUTTON))
+		if (I_Input.KeyCheck(VK_RBUTTON))
 		{
 				SelectObject();
 		}
@@ -1263,17 +1237,13 @@ bool Sample::Frame()
 		if (I_Input.KeyCheck(VK_LBUTTON))
 		{
 			GetNearPoint();
-			D3DXVECTOR3 before = m_pSelectMapObj->m_Box.vCenter;
-			m_pSelectMapObj->m_matWorld._41 = m_NearPoint.x;
-			m_pSelectMapObj->m_matWorld._42 = m_NearPoint.y;
-			m_pSelectMapObj->m_matWorld._43 = m_NearPoint.z;
+			D3DXVECTOR3 before = m_pSelectMapObj->GetObj()->GetCharBox().vCenter;
+			m_pSelectMapObj->GetObj()-> m_matWorld._41 = m_NearPoint.x;
+			m_pSelectMapObj->GetObj()->m_matWorld._42 = m_NearPoint.y;
+			m_pSelectMapObj->GetObj()->m_matWorld._43 = m_NearPoint.z;
 			if (m_QuadTree->ChangeObjectNode(m_pSelectMapObj))
 			{
-				
-				m_ObjectList[m_SelectObjID]->m_matWorld._41 = m_NearPoint.x;
-				m_ObjectList[m_SelectObjID]->m_matWorld._42 = m_NearPoint.y;
-				m_ObjectList[m_SelectObjID]->m_matWorld._43 = m_NearPoint.z;
-
+		
 				m_pSelectMapObj = nullptr;
 				m_SelectObj = nullptr;
 				m_ToolState = NORMAL;
@@ -1285,7 +1255,7 @@ bool Sample::Frame()
 
 	
 		break;
-	case OBJECT_DELETE:
+
 
 
 	default:
@@ -1321,28 +1291,18 @@ bool Sample::Render()
 			D3DXMatrixIdentity(&World);
 
 			
-			for (int iNode = 0; iNode < m_QuadTree->m_DrawObjNodeList.size(); iNode++)
+			for (auto  Obj : m_QuadTree->m_DrawObjectList)
 			{
-				JH::KG_Node* pNode = m_QuadTree->m_DrawObjNodeList[iNode];
-				std::map<int,std::shared_ptr<JH::JH_MapObj>>::iterator iter;
-				for (iter = pNode->m_ObjList.begin();
-					iter != pNode->m_ObjList.end();
-					iter++)
-				{
-					KG_Box Box;
-					iter->second->m_matWorld=m_ObjectList[iter->second->GetID()]->m_matWorld;
-					Box = m_QuadTree->SetBB(iter->second.get());
-					int pos = m_pMainCamera->CheckOBBInPlane(Box);
-					if (pos == P_BACK)  continue;
 
-					
-					
-					m_ObjectList[iter->second->GetID()]->SetMatrix(&m_ObjectList[iter->second->GetID()]->m_matWorld,
+				
+
+					Obj->GetObj()->SetMatrix(&Obj->GetObj()->m_matWorld,
 						&m_pMainCamera->m_View,
 						&m_pMainCamera->m_Proj);
-					m_ObjectList[iter->second->GetID()]->Frame();
-					m_ObjectList[iter->second->GetID()]->Render();
-				}
+					Obj->GetObj()->Frame();
+					Obj->GetObj()->Render();
+			
+				
 
 			}
 
@@ -1370,9 +1330,9 @@ bool Sample::Render()
 
 
 
-	m_QuadTree->DrawNodeLine(m_QuadTree->m_pRootNode);
+	
 
-
+	m_QuadTree->DrawObjectBoxLine();
 
 
 

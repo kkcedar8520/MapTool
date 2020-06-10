@@ -56,4 +56,5 @@ public:
 	float m_fRotPit;
 	float m_fRotRol;
 	float m_fTransY;
+	afx_msg void OnBnClickedBoneLoad();
 };

@@ -111,6 +111,7 @@
 #define IDC_EDIT12                      1013
 #define IDC_EDIT14                      1014
 #define IDC_EDIT13                      1015
+#define IDC_BUTTON4                     1015
 #define IDC_EDIT15                      1016
 #define IDC_EDIT18                      1017
 #define IDC_SCROLLBAR2                  1018

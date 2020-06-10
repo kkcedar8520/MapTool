@@ -1060,7 +1060,7 @@ int Sample::CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName, D3
 		//m_Object.reset(); 
 		//m_Object = nullptr;
 
-		return -1;
+		return 0;
 	}
 
 	if (pSkinFileName == nullptr || pBoneFileName == nullptr) { return -1; }
@@ -1136,8 +1136,8 @@ bool Sample::Init()
 	(CDXH::CreateComputeShader( L"ComputeShader.HLSL", "CSMAIN", m_pd3dDevice, m_pCS.GetAddressOf()));
 	//(CDXH::CreateComputeShader(L"ComputeShader.HLSL", "CSEDITER", m_pd3dDevice, m_pEditCS.GetAddressOf()));
 
-	m_MiniMap.Create(m_pd3dDevice, m_pContext);
-	m_MiniMap.m_RT->Create(m_pd3dDevice,150,150);
+	//m_MiniMap.Create(m_pd3dDevice, m_pContext);
+	//m_MiniMap.m_RT->Create(m_pd3dDevice,150,150);
 
 	return true;
 }

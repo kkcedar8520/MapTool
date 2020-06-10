@@ -30,8 +30,6 @@ public:
 	CString m_SkinName;
 	CString m_BoneName;
 	afx_msg void OnBnClickedButton3();
-	afx_msg void OnDeltaposSpin1(NMHDR *pNMHDR, LRESULT *pResult);
-	float m_fSpin;
 	afx_msg void OnBnClickedObjectSelect();
 	bool m_bSet;
 
@@ -57,4 +55,6 @@ public:
 	float m_fRotRol;
 	float m_fTransY;
 	afx_msg void OnBnClickedBoneLoad();
+	afx_msg void OnLbnObjSelChange();
+	CListBox m_ObjectListBox;
 };

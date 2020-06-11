@@ -5,6 +5,7 @@
 #include "JH_Tool.h"
 #include "JH_ObjForm.h"
 #include "afxdialogex.h"
+#include"KG_Input.h"
 
 
 // JH_ObjForm 대화 상자
@@ -183,8 +184,7 @@ void JH_ObjForm::OnBnClickedButton3()
 {
 	UpdateData(TRUE);
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
-	D3DXMATRIX mWorld;
-	D3DXMatrixIdentity(&mWorld);
+
 
 	TCHAR szFileName[MAX_PATH];
 	TCHAR Drive[MAX_PATH];
@@ -210,8 +210,7 @@ void JH_ObjForm::OnBnClickedButton3()
 	{
 		if (pApp->m_Sample.CreateObj(
 			m_SkinName,
-			m_BoneName,
-			mWorld))
+			m_BoneName))
 		{
 			FileName = m_SkinName;
 			_tsplitpath(FileName, Drive, Dir, FName, Ext);
@@ -227,7 +226,7 @@ void JH_ObjForm::OnBnClickedButton3()
 	}
 
 	
-	pApp->m_Sample.m_ToolState = ADDOBJECT;
+
 }
 
 
@@ -334,6 +333,14 @@ void JH_ObjForm::OnLbnObjSelChange()
 	m_SkinName = name+Ext;
 	Ext = L".mtr";
 	m_BoneName = name + Ext;
+
+	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
+
+	if (I_Input.KeyCheck(VK_LBUTTON))
+	{
+		pApp->m_Sample.CreateObj(m_SkinName, m_BoneName);
+	}
+
 	UpdateData(FALSE);
 }
 

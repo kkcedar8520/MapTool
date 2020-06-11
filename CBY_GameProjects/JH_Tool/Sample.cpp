@@ -457,7 +457,7 @@ INT Sample::AddObject(OBJECT OBJ)
 {
 	std::shared_ptr<CBY::CBY_Object> Object;
 	Object = std::make_shared<CBY::CBY_Object>();
-	Object->Create(m_pd3dDevice, m_pContext, L"../../data/shader/ObjectShader.txt", nullptr, "VSOBJECT", "PS");
+	Object->Create(m_pd3dDevice, m_pContext, L"../../data/shader/SkinShader.txt", nullptr, "VSOBJECT", "PS");
 	Object->SkinLoad( OBJ.m_MapObj->m_SkinName);
 	Object->BoneLoad( OBJ.m_MapObj->m_BoneName);
 
@@ -1051,7 +1051,7 @@ bool Sample::CreateMap(int iWidth,
 	return true;
 }
 
-int Sample::CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName, D3DXMATRIX& matWorld)
+int Sample::CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName)
 
 {
 	if (!m_Map) { return -1; }
@@ -1067,7 +1067,7 @@ int Sample::CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName, D3
 		m_pSelectMapObj = nullptr;
 		m_QuadTree->m_pFindNode = nullptr;
 		m_Object=std::make_shared<CBY::CBY_Object>();
-		m_Object->Create(m_pd3dDevice, m_pContext, L"../../data/shader/ObjectShader.txt", nullptr, "VSOBJECT", "PS");
+		m_Object->Create(m_pd3dDevice, m_pContext, L"../../data/shader/SkinShader.txt", nullptr, "VSOBJECT", "PS");
 		m_Object->SkinLoad(pSkinFileName);
 		m_Object->BoneLoad(pBoneFileName);
 		
@@ -1093,7 +1093,7 @@ int Sample::CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName, D3
 		
 
 		
-
+		m_ToolState = ADDOBJECT;
 
 
 	return 1;
@@ -1290,12 +1290,14 @@ bool Sample::Render()
 			D3DXMATRIX World;
 			D3DXMatrixIdentity(&World);
 
-			
+			m_pContext->VSSetConstantBuffers(2, 1, JH::I_LIGHT_MGR.m_pLightConstantBuffer->GetAddressOf());
+			m_pContext->PSSetConstantBuffers(2, 1, JH::I_LIGHT_MGR.m_pLightConstantBuffer->GetAddressOf());
+
 			for (auto  Obj : m_QuadTree->m_DrawObjectList)
 			{
 
 				
-
+					
 					Obj->GetObj()->SetMatrix(&Obj->GetObj()->m_matWorld,
 						&m_pMainCamera->m_View,
 						&m_pMainCamera->m_Proj);

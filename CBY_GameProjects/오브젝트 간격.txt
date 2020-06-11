@@ -1,0 +1,8 @@
+farmland metal wall 스케일 1/4
+
+x간격 32 z간격 37
+
+
+스케일 1/2
+
+x간격 16

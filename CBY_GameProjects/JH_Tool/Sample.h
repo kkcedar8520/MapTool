@@ -208,7 +208,7 @@ public:
 		const TCHAR* pTexturFileName,
 		const TCHAR* pNormalMapFileName = nullptr,
 		const TCHAR* pHeightMapFileName = nullptr);
-	int CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName, D3DXMATRIX& matWorld);
+	int CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName);
 	void SelectObject();
 	void MapUpDown(JH::SPHERE Sphere);
 	void MapFlatting(JH::SPHERE Sphere);

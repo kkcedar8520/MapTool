@@ -5,7 +5,6 @@
 #include "JH_Tool.h"
 #include "JH_ObjForm.h"
 #include "afxdialogex.h"
-#include"KG_Input.h"
 
 
 // JH_ObjForm 대화 상자
@@ -27,6 +26,9 @@ JH_ObjForm::JH_ObjForm()
 	, m_fRotPit(0)
 	, m_fRotRol(0)
 	, m_fTransY(0)
+	, m_Obj_ID(0)
+	, m_ObjNode(0)
+	, m_ObjFlag(0)
 {
 
 }
@@ -58,6 +60,9 @@ void JH_ObjForm::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT25, m_fRotRol);
 	DDX_Text(pDX, IDC_EDIT19, m_fTransY);
 	DDX_Control(pDX, IDC_LIST1, m_ObjectListBox);
+	DDX_Text(pDX, IDC_SELECTOBJ, m_Obj_ID);
+	DDX_Text(pDX, IDC_OBJNODE, m_ObjNode);
+	DDX_Text(pDX, IDC_OBJFLAG, m_ObjFlag);
 }
 
 
@@ -184,7 +189,8 @@ void JH_ObjForm::OnBnClickedButton3()
 {
 	UpdateData(TRUE);
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
-
+	D3DXMATRIX mWorld;
+	D3DXMatrixIdentity(&mWorld);
 
 	TCHAR szFileName[MAX_PATH];
 	TCHAR Drive[MAX_PATH];
@@ -210,7 +216,8 @@ void JH_ObjForm::OnBnClickedButton3()
 	{
 		if (pApp->m_Sample.CreateObj(
 			m_SkinName,
-			m_BoneName))
+			m_BoneName,
+			mWorld))
 		{
 			FileName = m_SkinName;
 			_tsplitpath(FileName, Drive, Dir, FName, Ext);
@@ -226,7 +233,7 @@ void JH_ObjForm::OnBnClickedButton3()
 	}
 
 	
-
+	pApp->m_Sample.m_ToolState = ADDOBJECT;
 }
 
 
@@ -333,13 +340,28 @@ void JH_ObjForm::OnLbnObjSelChange()
 	m_SkinName = name+Ext;
 	Ext = L".mtr";
 	m_BoneName = name + Ext;
+	UpdateData(FALSE);
+}
 
+void JH_ObjForm::OnBnClickedShowinfom()
+{
 	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
+	if (!pApp->m_Sample.m_pSelectMapObj)return;
 
-	if (I_Input.KeyCheck(VK_LBUTTON))
-	{
-		pApp->m_Sample.CreateObj(m_SkinName, m_BoneName);
-	}
+
+	 m_Obj_ID= pApp->m_Sample.m_pSelectMapObj->GetID();
+	 m_ObjNode = pApp->m_Sample.m_pSelectMapObj->GetQuadIndex();
+	 m_ObjFlag = pApp->m_Sample.m_pSelectMapObj->GetFlag();
+
+	 UpdateData(FALSE);
+}
+void JH_ObjForm::OnEnChangeObjflag()
+{
+	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
+	if (!pApp->m_Sample.m_pSelectMapObj)return;
+
+	UpdateData(TRUE);
+	pApp->m_Sample.m_pSelectMapObj->SetFlag(m_ObjFlag);
 
 	UpdateData(FALSE);
 }
@@ -356,11 +378,14 @@ BEGIN_MESSAGE_MAP(JH_ObjForm, CFormView)
 	ON_BN_CLICKED(IDC_SELECT4, &JH_ObjForm::OnBnClickedTransLation)
 	ON_BN_CLICKED(IDC_BUTTON4, &JH_ObjForm::OnBnClickedBoneLoad)
 	ON_LBN_SELCHANGE(IDC_LIST1, &JH_ObjForm::OnLbnObjSelChange)
+	ON_BN_CLICKED(IDC_SHOWINFOM, &JH_ObjForm::OnBnClickedShowinfom)
+	ON_EN_CHANGE(IDC_OBJFLAG, &JH_ObjForm::OnEnChangeObjflag)
 END_MESSAGE_MAP()
 
 
 // JH_ObjForm 메시지 처리기
 #include"pch.h"
+
 
 
 

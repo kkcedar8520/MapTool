@@ -57,4 +57,9 @@ public:
 	afx_msg void OnBnClickedBoneLoad();
 	afx_msg void OnLbnObjSelChange();
 	CListBox m_ObjectListBox;
+	afx_msg void OnBnClickedShowinfom();
+	INT m_Obj_ID;
+	INT m_ObjNode;
+	DWORD m_ObjFlag;
+	afx_msg void OnEnChangeObjflag();
 };

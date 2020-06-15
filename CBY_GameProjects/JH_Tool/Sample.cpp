@@ -5,6 +5,7 @@
 #include"KG_Input.h"
 #include"KG_ShapeMap.h"
 #include"LightMgr.h"
+#include"MainFrm.h"
 
 
 	
@@ -170,17 +171,19 @@ bool  Sample::SaveMapData(const TCHAR* LoadFile)
 {
 	m_sMapData.Reset();
 
+	m_sMapData.m_CharPos = m_Map->GetCharPos();
 
 	
 		OBJECT OBJ;
 		for (auto Obj :  m_QuadTree->m_ObjectList)
 		{
-			OBJ.m_MapObj = std::make_shared<MAP_OBJ_DATA>();
+			 OBJ.m_MapObj = std::make_shared<MAP_OBJ_DATA>();
 			 OBJ.m_MapObj->m_matWorld = Obj.second->GetObj()->m_matWorld;
 			 OBJ.m_MapObj->m_BoneName = Obj.second->GetBoneName();
 			 OBJ.m_MapObj->m_SkinName = Obj.second->GetSkinName();
 			 OBJ.m_MapObj->m_iQuadTreeIndex = Obj.second->GetQuadIndex();
 			 OBJ.m_MapObj->m_Box = Obj.second->GetObj()->GetCharBox();
+			 OBJ.m_MapObj->m_Flag = Obj.second->GetFlag();
 			m_sMapData.m_sQTData.m_ObjList.push_back(OBJ);
 		}
 	
@@ -208,16 +211,23 @@ bool  Sample::SaveMapData(const TCHAR* LoadFile)
 		m_sMapData.m_pSplattAlphaTextureFile.data());
 
 
+
+
 	for (int i = 0; i < m_Map->m_vSplattTextureList.size(); i++)
 	{
 		m_sMapData.m_pSplattTextureFile.push_back(FixupName(m_Map->m_vSplattTextureList[i]->m_szPath+ m_Map->m_vSplattTextureList[i]->m_szName));
 	}
 
 	_ftprintf(fp, _T("%s %d\n"), L"SPT_TEX_NUM", m_sMapData.m_pSplattTextureFile.size());
+
+	_ftprintf(fp, _T("%s %10.4f %10.4f %10.4f\n"), L"CHARPOS",
+		m_sMapData.m_CharPos.x, m_sMapData.m_CharPos.y, m_sMapData.m_CharPos.z);
 	for (int i = 0; i < m_sMapData.m_pSplattTextureFile.size(); i++)
 	{
 		_ftprintf(fp, _T("%d %s\n"), i, m_sMapData.m_pSplattTextureFile[i].data());
 	}
+
+	
 
 	int iWidth = m_Map->m_iColumNum / m_Map->m_iCellCount;
 	int iHeight = m_Map->m_iRowNum / m_Map->m_iCellCount;
@@ -241,6 +251,9 @@ bool  Sample::SaveMapData(const TCHAR* LoadFile)
 		_ftprintf(fp, _T("%d \n"),  OBJ.m_MapObj->m_iQuadTreeIndex);
 		_ftprintf(fp, _T("%s \n"),  OBJ.m_MapObj->m_SkinName.data());
 		_ftprintf(fp, _T("%s \n"),  OBJ.m_MapObj->m_BoneName.data());
+		_ftprintf(fp, _T("%d \n"), OBJ.m_MapObj->m_Flag);
+
+
 
 		_ftprintf(fp, _T("\t%s\n"), _T("WORLD_MATRIX"));
 		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f %10.4f\n"),
@@ -319,12 +332,15 @@ bool  Sample::LoadMapData(const TCHAR* LoadFile)
 			Temp);
 		m_sMapData.m_pSplattAlphaTextureFile = Temp;
 	
-
-
-
+		
 	//Splatt Texture
 	_fgetts(m_pBuffer, 256, fp);
 	_stscanf(m_pBuffer, _T("%s %d\n"), m_pString, &m_iTemp);
+
+
+	_fgetts(m_pBuffer, 256, fp);
+	_stscanf(m_pBuffer, _T("%s %f %f %f\n"), m_pString,
+		&m_sMapData.m_CharPos.x, &m_sMapData.m_CharPos.y, &m_sMapData.m_CharPos.z);
 
 	m_sMapData.m_pSplattTextureFile.resize(m_iTemp);
 	for (int i = 0; i < m_sMapData.m_pSplattTextureFile.size(); i++)
@@ -375,6 +391,10 @@ bool  Sample::LoadMapData(const TCHAR* LoadFile)
 		_fgetts(m_pBuffer, 256, fp);
 		_stscanf(m_pBuffer, _T("%s \n"), Buf);
 		 OBJ.m_MapObj->m_BoneName=Buf;
+
+		 _fgetts(m_pBuffer, 256, fp);
+		 _stscanf(m_pBuffer, _T("%d \n"), &m_iTemp);
+		 OBJ.m_MapObj->m_Flag = m_iTemp;
 
 		_fgetts(m_pBuffer, 256, fp);
 		_stscanf(m_pBuffer, _T("\t%s\n"), Buf);
@@ -430,6 +450,8 @@ bool  Sample::LoadMapData(const TCHAR* LoadFile)
 	}
 	CreateMap(m_sMapData.iRow, m_sMapData.iCol, m_sMapData.iCellCount,m_sMapData.iCellSize, 
 		m_sMapData.m_BaseTextureFile.c_str(), m_sMapData.m_NormalMapFile.c_str(), HeightFile);
+
+	m_Map->SetCharPos(m_sMapData.m_CharPos);
 	for (int iTex = 0; iTex < m_sMapData.m_pSplattTextureFile.size(); iTex++)
 	{
 		m_Map->AddSplattTexture(m_sMapData.m_pSplattTextureFile[iTex].data(), iTex+1);
@@ -457,7 +479,7 @@ INT Sample::AddObject(OBJECT OBJ)
 {
 	std::shared_ptr<CBY::CBY_Object> Object;
 	Object = std::make_shared<CBY::CBY_Object>();
-	Object->Create(m_pd3dDevice, m_pContext, L"../../data/shader/SkinShader.txt", nullptr, "VSOBJECT", "PS");
+	Object->Create(m_pd3dDevice, m_pContext, L"../../data/shader/ObjectShader.txt", nullptr, "VSOBJECT", "PS");
 	Object->SkinLoad( OBJ.m_MapObj->m_SkinName);
 	Object->BoneLoad( OBJ.m_MapObj->m_BoneName);
 
@@ -471,6 +493,7 @@ INT Sample::AddObject(OBJECT OBJ)
 	MapObj->SetSkinName(OBJ.m_MapObj->m_SkinName);
 	MapObj->SetID(m_ObjID++);
 	MapObj->SetObj(Object);
+	MapObj->SetFlag(OBJ.m_MapObj->m_Flag);
 	MapObj->SetQuadIndex(OBJ.m_MapObj->m_iQuadTreeIndex);
 	m_QuadTree->GetObjectAddNode(MapObj);
 	return 1;
@@ -1051,7 +1074,7 @@ bool Sample::CreateMap(int iWidth,
 	return true;
 }
 
-int Sample::CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName)
+int Sample::CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName, D3DXMATRIX& matWorld)
 
 {
 	if (!m_Map) { return -1; }
@@ -1067,7 +1090,7 @@ int Sample::CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName)
 		m_pSelectMapObj = nullptr;
 		m_QuadTree->m_pFindNode = nullptr;
 		m_Object=std::make_shared<CBY::CBY_Object>();
-		m_Object->Create(m_pd3dDevice, m_pContext, L"../../data/shader/SkinShader.txt", nullptr, "VSOBJECT", "PS");
+		m_Object->Create(m_pd3dDevice, m_pContext, L"../../data/shader/ObjectShader.txt", nullptr, "VSOBJECT", "PS");
 		m_Object->SkinLoad(pSkinFileName);
 		m_Object->BoneLoad(pBoneFileName);
 		
@@ -1083,6 +1106,7 @@ int Sample::CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName)
 		m_CurrentMapObj->SetID(m_ObjID++);
 		m_CurrentMapObj->SetSkinName(pSkinFileName);
 		m_CurrentMapObj->SetBoneName(pBoneFileName);
+		m_CurrentMapObj->SetFlag(JH::WALL);
 	
 		m_CurrentMapObj->GetObj()->m_matWorld=m_Object->m_ObjList[0]->m_ObjList[0]->m_matWorld;
 	
@@ -1093,7 +1117,7 @@ int Sample::CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName)
 		
 
 		
-		m_ToolState = ADDOBJECT;
+
 
 
 	return 1;
@@ -1121,6 +1145,7 @@ bool Sample::Init()
 	m_pMainCamera = m_DebugCamera.get();
 	m_pMainCamera->CreateViewMatrix(D3DXVECTOR3(0, 400, -50.0f), D3DXVECTOR3(0, 0, 0));
 	m_pMainCamera->UpdateVector();
+
 
 
 	float fAspect = (float)Winrt.right / Winrt.bottom;
@@ -1230,6 +1255,7 @@ bool Sample::Frame()
 		if (I_Input.KeyCheck(VK_RBUTTON))
 		{
 				SelectObject();
+			
 		}
 		break;
 	case MOVE:
@@ -1290,14 +1316,12 @@ bool Sample::Render()
 			D3DXMATRIX World;
 			D3DXMatrixIdentity(&World);
 
-			m_pContext->VSSetConstantBuffers(2, 1, JH::I_LIGHT_MGR.m_pLightConstantBuffer->GetAddressOf());
-			m_pContext->PSSetConstantBuffers(2, 1, JH::I_LIGHT_MGR.m_pLightConstantBuffer->GetAddressOf());
-
+			
 			for (auto  Obj : m_QuadTree->m_DrawObjectList)
 			{
 
 				
-					
+
 					Obj->GetObj()->SetMatrix(&Obj->GetObj()->m_matWorld,
 						&m_pMainCamera->m_View,
 						&m_pMainCamera->m_Proj);

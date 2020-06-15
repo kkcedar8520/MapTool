@@ -14,6 +14,7 @@ namespace JH {
 		T_STR		m_BoneName;
 		T_STR		m_SkinName;
 		D3DXMATRIX	m_matWorld;
+		DWORD		m_Flag;
 		KG_Box		m_Box;
 
 		inline MAP_OBJ_DATA()
@@ -40,15 +41,15 @@ namespace JH {
 	};
 	struct MAPDATA
 	{
-		int iCol;
-		int iRow;
-		int iCellCount;
-		int iCellSize;
-		T_STR m_BaseTextureFile;
-		T_STR m_NormalMapFile;
-		T_STR m_HeightMapFile;
-		T_STR m_ShaderFile;
-
+		int					iCol;
+		int					iRow;
+		int					iCellCount;
+		int					iCellSize;
+		T_STR				m_BaseTextureFile;
+		T_STR				m_NormalMapFile;
+		T_STR				m_HeightMapFile;
+		T_STR				m_ShaderFile;
+		D3DXVECTOR3			m_CharPos;
 		T_STR				m_pSplattAlphaTextureFile;
 		std::vector<float>		m_fHegihtList;
 		std::vector<T_STR>		m_pSplattTextureFile;

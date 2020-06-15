@@ -77,6 +77,10 @@ namespace JH {
 		_fgetts(m_pBuffer, 256, fp);
 		_stscanf(m_pBuffer, _T("%s %d\n"), m_pString, &m_iTemp);
 
+		_fgetts(m_pBuffer, 256, fp);
+		_stscanf(m_pBuffer, _T("%s %f %f %f\n"), m_pString,
+			&m_MapData.m_CharPos.x, &m_MapData.m_CharPos.y, &m_MapData.m_CharPos.z);
+
 		m_MapData.m_pSplattTextureFile.resize(m_iTemp);
 		for (int i = 0; i < m_MapData.m_pSplattTextureFile.size(); i++)
 		{
@@ -213,7 +217,7 @@ namespace JH {
 		static int ID;
 		std::shared_ptr<CBY::CBY_Object> Object;
 		Object =std::make_shared<CBY::CBY_Object>();
-		Object->Create(m_pd3dDevice, m_pContext, L"../../data/shader/ObjectShader.txt", nullptr, "VSOBJECT", "PS");
+		Object->Create(m_pd3dDevice, m_pContext, L"../../data/shader/SkinShader.txt", nullptr, "VSOBJECT", "PS");
 		Object->SkinLoad(Obj.m_MapObj->m_SkinName);
 		Object->BoneLoad(Obj.m_MapObj->m_BoneName);
 
@@ -223,6 +227,7 @@ namespace JH {
 		MapObj->SetSkinName(Obj.m_MapObj->m_SkinName);
 		MapObj->SetQuadIndex(Obj.m_MapObj->m_iQuadTreeIndex);
 		MapObj->SetObj(Object);
+		MapObj->SetFlag(Obj.m_MapObj->m_Flag);
 		MapObj->SetID(ID++);
 		
 

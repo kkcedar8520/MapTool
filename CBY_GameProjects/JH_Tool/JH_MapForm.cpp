@@ -38,6 +38,9 @@ JH_MapForm::JH_MapForm()
 	, m_HeightValue(0)
 	, m_fRadius(0)
 
+	, m_CharX(0)
+	, m_CharY(0)
+	, m_CharZ(0)
 {
 
 }
@@ -79,6 +82,9 @@ void JH_MapForm::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT13, m_HeightValue);
 	DDX_Text(pDX, IDC_EDIT7, m_fRadius);
 	DDX_Text(pDX, IDC_EDIT21, m_HeightMapFile);
+	DDX_Text(pDX, IDC_CharX, m_CharX);
+	DDX_Text(pDX, IDC_CharY, m_CharY);
+	DDX_Text(pDX, IDC_CharZ, m_CharZ);
 }
 
 
@@ -105,6 +111,7 @@ BEGIN_MESSAGE_MAP(JH_MapForm, CFormView)
 	ON_EN_CHANGE(IDC_EDIT20, &JH_MapForm::OnSplattFile20)
 	ON_EN_CHANGE(IDC_EDIT13, &JH_MapForm::OnMapUpDown)
 	ON_BN_CLICKED(IDOK11, &JH_MapForm::OnMapFlatt)
+	ON_BN_CLICKED(IDOK12, &JH_MapForm::OnSetCharPos)
 END_MESSAGE_MAP()
 
 
@@ -546,3 +553,13 @@ void JH_MapForm::OnMapFlatt()
 }
 
 
+
+
+void JH_MapForm::OnSetCharPos()
+{
+	
+	CJHToolApp* pApp = (CJHToolApp*)AfxGetApp();
+	UpdateData(TRUE);
+	pApp->m_Sample.m_Map->SetCharPos(D3DXVECTOR3(m_CharX, m_CharY, m_CharZ));
+	UpdateData(FALSE);
+}

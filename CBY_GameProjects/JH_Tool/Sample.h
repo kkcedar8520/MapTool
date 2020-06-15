@@ -35,6 +35,7 @@ struct MAP_OBJ_DATA
 	T_STR		m_BoneName;
 	T_STR		m_SkinName;
 	D3DXMATRIX	m_matWorld;
+	DWORD		m_Flag;
 	KG_Box		m_Box;
 
 	inline MAP_OBJ_DATA()
@@ -61,20 +62,22 @@ struct QuadTreeData
 };
 struct MAPDATA
 {
-	int iCol;
-	int iRow;
-	int iCellCount;
-	int iCellSize;
-	T_STR m_BaseTextureFile;
-	T_STR m_NormalMapFile;
-	T_STR m_HeightMapFile;
-	T_STR m_ShaderFile;
+	int			iCol;
+	int			iRow;
+	int			iCellCount;
+	int			iCellSize;
+	T_STR		m_BaseTextureFile;
+	T_STR		m_NormalMapFile;
+	T_STR		m_HeightMapFile;
+	T_STR		m_ShaderFile;
+	D3DXVECTOR3 m_CharPos;
 
 	T_STR				m_pSplattAlphaTextureFile;
 	std::vector<float>		m_fHegihtList;
 	std::vector<T_STR>		m_pSplattTextureFile;
 
 	QuadTreeData		m_sQTData;
+
 	void Reset()
 	{
 		m_pSplattAlphaTextureFile.clear();
@@ -196,6 +199,7 @@ public:
 	//Load
 	int					m_iTemp;
 	
+	
 	TCHAR				m_pBuffer[256];
 	TCHAR				m_pString[256];
 	//Save
@@ -208,7 +212,7 @@ public:
 		const TCHAR* pTexturFileName,
 		const TCHAR* pNormalMapFileName = nullptr,
 		const TCHAR* pHeightMapFileName = nullptr);
-	int CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName);
+	int CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName, D3DXMATRIX& matWorld);
 	void SelectObject();
 	void MapUpDown(JH::SPHERE Sphere);
 	void MapFlatting(JH::SPHERE Sphere);

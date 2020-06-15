@@ -71,4 +71,8 @@ public:
 	float m_fRadius;
 	CString m_HeightMapFile;
 
+	afx_msg void OnSetCharPos();
+	float m_CharX;
+	float m_CharY;
+	float m_CharZ;
 };

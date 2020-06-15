@@ -82,6 +82,8 @@ namespace JH
 		float m_fCellDistance;
 		float m_fScaleHeight;
 
+		D3DXVECTOR3 m_CharPos;
+
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	m_pCopySrv;
 	public:
 		std::vector<float> m_vHeightList;
@@ -105,7 +107,8 @@ namespace JH
 
 	//툴 관련 함수
 		INT AddSplattTexture(const TCHAR* pFileName, int Num, float Alpha = 0.0f);
-
+		D3DXVECTOR3 GetCharPos(){ return m_CharPos; }
+		void		SetCharPos(D3DXVECTOR3 vPos) { m_CharPos = vPos; }
 	public:
 		bool RenderSet(KG_Camera* Camera);
 	public:

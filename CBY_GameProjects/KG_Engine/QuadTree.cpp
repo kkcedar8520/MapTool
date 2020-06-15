@@ -740,6 +740,7 @@ namespace JH {
 			{
 				KG_Node* beforeNode =(KG_Node*) Obj->GetNode();
 				auto iter = beforeNode->m_ObjList.find(Obj->GetID());
+				assert(iter != beforeNode->m_ObjList.end());
 				if (pNode->m_iQuadTreeIndex != beforeNode->m_ObjList[Obj->GetID()]->GetQuadIndex())
 					beforeNode->m_ObjList.erase(Obj->GetID());
 					

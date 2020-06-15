@@ -2,12 +2,19 @@
 #include"JH_BaseObj.h"
 #include"CBY_Object.h"
 namespace JH {
+	
+	enum OBJ_FLAG
+	{
+		PATH=1,
+		WALL,
+	};
 	class JH_MapObj 
 	{
 		T_STR	m_FileName;
 		T_STR	m_SkinFileName;
 		T_STR	m_BoneFileName;
 		void*	m_pNode;
+		DWORD	m_dwFlag;
 
 		std::shared_ptr<CBY::CBY_Object> m_Object;
 		int				m_ID;
@@ -26,6 +33,8 @@ namespace JH {
 		void				SetBoneName(const T_STR FileName) { m_BoneFileName = FileName; }
 		void*				GetNode() { return m_pNode; }
 		void				SetNode(void* pNode) { m_pNode = pNode; }
+		DWORD				GetFlag() { return m_dwFlag; }
+		void				SetFlag(DWORD dwFlag) { m_dwFlag = dwFlag; }
 
 		void				SetObj(const std::shared_ptr<CBY::CBY_Object> Obj) { m_Object = Obj; }
 		std::shared_ptr<CBY::CBY_Object> GetObj() { return m_Object; }

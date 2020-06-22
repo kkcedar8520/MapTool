@@ -73,7 +73,7 @@ namespace JH {
 	}
 	bool LightObj::Frame()
 	{
-		float Angle = g_SecondTime * D3DX_PI / 2000.0f;
+		float Angle = 0;//g_SecondTime * D3DX_PI / 2000.0f;
 		D3DXMATRIX matRot;
 		D3DXMatrixRotationY(&matRot, Angle);
 

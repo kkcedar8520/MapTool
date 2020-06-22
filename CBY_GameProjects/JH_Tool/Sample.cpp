@@ -239,7 +239,10 @@ bool  Sample::SaveMapData(const TCHAR* LoadFile)
 	for (int iVertex = 0; iVertex < m_Map->m_VerTex.size(); iVertex++)
 	{
 
-		_ftprintf(fp, _T("%10.4f \n"), m_Map->m_VerTex[iVertex].p.y);
+		_ftprintf(fp, _T("%10.4f %10.4f %10.4f \n"), m_Map->m_VerTex[iVertex].p.x, m_Map->m_VerTex[iVertex].p.y, m_Map->m_VerTex[iVertex].p.z);
+		_ftprintf(fp, _T("%10.4f %10.4f %10.4f \n"), m_Map->m_VerTex[iVertex].n.x, m_Map->m_VerTex[iVertex].n.y, m_Map->m_VerTex[iVertex].n.z);
+		_ftprintf(fp, _T("%10.4f %10.4f %10.4f %10.4f\n"), m_Map->m_VerTex[iVertex].c.x, m_Map->m_VerTex[iVertex].c.y, m_Map->m_VerTex[iVertex].c.z,m_Map->m_VerTex[iVertex].c.w);
+		_ftprintf(fp, _T("%10.4f %10.4f \n"), m_Map->m_VerTex[iVertex].t.x, m_Map->m_VerTex[iVertex].t.y);
 
 
 	}
@@ -342,7 +345,9 @@ bool  Sample::LoadMapData(const TCHAR* LoadFile)
 	_stscanf(m_pBuffer, _T("%s %f %f %f\n"), m_pString,
 		&m_sMapData.m_CharPos.x, &m_sMapData.m_CharPos.y, &m_sMapData.m_CharPos.z);
 
-	m_sMapData.m_pSplattTextureFile.resize(m_iTemp);
+
+
+	m_sMapData.m_pSplattTextureFile.resize( m_iTemp);
 	for (int i = 0; i < m_sMapData.m_pSplattTextureFile.size(); i++)
 	{
 
@@ -359,16 +364,22 @@ bool  Sample::LoadMapData(const TCHAR* LoadFile)
 	_fgetts(m_pBuffer, 256, fp);
 	_stscanf(m_pBuffer, _T(" %s\n"), m_pString);
 
-	m_sMapData.m_fHegihtList.resize(m_iTemp);
+	m_sMapData.m_VerTex.resize(m_iTemp);
 	int layer = 0;
-	for (int iVertex = 0; iVertex < m_iTemp; iVertex++)
-	{
 
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("%f "), &m_sMapData.m_fHegihtList[iVertex]);
+		for (int iVertex = 0; iVertex < m_sMapData.m_VerTex.size(); iVertex++)
+		{
 
-
-	}
+			_fgetts(m_pBuffer, 256, fp);
+			_stscanf(m_pBuffer,_T("%f %f %f \n"), &m_sMapData.m_VerTex[iVertex].p.x,&m_sMapData.m_VerTex[iVertex].p.y, &m_sMapData.m_VerTex[iVertex].p.z);
+			_fgetts(m_pBuffer, 256, fp);
+			_stscanf(m_pBuffer, _T("%f %f %f \n"), &m_sMapData.m_VerTex[iVertex].n.x, &m_sMapData.m_VerTex[iVertex].n.y, &m_sMapData.m_VerTex[iVertex].n.z);
+			_fgetts(m_pBuffer, 256, fp);
+			_stscanf(m_pBuffer, _T("%f %f %f %f\n"), &m_sMapData.m_VerTex[iVertex].c.x, &m_sMapData.m_VerTex[iVertex].c.y, &m_sMapData.m_VerTex[iVertex].c.z, &m_sMapData.m_VerTex[iVertex].c.w);
+			_fgetts(m_pBuffer, 256, fp);
+			_stscanf(m_pBuffer, _T("%f %f \n"), &m_sMapData.m_VerTex[iVertex].t.x, &m_sMapData.m_VerTex[iVertex].t.y);
+		}
+	
 
 	_fgetts(m_pBuffer, 256, fp);
 	_stscanf(m_pBuffer, _T("%s %d \n"), m_pString, &m_iTemp);
@@ -413,7 +424,7 @@ bool  Sample::LoadMapData(const TCHAR* LoadFile)
 			& OBJ.m_MapObj->m_matWorld._41, & OBJ.m_MapObj->m_matWorld._42, & OBJ.m_MapObj->m_matWorld._43, & OBJ.m_MapObj->m_matWorld._44);
 
 
-		KG_Box Box = OBJ.m_MapObj->m_Box;
+		KG_Box& Box = OBJ.m_MapObj->m_Box;
 		_fgetts(m_pBuffer, 256, fp);
 		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
 			&Box.vCenter.x, &Box.vCenter.y, &Box.vCenter.z);
@@ -451,6 +462,7 @@ bool  Sample::LoadMapData(const TCHAR* LoadFile)
 	CreateMap(m_sMapData.iRow, m_sMapData.iCol, m_sMapData.iCellCount,m_sMapData.iCellSize, 
 		m_sMapData.m_BaseTextureFile.c_str(), m_sMapData.m_NormalMapFile.c_str(), HeightFile);
 
+
 	m_Map->SetCharPos(m_sMapData.m_CharPos);
 	for (int iTex = 0; iTex < m_sMapData.m_pSplattTextureFile.size(); iTex++)
 	{
@@ -484,6 +496,9 @@ INT Sample::AddObject(OBJECT OBJ)
 	Object->BoneLoad( OBJ.m_MapObj->m_BoneName);
 
 	Object->m_matWorld =  OBJ.m_MapObj->m_matWorld;
+	Object->SetMatrix(&Object->m_matWorld,
+		&m_pMainCamera->m_View,
+		&m_pMainCamera->m_Proj);
 	
 	//OBJ.m_MapObj->SetObj(Object);
 	//OBJ.m_MapObj->SetID(m_ObjID++);
@@ -1034,7 +1049,7 @@ bool Sample::CreateMap(int iWidth,
 
 
 	m_Map = std::make_shared<JH::JH_Map>();
-	m_Map->m_vHeightList.resize(m_sMapData.m_fHegihtList.size());
+	m_Map->m_VerTex.resize(m_sMapData.m_VerTex.size());
 
 	if (pHeightMapFileName)
 	{
@@ -1047,12 +1062,12 @@ bool Sample::CreateMap(int iWidth,
 		m_Map->m_iColumNum = iCellCount * iHeight + 1;
 	
 	}
-	if (m_sMapData.m_fHegihtList.size() > 0)
+	if (m_sMapData.m_VerTex.size() > 0)
 	{
 		
-		std::copy(m_sMapData.m_fHegihtList.begin(),
-			m_sMapData.m_fHegihtList.end(),
-			m_Map->m_vHeightList.begin());
+		std::copy(m_sMapData.m_VerTex.begin(),
+			m_sMapData.m_VerTex.end(),
+			m_Map->m_VerTex.begin());
 	}
 	//	CreateSplattingTexture();
 
@@ -1085,8 +1100,32 @@ int Sample::CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName, D3
 
 		return 0;
 	}
+	
+	T_STR	SkinName = pSkinFileName;
+	T_STR	BoneName = pBoneFileName;
 
-	if (pSkinFileName == nullptr || pBoneFileName == nullptr) { return -1; }
+	TCHAR szFileName[MAX_PATH];
+	TCHAR Drive[MAX_PATH];
+	TCHAR Dir[MAX_PATH];
+	TCHAR FName[MAX_PATH];
+	TCHAR Ext[MAX_PATH];
+	T_STR DirBuf;
+	T_STR FileName;
+
+ 
+	_tsplitpath(SkinName.c_str(), Drive, Dir, FName, Ext);
+
+	SkinName = Drive;
+	SkinName += Dir;
+	SkinName += FName;
+
+	_tsplitpath(BoneName.c_str(), Drive, Dir, FName, Ext);
+	BoneName = Drive;
+	BoneName += Dir;
+	BoneName += FName;
+
+
+	if (pSkinFileName == nullptr|| pBoneFileName == nullptr&&BoneName==SkinName) { return -1; }
 		m_pSelectMapObj = nullptr;
 		m_QuadTree->m_pFindNode = nullptr;
 		m_Object=std::make_shared<CBY::CBY_Object>();
@@ -1316,19 +1355,25 @@ bool Sample::Render()
 			D3DXMATRIX World;
 			D3DXMatrixIdentity(&World);
 
-			
+		
+
+
 			for (auto  Obj : m_QuadTree->m_DrawObjectList)
 			{
 
 				
 
+				m_pContext->VSSetConstantBuffers(2, 1, JH::I_LIGHT_MGR.m_pLightConstantBuffer[0].GetAddressOf());
+				m_pContext->PSSetConstantBuffers(2, 1, JH::I_LIGHT_MGR.m_pLightConstantBuffer[0].GetAddressOf());
+
 					Obj->GetObj()->SetMatrix(&Obj->GetObj()->m_matWorld,
 						&m_pMainCamera->m_View,
 						&m_pMainCamera->m_Proj);
 					Obj->GetObj()->Frame();
+
+
 					Obj->GetObj()->Render();
-			
-				
+
 
 			}
 
@@ -1361,6 +1406,7 @@ bool Sample::Render()
 	m_QuadTree->DrawObjectBoxLine();
 
 
+	m_QuadTree->DrawNodeLine(m_QuadTree->m_pRootNode);
 
 
 

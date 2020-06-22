@@ -73,8 +73,10 @@ namespace JH {
 		void CreateIndexList(KG_Node* pNode);
 		void CreateBB(KG_Node* pNode);
 		void ChangeBB(KG_Node* pNode, KG_Box Box);
+		int	CheckOBBNodePlane(KG_Node* pNode, KG_Box& box);
 
-		JH_MapObj* UpdateBB(KG_Node* pNode, JH_MapObj* Obj);
+
+
 		KG_Node* FindIDNode(KG_Node* pNode, JH_MapObj* Obj);
 		
 		void DirectSelect(KG_Node* pNode);

@@ -11,10 +11,10 @@ namespace JH
 		D3DXVECTOR4 vSpotLightColor[g_iLightNum];
 		D3DXVECTOR4 vLightDirection[g_iLightNum];//W :감쇠
 		D3DXVECTOR4 vLightPos[g_iLightNum];//W:타입
-		D3DXVECTOR4 vSpotLight[g_iLightNum];// 내부,외부,휘도 theta, phi, Fallofff
-		D3DXVECTOR4 vEyeDir;
-		D3DXVECTOR4 vEyePos;
-		D3DXMATRIX  matLTM;
+		D3DXVECTOR4 vEyeDir[g_iLightNum];
+		D3DXVECTOR4 vEyePos[g_iLightNum];// 내부,외부,휘도 theta, phi, Fallofff
+		D3DXVECTOR4 vSpotLight[g_iLightNum];
+		D3DXMATRIX  matLTM[g_iLightNum];
 	};
 
 	class LightMgr

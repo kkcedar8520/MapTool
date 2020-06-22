@@ -62,4 +62,7 @@ public:
 	INT m_ObjNode;
 	DWORD m_ObjFlag;
 	afx_msg void OnEnChangeObjflag();
+	float m_ObjPositionX;
+	float m_ObjPositionY;
+	float m_ObjPositionZ;
 };

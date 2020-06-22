@@ -87,7 +87,7 @@ namespace JH {
 	void HQuadTree::CreateBB(KG_Node* pNode)
 	{
 
-		 
+
 
 		DWORD dwTL = pNode->m_dwCorner[0];
 		DWORD dwTR = pNode->m_dwCorner[1];
@@ -132,121 +132,70 @@ namespace JH {
 				}
 			}
 		}
-		//else
-		//{
+		else
+		{
 
-		//	pNode->m_Box.vMin.y = 999999999.0f;
-		//	pNode->m_Box.vMax.y = -999999999.0f;
-		//	D3DXVECTOR3 vAxis[3];
-		//	std::map<int, std::shared_ptr<JH_MapObj>>::iterator iter;
-		//	for (iter = pNode->m_ObjList.begin(); iter != pNode->m_ObjList.end(); iter++)
-		//	{
-		//		if (pNode->m_Box.vMin.y > iter->second->GetObj()->GetCharBox().vMin.y)
-		//		{
-		//			pNode->m_Box.vMin.y = iter->second->GetObj()->GetCharBox().vMin.y;
-		//		}
-		//		if (pNode->m_Box.vMax.y < iter->second->GetObj()->GetCharBox().vMax.y)
-		//		{
-		//			pNode->m_Box.vMax.y = iter->second->GetObj()->GetCharBox().vMax.y;
-		//		}
-		//	}
-		//}
+			pNode->m_Box.vMin.y = 999999999.0f;
+			pNode->m_Box.vMax.y = -999999999.0f;
+			D3DXVECTOR3 vAxis[3];
+			std::map<int, std::shared_ptr<JH_MapObj>>::iterator iter;
+			for (iter = pNode->m_ObjList.begin(); iter != pNode->m_ObjList.end(); iter++)
+			{
+				if (pNode->m_Box.vMin.y > iter->second->GetObj()->GetCharBox().vMin.y)
+				{
+					pNode->m_Box.vMin.y = iter->second->GetObj()->GetCharBox().vMin.y;
+				}
+				if (pNode->m_Box.vMax.y < iter->second->GetObj()->GetCharBox().vMax.y)
+				{
+					pNode->m_Box.vMax.y = iter->second->GetObj()->GetCharBox().vMax.y;
+				}
+			}
+		}
 		pNode->m_Box.vCenter = (pNode->m_Box.vMax + pNode->m_Box.vMin) / 2;
 		pNode->m_Box.vAxis[0] = D3DXVECTOR3(1, 0, 0);
 		pNode->m_Box.vAxis[1] = D3DXVECTOR3(0, 1, 0);
 		pNode->m_Box.vAxis[2] = D3DXVECTOR3(0, 0, 1);
 		D3DXVECTOR3 vHalf = pNode->m_Box.vMax - pNode->m_Box.vCenter;
-		pNode->m_Box.fExtent[0] = D3DXVec3Dot(&pNode->m_Box.vAxis[0], &vHalf);
-		pNode->m_Box.fExtent[1] = D3DXVec3Dot(&pNode->m_Box.vAxis[1], &vHalf);
-		pNode->m_Box.fExtent[2] = D3DXVec3Dot(&pNode->m_Box.vAxis[2], &vHalf);
-		if ((pNode->m_Box.vMax.y - pNode->m_Box.vMin.y) == 0)
+		pNode->m_Box.fExtent[0] = pNode->m_Box.vMax.x - pNode->m_Box.vCenter.x;//D3DXVec3Dot(&pNode->m_Box.vAxis[0], &vHalf);
+		pNode->m_Box.fExtent[1] = pNode->m_Box.vMax.y - pNode->m_Box.vCenter.y;//D3DXVec3Dot(&pNode->m_Box.vAxis[1], &vHalf);
+		pNode->m_Box.fExtent[2] = pNode->m_Box.vMax.z - pNode->m_Box.vCenter.z;//D3DXVec3Dot(&pNode->m_Box.vAxis[2], &vHalf);
+		if ((pNode->m_Box.vMax.y==0&&pNode->m_Box.vMin.y==0))
 		{
-			pNode->m_Box.fExtent[1] = 20;
+			pNode->m_Box.fExtent[1] = 1;
+			pNode->m_Box.vMax.y += 1;
 		}
+
+		D3DXVECTOR3 BoxVertex[8];
+
+		/*m_vFrustum[0] = D3DXVECTOR3(-1.0f, -1.0f, 0.0f);
+		m_vFrustum[1] = D3DXVECTOR3(-1.0f, 1.0f, 0.0f);
+		m_vFrustum[2] = D3DXVECTOR3(1.0f, 1.0f, 0.0f);
+		m_vFrustum[3] = D3DXVECTOR3(1.0f, -1.0f, 0.0f);
+
+		m_vFrustum[4] = D3DXVECTOR3(-1.0f, -1.0f, 1.0f);
+		m_vFrustum[5] = D3DXVECTOR3(-1.0f, 1.0f, 1.0f);
+		m_vFrustum[6] = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+		m_vFrustum[7] = D3DXVECTOR3(1.0f, -1.0f, 1.0f);*/
+
+		BoxVertex[0] = D3DXVECTOR3(pNode->m_Box.vMin.x, pNode->m_Box.vMin.y, pNode->m_Box.vMin.z);
+		BoxVertex[1] = D3DXVECTOR3(pNode->m_Box.vMin.x, pNode->m_Box.vMax.y, pNode->m_Box.vMin.z);
+		BoxVertex[2] = D3DXVECTOR3(pNode->m_Box.vMax.x, pNode->m_Box.vMax.y, pNode->m_Box.vMin.z);
+		BoxVertex[3] = D3DXVECTOR3(pNode->m_Box.vMax.x, pNode->m_Box.vMin.y, pNode->m_Box.vMin.z);
+
+		BoxVertex[4] = D3DXVECTOR3(pNode->m_Box.vMin.x, pNode->m_Box.vMin.y, pNode->m_Box.vMax.z);
+		BoxVertex[5] = D3DXVECTOR3(pNode->m_Box.vMin.x, pNode->m_Box.vMax.y, pNode->m_Box.vMax.z);
+		BoxVertex[6] = D3DXVECTOR3(pNode->m_Box.vMax.x, pNode->m_Box.vMax.y, pNode->m_Box.vMax.z);
+		BoxVertex[7] = D3DXVECTOR3(pNode->m_Box.vMax.x, pNode->m_Box.vMin.y, pNode->m_Box.vMax.z);
+
+		// 노말 방향 안쪽으로
+		pNode->m_BoxPlane[0].CreatePlane(BoxVertex[5], BoxVertex[0], BoxVertex[1]);	// 좌 평면(left)
+		pNode->m_BoxPlane[1].CreatePlane(BoxVertex[3], BoxVertex[6], BoxVertex[2]);	// 우 평면(right)
+		//pNode->m_BoxPlane[2].CreatePlane(BoxVertex[5], BoxVertex[2], BoxVertex[6]);	// 상 평면(top)
+		//pNode->m_BoxPlane[3].CreatePlane(BoxVertex[0], BoxVertex[7], BoxVertex[3]);	// 하 평면(bottom)
+		pNode->m_BoxPlane[2].CreatePlane(BoxVertex[0], BoxVertex[2], BoxVertex[1]);	// 근 평면(near)
+		pNode->m_BoxPlane[3].CreatePlane(BoxVertex[6], BoxVertex[4], BoxVertex[5]);	// 원 평면(far)
 	}
-	//JH_MapObj* HQuadTree::UpdateBB(KG_Node* pNode, JH_MapObj* Obj)
-	//{
-	//	D3DXMATRIX mat;
-	//	D3DXMatrixIdentity(&mat);
-	//	if (Obj == nullptr)return nullptr;
-	//	if (pNode->m_ObjList.find(Obj->GetID()) == pNode->m_ObjList.end()) return Obj;
-	//	if (Obj->m_matWorld != mat)
-	//	{
 
-	//		D3DXVec3TransformCoord(&Obj->m_Box.vMax, &Obj->m_Box.vMax, &Obj->m_matWorld);
-	//		D3DXVec3TransformCoord(&Obj->m_Box.vMin, &Obj->m_Box.vMin, &Obj->m_matWorld);
-
-	//		D3DXVECTOR3 vX = D3DXVECTOR3(1, 0, 0);
-	//		D3DXVECTOR3 vY = D3DXVECTOR3(0, 1, 0);
-	//		D3DXVECTOR3 vZ = D3DXVECTOR3(0, 0, 1);
-
-	//		D3DXVec3TransformNormal(&vX, &vX, &Obj->m_matWorld);
-	//		D3DXVec3TransformNormal(&vY, &vY, &Obj->m_matWorld);
-	//		D3DXVec3TransformNormal(&vZ, &vZ, &Obj->m_matWorld);
-
-	//		Obj->m_Box.vAxis[0] = vX;
-	//		Obj->m_Box.vAxis[1] = vY;
-	//		Obj->m_Box.vAxis[2] = vZ;
-
-	//		D3DXVECTOR3 vHalf = Obj->m_Box.vMax - Obj->m_Box.vCenter;
-	//		Obj->m_Box.fExtent[0] = D3DXVec3Dot(&Obj->m_Box.vAxis[0], &vHalf);
-	//		Obj->m_Box.fExtent[1] = D3DXVec3Dot(&Obj->m_Box.vAxis[1], &vHalf);
-	//		Obj->m_Box.fExtent[2] = D3DXVec3Dot(&Obj->m_Box.vAxis[2], &vHalf);
-	//		////D3DXVECTOR3 Max= Obj->m_Box.vAxis[0] +
-	//		////	 Obj->m_Box.vAxis[1] 
-	//		////	+ Obj->m_Box.vAxis[2]+ Obj->m_Box.vCenter;
-
-	//		////D3DXVECTOR3 Min =-Obj->m_Box.vAxis[0] +
-	//		////	 -Obj->m_Box.vAxis[1]
-	//		////	+ -Obj->m_Box.vAxis[2]+Obj->m_Box.vCenter;
-
-	//	}
-	//	return Obj;
-
-	//}
-	//KG_Box HQuadTree::SetBB(JH_MapObj* Obj)
-	//{
-	//	KG_Box Box;
-	//	if (Obj == nullptr)return Box;
-	//	D3DXVec3TransformCoord(&Box.vMax, &Obj->m_Box.vMax, &Obj->m_matWorld);
-	//	D3DXVec3TransformCoord(&Box.vMin, &Obj->m_Box.vMin, &Obj->m_matWorld);
-
-	//	D3DXVECTOR3 vScale, vTrans;
-
-	//	D3DXQUATERNION qQuat;
-	//	D3DXMATRIX matRot;
-
-	//	D3DXMatrixDecompose(&vScale, &qQuat, &vTrans, &Obj->m_matWorld);
-
-
-
-	//	Box.vCenter.x = Obj->m_matWorld._41;
-	//	Box.vCenter.y = Obj->m_matWorld._42;
-	//	Box.vCenter.z = Obj->m_matWorld._43;
-
-
-	//	D3DXVECTOR3 vX = D3DXVECTOR3(1, 0, 0);
-	//	D3DXVECTOR3 vY = D3DXVECTOR3(0, 1, 0);
-	//	D3DXVECTOR3 vZ = D3DXVECTOR3(0, 0, 1);
-
-	//	D3DXMatrixRotationQuaternion(&matRot, &qQuat);
-	//	D3DXVec3TransformNormal(&vX, &vX, &matRot);
-	//	D3DXVec3TransformNormal(&vY, &vY, &matRot);
-	//	D3DXVec3TransformNormal(&vZ, &vZ, &matRot);
-
-	//	Box.vAxis[0] = vX;
-	//	Box.vAxis[1] = vY;
-	//	Box.vAxis[2] = vZ;
-
-
-	//	Box.fExtent[0] = Obj->m_Box.fExtent[0] * vScale.x;
-	//	Box.fExtent[1] = Obj->m_Box.fExtent[1] * vScale.y;
-	//	Box.fExtent[2] = Obj->m_Box.fExtent[2] * vScale.z;
-
-
-
-	//	return Box;
-	//}
 	void HQuadTree::ChangeBB(KG_Node* pNode, KG_Box Box)
 	{
 		pNode->m_Box = Box;
@@ -396,246 +345,170 @@ namespace JH {
 		m_BoxLine->SetMatrix(nullptr,
 			&m_pCamera->m_View,
 			&m_pCamera->m_Proj);
-	
-		
-				D3DXVECTOR3 vS;
-				D3DXVECTOR3 vE;
-				KG_Box Box;
-				
-				D3DXVECTOR3 vEAxisX, vEAxisY, vEAxisZ;
-
-				for (auto Obj : m_DrawObjectList)
-				{
-					Box = Obj->GetObj()->GetCharBox();
-					D3DXVECTOR3 TRANS = D3DXVECTOR3(Obj->GetObj()->m_matWorld._41, Obj->GetObj()->m_matWorld._42, Obj->GetObj()->m_matWorld._43);
-
-					vEAxisX = (Box.vAxis[0] * Box.fExtent[0]);
-					vEAxisY = (Box.vAxis[1] * Box.fExtent[1]);
-					vEAxisZ = (Box.vAxis[2] * Box.fExtent[2]);
-
-
-					vS = -vEAxisX + vEAxisY + vEAxisZ + TRANS;
-					vE = vEAxisX + vEAxisY + vEAxisZ + TRANS;
-					m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-					vS = vEAxisX + vEAxisY - vEAxisZ + TRANS;
-					m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-					vE = -vEAxisX + vEAxisY - vEAxisZ + TRANS;
-					m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-					vS = -vEAxisX + vEAxisY + vEAxisZ + TRANS;
-					m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-
-					vS = -vEAxisX - vEAxisY + vEAxisZ + TRANS;
-					vE = +vEAxisX - vEAxisY + vEAxisZ + TRANS;
-					m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-					vS = vEAxisX - vEAxisY - vEAxisZ + TRANS;
-					m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-					vE = -vEAxisX - vEAxisY - vEAxisZ + TRANS;
-					m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-					vS = -vEAxisX - vEAxisY + vEAxisZ + TRANS;
-					m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-
-					vS = -vEAxisX + vEAxisY + vEAxisZ + TRANS;
-					vE = -vEAxisX - vEAxisY + vEAxisZ + TRANS;
-					m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-					vS = -vEAxisX - vEAxisY - vEAxisZ + TRANS;
-					m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-					vE = -vEAxisX + vEAxisY - vEAxisZ + TRANS;
-					m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-					vS = -vEAxisX + vEAxisY + vEAxisZ + TRANS;
-					m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-
-					vS = vEAxisX + vEAxisY + vEAxisZ + TRANS;
-					vE = +vEAxisX - vEAxisY + vEAxisZ + TRANS;
-					m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-					vS = +vEAxisX - vEAxisY - vEAxisZ + TRANS;
-					m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-					vE = +vEAxisX + vEAxisY - vEAxisZ + TRANS;
-					m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-					vS = +vEAxisX + vEAxisY + vEAxisZ + TRANS;
-					m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-				}
-
-		
-		
-	}
-	void HQuadTree::DrawLine(KG_Node* pNode)
-	{
-
-
-		/*	D3DXVECTOR3 vS;
-			vS.x = pNode->m_Box.vMin.x;
-			vS.y = pNode->m_Box.vMax.y;
-			vS.z = pNode->m_Box.vMax.z;
-			D3DXVECTOR3 vE;
-			vE.x = pNode->m_Box.vMax.x;
-			vE.y = pNode->m_Box.vMax.y;
-			vE.z = pNode->m_Box.vMax.z;
-			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-			vS.x = pNode->m_Box.vMax.x;
-			vS.y = pNode->m_Box.vMax.y;
-			vS.z = pNode->m_Box.vMin.z;
-			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-			vE.x = pNode->m_Box.vMin.x;
-			vE.y = pNode->m_Box.vMax.y;
-			vE.z = pNode->m_Box.vMin.z;
-			m_BoxLine->Draw(vS, vE, D3DXVECTOR4(1, 0, 0, 1));
-			vS.x = pNode->m_Box.vMin.x;
-			vS.y = pNode->m_Box.vMax.y;
-			vS.z = pNode->m_Box.vMax.z;
-			m_BoxLine->Draw(vS, vE, D3DXVECTOR4(1, 0, 0, 1));
-
-
-			vS.x = pNode->m_Box.vMin.x;
-			vS.y = pNode->m_Box.vMin.y;
-			vS.z = pNode->m_Box.vMax.z;
-			vE.x = pNode->m_Box.vMax.x;
-			vE.y = pNode->m_Box.vMin.y;
-			vE.z = pNode->m_Box.vMax.z;
-			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-			vS.x = pNode->m_Box.vMax.x;
-			vS.y = pNode->m_Box.vMin.y;
-			vS.z = pNode->m_Box.vMin.z;
-			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-			vE.x = pNode->m_Box.vMin.x;
-			vE.y = pNode->m_Box.vMin.y;
-			vE.z = pNode->m_Box.vMin.z;
-			m_BoxLine->Draw(vS, vE, D3DXVECTOR4(1, 0, 0, 1));
-			vS.x = pNode->m_Box.vMin.x;
-			vS.y = pNode->m_Box.vMin.y;
-			vS.z = pNode->m_Box.vMax.z;
-			m_BoxLine->Draw(vS, vE, D3DXVECTOR4(1, 0, 0, 1));
-
-
-			vS.x = pNode->m_Box.vMin.x;
-			vS.y = pNode->m_Box.vMax.y;
-			vS.z = pNode->m_Box.vMax.z;
-			vE.x = pNode->m_Box.vMin.x;
-			vE.y = pNode->m_Box.vMin.y;
-			vE.z = pNode->m_Box.vMax.z;
-			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-			vS.x = pNode->m_Box.vMax.x;
-			vS.y = pNode->m_Box.vMax.y;
-			vS.z = pNode->m_Box.vMax.z;
-			vE.x = pNode->m_Box.vMax.x;
-			vE.y = pNode->m_Box.vMin.y;
-			vE.z = pNode->m_Box.vMax.z;
-			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-			vS.x = pNode->m_Box.vMax.x;
-			vS.y = pNode->m_Box.vMax.y;
-			vS.z = pNode->m_Box.vMin.z;
-			vE.x = pNode->m_Box.vMax.x;
-			vE.y = pNode->m_Box.vMin.y;
-			vE.z = pNode->m_Box.vMin.z;
-			m_BoxLine->Draw(vS, vE, D3DXVECTOR4(1, 0, 0, 1));
-			vS.x = pNode->m_Box.vMin.x;
-			vS.y = pNode->m_Box.vMax.y;
-			vS.z = pNode->m_Box.vMin.z;
-			vE.x = pNode->m_Box.vMin.x;
-			vE.y = pNode->m_Box.vMin.y;
-			vE.z = pNode->m_Box.vMin.z;
-			m_BoxLine->Draw(vS, vE, D3DXVECTOR4(1, 0, 0, 1));*/
-
-		m_BoxLine->SetMatrix(nullptr,
-			&m_pCamera->m_View,
-			&m_pCamera->m_Proj);
 
 
 		D3DXVECTOR3 vS;
 		D3DXVECTOR3 vE;
 		KG_Box Box;
-		for (auto Node : m_DrawObjNodeList)
+
+		D3DXVECTOR3 vEAxisX, vEAxisY, vEAxisZ;
+
+		for (auto Obj : m_DrawObjectList)
 		{
-			for (auto Obj : Node->m_ObjList)
-			{
-		/*		Box = SetBB(Obj.second.get());
-				D3DXVECTOR3 vEAxisX, vEAxisY, vEAxisZ;
+			Box = Obj->GetObj()->GetCharBox();
+			D3DXVECTOR3 TRANS = D3DXVECTOR3(Obj->GetObj()->m_matWorld._41, Obj->GetObj()->m_matWorld._42, Obj->GetObj()->m_matWorld._43);
 
-				D3DXVECTOR3 TRANS = D3DXVECTOR3(Obj.second->m_matWorld._41, Obj.second->m_matWorld._42, Obj.second->m_matWorld._43);
-
-				vEAxisX = (Box.vAxis[0] * Box.fExtent[0]);
-				vEAxisY = (Box.vAxis[1] * Box.fExtent[1]);
-				vEAxisZ = (Box.vAxis[2] * Box.fExtent[2]);
+			vEAxisX = (Box.vAxis[0] * Box.fExtent[0]);
+			vEAxisY = (Box.vAxis[1] * Box.fExtent[1]);
+			vEAxisZ = (Box.vAxis[2] * Box.fExtent[2]);
 
 
-				vS = -vEAxisX + vEAxisY + vEAxisZ + TRANS;
-				vE = vEAxisX + vEAxisY + vEAxisZ + TRANS;
-				m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
+			vS = -vEAxisX + vEAxisY + vEAxisZ + TRANS;
+			vE = vEAxisX + vEAxisY + vEAxisZ + TRANS;
+			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(0, 1, 0, 1));
 
-				vS = vEAxisX + vEAxisY - vEAxisZ + TRANS;
-				m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
+			vS = vEAxisX + vEAxisY - vEAxisZ + TRANS;
+			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(0, 1, 0, 1));
 
-				vE = -vEAxisX + vEAxisY - vEAxisZ + TRANS;
-				m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
+			vE = -vEAxisX + vEAxisY - vEAxisZ + TRANS;
+			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(0, 1, 0, 1));
 
-				vS = -vEAxisX + vEAxisY + vEAxisZ + TRANS;
-				m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-
-				vS = -vEAxisX - vEAxisY + vEAxisZ + TRANS;
-				vE = +vEAxisX - vEAxisY + vEAxisZ + TRANS;
-				m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-				vS = vEAxisX - vEAxisY - vEAxisZ + TRANS;
-				m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-				vE = -vEAxisX - vEAxisY - vEAxisZ + TRANS;
-				m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-				vS = -vEAxisX - vEAxisY + vEAxisZ + TRANS;
-				m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
+			vS = -vEAxisX + vEAxisY + vEAxisZ + TRANS;
+			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(0, 1, 0, 1));
 
 
-				vS = -vEAxisX + vEAxisY + vEAxisZ + TRANS;
-				vE = -vEAxisX - vEAxisY + vEAxisZ + TRANS;
-				m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
+			vS = -vEAxisX - vEAxisY + vEAxisZ + TRANS;
+			vE = +vEAxisX - vEAxisY + vEAxisZ + TRANS;
+			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(0, 1, 0, 1));
 
-				vS = -vEAxisX - vEAxisY - vEAxisZ + TRANS;
-				m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
+			vS = vEAxisX - vEAxisY - vEAxisZ + TRANS;
+			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(0, 1, 0, 1));
 
-				vE = -vEAxisX + vEAxisY - vEAxisZ + TRANS;
-				m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
+			vE = -vEAxisX - vEAxisY - vEAxisZ + TRANS;
+			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(0, 1, 0, 1));
 
-				vS = -vEAxisX + vEAxisY + vEAxisZ + TRANS;
-				m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-
-				vS = vEAxisX + vEAxisY + vEAxisZ + TRANS;
-				vE = +vEAxisX - vEAxisY + vEAxisZ + TRANS;
-				m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-				vS = +vEAxisX - vEAxisY - vEAxisZ + TRANS;
-				m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-				vE = +vEAxisX + vEAxisY - vEAxisZ + TRANS;
-				m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
-
-				vS = +vEAxisX + vEAxisY + vEAxisZ + TRANS;
-				m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));*/
+			vS = -vEAxisX - vEAxisY + vEAxisZ + TRANS;
+			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(0, 1, 0, 1));
 
 
-			}
+			vS = -vEAxisX + vEAxisY + vEAxisZ + TRANS;
+			vE = -vEAxisX - vEAxisY + vEAxisZ + TRANS;
+			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(0, 1, 0, 1));
+
+			vS = -vEAxisX - vEAxisY - vEAxisZ + TRANS;
+			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(0, 1, 0, 1));
+
+			vE = -vEAxisX + vEAxisY - vEAxisZ + TRANS;
+			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(0, 1, 0, 1));
+
+			vS = -vEAxisX + vEAxisY + vEAxisZ + TRANS;
+			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(0, 1, 0, 1));
+
+
+			vS = vEAxisX + vEAxisY + vEAxisZ + TRANS;
+			vE = +vEAxisX - vEAxisY + vEAxisZ + TRANS;
+			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(0, 1, 0, 1));
+
+			vS = +vEAxisX - vEAxisY - vEAxisZ + TRANS;
+			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(0, 1, 0, 1));
+
+			vE = +vEAxisX + vEAxisY - vEAxisZ + TRANS;
+			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(0, 1, 0, 1));
+
+			vS = +vEAxisX + vEAxisY + vEAxisZ + TRANS;
+			m_BoxLine->Draw(vE, vS, D3DXVECTOR4(0, 1, 0, 1));
+
 		}
 
 
+
 	}
-	
-	
+	void HQuadTree::DrawLine(KG_Node* pNode)
+	{
+
+		m_BoxLine->SetMatrix(nullptr,
+			&m_pCamera->m_View,
+			&m_pCamera->m_Proj);
+
+		D3DXVECTOR3 vS;
+		vS.x = pNode->m_Box.vMin.x;
+		vS.y = pNode->m_Box.vMax.y;
+		vS.z = pNode->m_Box.vMax.z;
+		D3DXVECTOR3 vE;
+		vE.x = pNode->m_Box.vMax.x;
+		vE.y = pNode->m_Box.vMax.y;
+		vE.z = pNode->m_Box.vMax.z;
+		m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
+		vS.x = pNode->m_Box.vMax.x;
+		vS.y = pNode->m_Box.vMax.y;
+		vS.z = pNode->m_Box.vMin.z;
+		m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
+		vE.x = pNode->m_Box.vMin.x;
+		vE.y = pNode->m_Box.vMax.y;
+		vE.z = pNode->m_Box.vMin.z;
+		m_BoxLine->Draw(vS, vE, D3DXVECTOR4(1, 0, 0, 1));
+		vS.x = pNode->m_Box.vMin.x;
+		vS.y = pNode->m_Box.vMax.y;
+		vS.z = pNode->m_Box.vMax.z;
+		m_BoxLine->Draw(vS, vE, D3DXVECTOR4(1, 0, 0, 1));
+
+
+		vS.x = pNode->m_Box.vMin.x;
+		vS.y = pNode->m_Box.vMin.y;
+		vS.z = pNode->m_Box.vMax.z;
+		vE.x = pNode->m_Box.vMax.x;
+		vE.y = pNode->m_Box.vMin.y;
+		vE.z = pNode->m_Box.vMax.z;
+		m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
+		vS.x = pNode->m_Box.vMax.x;
+		vS.y = pNode->m_Box.vMin.y;
+		vS.z = pNode->m_Box.vMin.z;
+		m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
+		vE.x = pNode->m_Box.vMin.x;
+		vE.y = pNode->m_Box.vMin.y;
+		vE.z = pNode->m_Box.vMin.z;
+		m_BoxLine->Draw(vS, vE, D3DXVECTOR4(1, 0, 0, 1));
+		vS.x = pNode->m_Box.vMin.x;
+		vS.y = pNode->m_Box.vMin.y;
+		vS.z = pNode->m_Box.vMax.z;
+		m_BoxLine->Draw(vS, vE, D3DXVECTOR4(1, 0, 0, 1));
+
+
+		vS.x = pNode->m_Box.vMin.x;
+		vS.y = pNode->m_Box.vMax.y;
+		vS.z = pNode->m_Box.vMax.z;
+		vE.x = pNode->m_Box.vMin.x;
+		vE.y = pNode->m_Box.vMin.y;
+		vE.z = pNode->m_Box.vMax.z;
+		m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
+		vS.x = pNode->m_Box.vMax.x;
+		vS.y = pNode->m_Box.vMax.y;
+		vS.z = pNode->m_Box.vMax.z;
+		vE.x = pNode->m_Box.vMax.x;
+		vE.y = pNode->m_Box.vMin.y;
+		vE.z = pNode->m_Box.vMax.z;
+		m_BoxLine->Draw(vE, vS, D3DXVECTOR4(1, 0, 0, 1));
+		vS.x = pNode->m_Box.vMax.x;
+		vS.y = pNode->m_Box.vMax.y;
+		vS.z = pNode->m_Box.vMin.z;
+		vE.x = pNode->m_Box.vMax.x;
+		vE.y = pNode->m_Box.vMin.y;
+		vE.z = pNode->m_Box.vMin.z;
+		m_BoxLine->Draw(vS, vE, D3DXVECTOR4(1, 0, 0, 1));
+		vS.x = pNode->m_Box.vMin.x;
+		vS.y = pNode->m_Box.vMax.y;
+		vS.z = pNode->m_Box.vMin.z;
+		vE.x = pNode->m_Box.vMin.x;
+		vE.y = pNode->m_Box.vMin.y;
+		vE.z = pNode->m_Box.vMin.z;
+		m_BoxLine->Draw(vS, vE, D3DXVECTOR4(1, 0, 0, 1));
+
+
+
+
+	}
+
+
 	void HQuadTree::GetSelectNode(KG_Node* pNode)
 	{
 
@@ -677,7 +550,7 @@ namespace JH {
 
 
 
-		for (auto Obj: m_ObjectList)
+		for (auto Obj : m_ObjectList)
 		{
 			KG_Box Box = Obj.second->GetObj()->GetCharBox();
 
@@ -688,7 +561,7 @@ namespace JH {
 				{
 					m_fInterval = vInterLength;
 					m_pSelectObj = Obj.second;
-					
+
 				}
 				//CreateBB(pNode);
 			}
@@ -703,24 +576,27 @@ namespace JH {
 		bool b = false;
 		if (!m_pRootNode) return false;
 		KG_Node* pNode = nullptr;
-		Obj->GetObj()->SetMatrix(&Obj->GetObj()->m_matWorld, &m_pCamera->m_View, &m_pCamera->m_Proj);
-		if (CheckRect(m_pRootNode, Obj.get()))
+		//Obj->GetObj()->SetMatrix(&Obj->GetObj()->m_matWorld, &m_pCamera->m_View, &m_pCamera->m_Proj);
+		KG_Box Box = Obj->GetObj()->GetCharBox();
+		int pos = CheckOBBNodePlane(m_pRootNode, Box);
+		if (pos==P_FRONT)//CheckRect(m_pRootNode,Obj.get()))
 		{
 			pNode = FindNode(m_pRootNode, Obj.get());
 			if (pNode)
 			{
 				std::map<int, JH_MapObj*>::iterator iter;
 
-			
+
 				Obj->SetQuadIndex(pNode->m_iQuadTreeIndex);
 				Obj->SetNode(pNode);
 				pNode->m_ObjList.insert(make_pair(Obj->GetID(), Obj));
+				//CreateBB(pNode);
 				m_ObjectList.insert(make_pair(Obj->GetID(), Obj));
 				b = true;
 				return b;
 			}
 		}
-		
+
 
 
 		return b;
@@ -732,22 +608,24 @@ namespace JH {
 		if (!m_pRootNode) return false;
 		KG_Node* pNode = nullptr;
 		Obj->GetObj()->SetMatrix(&Obj->GetObj()->m_matWorld, &m_pCamera->m_View, &m_pCamera->m_Proj);
-		if (CheckRect(m_pRootNode, Obj.get()))
+		KG_Box Box = Obj->GetObj()->GetCharBox();
+		int pos = CheckOBBNodePlane(m_pRootNode, Box);
+		if (pos==P_FRONT)
 		{
 			pNode = FindNode(m_pRootNode, Obj.get());
 
 			if (pNode)
 			{
-				KG_Node* beforeNode =(KG_Node*) Obj->GetNode();
+				KG_Node* beforeNode = (KG_Node*)Obj->GetNode();
 				auto iter = beforeNode->m_ObjList.find(Obj->GetID());
-				assert(iter != beforeNode->m_ObjList.end());
+				//assert(iter != beforeNode->m_ObjList.end());
 				if (pNode->m_iQuadTreeIndex != beforeNode->m_ObjList[Obj->GetID()]->GetQuadIndex())
 					beforeNode->m_ObjList.erase(Obj->GetID());
-					
+
 				Obj->SetNode(pNode);
 				Obj->SetQuadIndex(pNode->m_iQuadTreeIndex);
 				pNode->m_ObjList.insert(make_pair(Obj->GetID(), Obj));
-			
+
 
 
 
@@ -770,7 +648,9 @@ namespace JH {
 			for (int iChild = 0; iChild < 4; iChild++)
 			{
 				if (pNode->m_pChild[iChild] == nullptr) break;
-				if (CheckRect(pNode->m_pChild[iChild], Obj))
+				KG_Box Box = Obj->GetObj()->GetCharBox();
+				int pos = CheckOBBNodePlane(pNode->m_pChild[iChild], Box);
+				if (pos==P_FRONT)
 				{
 					m_QueueList.push(pNode->m_pChild[iChild]);
 				}
@@ -788,7 +668,7 @@ namespace JH {
 		if (m_pFindNode != nullptr)return nullptr;
 		std::map<int, std::shared_ptr<JH_MapObj>>::iterator iter;
 		iter = pNode->m_ObjList.find(Obj->GetID());
-		if ((pNode->m_iQuadTreeIndex ==Obj->GetQuadIndex()&&iter!= pNode->m_ObjList.end()))
+		if ((pNode->m_iQuadTreeIndex == Obj->GetQuadIndex() && iter != pNode->m_ObjList.end()))
 		{
 			m_pFindNode = pNode;
 			return pNode;
@@ -796,24 +676,80 @@ namespace JH {
 		}
 		for (int iNode = 0; iNode < 4; iNode++)
 		{
-			FindIDNode(pNode->m_pChild[iNode],Obj);
+			FindIDNode(pNode->m_pChild[iNode], Obj);
 		}
 		return nullptr;
 	}
+	int	HQuadTree::CheckOBBNodePlane(KG_Node* pNode, KG_Box& box)
+	{
+		D3DXVECTOR3 vDir;
+		float  fDistance = 0.0f;
+		float  fPlaneToCenterDistance = 0.0f;
+		int t_Pos = P_FRONT;
+
+		for (int iPlane = 0; iPlane < 4; iPlane++)
+		{
+			vDir = box.vAxis[0] * box.fExtent[0];
+			fDistance = fabs(pNode->m_BoxPlane[iPlane].fA *
+				vDir.x +
+				pNode->m_BoxPlane[iPlane].fB *
+				vDir.y +
+				pNode->m_BoxPlane[iPlane].fC *
+				vDir.z);
+
+			vDir = box.vAxis[1] * box.fExtent[1];
+			fDistance += fabs(pNode->m_BoxPlane[iPlane].fA *
+				vDir.x +
+				pNode->m_BoxPlane[iPlane].fB *
+				vDir.y +
+				pNode->m_BoxPlane[iPlane].fC *
+				vDir.z);
+
+			vDir = box.vAxis[2] * box.fExtent[2];
+			fDistance += fabs(pNode->m_BoxPlane[iPlane].fA *
+				vDir.x +
+				pNode->m_BoxPlane[iPlane].fB *
+				vDir.y +
+				pNode->m_BoxPlane[iPlane].fC *
+				vDir.z);
+
+			fPlaneToCenterDistance =
+				pNode->m_BoxPlane[iPlane].fA *
+				box.vCenter.x +
+				pNode->m_BoxPlane[iPlane].fB *
+				box.vCenter.y +
+				pNode->m_BoxPlane[iPlane].fC *
+				box.vCenter.z +
+				pNode->m_BoxPlane[iPlane].fD;
+
+			if (fPlaneToCenterDistance <= fDistance)
+			{
+				t_Pos = P_SPANNING;
+			}
+
+			if (fPlaneToCenterDistance < -fDistance)
+			{
+				return  P_BACK;
+			}
+		}
+		return t_Pos;
+	}
 	bool HQuadTree::CheckRect(KG_Node* pNode, JH_MapObj* Obj)
 	{
-		/*KG_Box Box=SetBB(Obj);*/
-		if (pNode->m_Box.vMax.x >= Obj->GetObj()->GetCharBox().vMin.x &&pNode->m_Box.vMin.x <= Obj->GetObj()->GetCharBox().vMax.x)
+		KG_Box Box = Obj->GetObj()->GetCharBox();
+		if (pNode->m_Box.vMax.x >= Box.vMax.x &&pNode->m_Box.vMin.x <= Box.vMin.x)
 		{
 			//if (pNode->m_Box.vMin.y <= Obj.m_Box.vMin.y &&
 			//	pNode->m_Box.vMax.y >= Obj.m_Box.vMax.y)
 			{
-				if (pNode->m_Box.vMax.z >= Obj->GetObj()->GetCharBox().vMin.z && pNode->m_Box.vMin.z <= Obj->GetObj()->GetCharBox().vMax.z)
+				if (pNode->m_Box.vMax.z >= Box.vMax.z && pNode->m_Box.vMin.z <= Box.vMin.z)
 				{
 					return true;
 				}
 			}
 		}
+
+
 		return false;
 	}
 	void  HQuadTree::FindObjectNode(KG_Node* pNode, std::shared_ptr<JH_MapObj> Obj)
@@ -930,8 +866,8 @@ namespace JH {
 
 		m_pMap->m_SkyBox->Frame();
 		I_LIGHT_MGR.Frame();
-		I_LIGHT_MGR.m_cbLight.vEyeDir = { m_pCamera->m_Look,30 };
-		I_LIGHT_MGR.m_cbLight.vEyePos = { m_pCamera->m_Pos,30 };
+		I_LIGHT_MGR.m_cbLight.vEyeDir[0] = { m_pCamera->m_Look,30 };
+		I_LIGHT_MGR.m_cbLight.vEyePos[0] = { m_pCamera->m_Pos,30 };
 		return true;
 	}
 	bool HQuadTree::Render()
@@ -965,7 +901,6 @@ namespace JH {
 				iSPTNum, SRVLIST);
 			m_pMap->m_CBSubData.MapSubData.x = iSPTNum;
 			m_pMap->m_obj.m_pContext->UpdateSubresource(m_pMap->m_CBSub.Get(), 0, 0, &m_pMap->m_CBSubData, 0, 0);
-			m_pMap->m_obj.m_pContext->PSSetConstantBuffers(2, 1, m_pMap->m_CBSub.GetAddressOf());
 		}
 
 
@@ -1056,8 +991,9 @@ namespace JH {
 		for (auto obj : pNode->m_ObjList)
 		{
 			KG_Box Box = obj.second->GetObj()->GetCharBox();
-			int pos = m_pCamera->CheckOBBInPlane(Box);
-			if (!P_BACK)
+			int Objpos = m_pCamera->CheckOBBInPlane(Box);
+
+			if (Objpos != P_BACK || pos != P_BACK)
 			{
 				m_DrawObjectList.push_back(obj.second);
 			}
@@ -1075,7 +1011,7 @@ namespace JH {
 			return;
 		}*/
 
-	
+
 		for (int iNode = 0; iNode < 4; iNode++)
 		{
 			FindDrawNode(pNode->m_pChild[iNode]);
@@ -1088,7 +1024,7 @@ namespace JH {
 		if (pNode->m_isLeaf == TRUE)
 		{
 			m_DrawNodeList.push_back(pNode);
-	
+
 			return;
 		}
 		for (int iNode = 0; iNode < 4; iNode++)

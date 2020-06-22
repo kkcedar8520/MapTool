@@ -47,7 +47,7 @@ bool main::Init()
 	JH::I_LIGHT_MGR.Create(L"../../data/Shader/JHMapShader.txt", L"../../data/LightSrc/LightInfo.txt");
 
 	JH::I_MapMgr.Set(m_pd3dDevice, m_pContext, m_pMainCamera, m_Select);
-	JH::I_MapMgr.AddMap(L"../../MapSave/Stage1test.Map");
+	JH::I_MapMgr.AddMap(L"../../MapSave/Stage1Fixed.Map");
 	float fAspect = (float)Winrt.right / Winrt.bottom;
 	m_pMainCamera->CreateProjMatrix(0.1F, 1000.0F, D3DX_PI*0.4F, fAspect);
 	
@@ -113,7 +113,8 @@ bool main::Render()
 	/*	for (auto LightObj :JH::I_LIGHT_MGR.m_LightObjList)
 		{*/
 			/*m_pContext->PSSetShaderResources(11, 1, &LightObj.m_Shadow.m_Rt->m_pDsvSRV);*/
-	
+			m_pContext->VSSetConstantBuffers(2, 1, JH::I_LIGHT_MGR.m_pLightConstantBuffer->GetAddressOf());
+			m_pContext->PSSetConstantBuffers(2, 1, JH::I_LIGHT_MGR.m_pLightConstantBuffer->GetAddressOf());
 				for (auto Obj : JH::I_MapMgr.GetCurrentMap().m_pQuadTree->m_DrawObjectList)
 				{
 

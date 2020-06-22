@@ -1,12 +1,13 @@
 #pragma once
 #include"KG_Std.h"
 #include"JH_MapObj.h"
+
 namespace JH {
 	class KG_Node
 	{
 	public:
 		KG_Box m_Box;
-
+		KG_Plane											m_BoxPlane[4];
 		std::vector<int>									m_ObjListIndexList;
 		std::vector<KG_Node*>								m_NeighborNodeList;
 		std::map<int, std::shared_ptr<JH_MapObj >>			m_ObjList;

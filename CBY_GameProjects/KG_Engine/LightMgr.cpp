@@ -94,7 +94,7 @@ namespace JH {
 		for (int i = 0; i < m_iLightNum; i++)
 		{
 			m_LightObjList[i].CreateLightObj(m_pDevice, m_pContext, m_LightInfoList[i]);
-			m_LightObjList[i].Create(m_pDevice, m_pContext, m_ShaderFileName, nullptr);
+			m_LightObjList[i].Create(m_pDevice, m_pContext, m_ShaderFileName, nullptr,"VS","PS");
 			m_cbLight.vAmbinentLightColor[i] = m_LightObjList[i].m_Info.vAmbinentLightColor;
 			m_cbLight.vDiffuseLightColor[i] = m_LightObjList[i].m_Info.vDiffuseLightColor;
 			m_cbLight.vSpecularLightColor[i] = m_LightObjList[i].m_Info.vSpecularLightColor;

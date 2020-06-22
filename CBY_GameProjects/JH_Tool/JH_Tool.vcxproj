@@ -276,6 +276,8 @@
     <Text Include="..\..\data\shader\JHMapShader.txt">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </Text>
+    <Text Include="..\..\data\shader\ObjectShader.txt" />
+    <Text Include="..\..\data\shader\SkinShader.txt" />
     <Text Include="ComputeShader.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -29,6 +29,9 @@ JH_ObjForm::JH_ObjForm()
 	, m_Obj_ID(0)
 	, m_ObjNode(0)
 	, m_ObjFlag(0)
+	, m_ObjPositionX(0)
+	, m_ObjPositionY(0)
+	, m_ObjPositionZ(0)
 {
 
 }
@@ -63,6 +66,9 @@ void JH_ObjForm::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_SELECTOBJ, m_Obj_ID);
 	DDX_Text(pDX, IDC_OBJNODE, m_ObjNode);
 	DDX_Text(pDX, IDC_OBJFLAG, m_ObjFlag);
+	DDX_Text(pDX, IDC_SELECTOBJ2, m_ObjPositionX);
+	DDX_Text(pDX, IDC_SELECTOBJ3, m_ObjPositionY);
+	DDX_Text(pDX, IDC_OBJFLAG2, m_ObjPositionZ);
 }
 
 
@@ -353,6 +359,9 @@ void JH_ObjForm::OnBnClickedShowinfom()
 	 m_ObjNode = pApp->m_Sample.m_pSelectMapObj->GetQuadIndex();
 	 m_ObjFlag = pApp->m_Sample.m_pSelectMapObj->GetFlag();
 
+	 m_ObjPositionX=pApp->m_Sample.m_pSelectMapObj->GetObj()->m_matWorld._41;
+	 m_ObjPositionY= pApp->m_Sample.m_pSelectMapObj->GetObj()->m_matWorld._42;
+	 m_ObjPositionZ= pApp->m_Sample.m_pSelectMapObj->GetObj()->m_matWorld._43;
 	 UpdateData(FALSE);
 }
 void JH_ObjForm::OnEnChangeObjflag()

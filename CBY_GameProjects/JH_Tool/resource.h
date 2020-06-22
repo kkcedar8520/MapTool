@@ -117,6 +117,7 @@
 #define IDC_BUTTON4                     1015
 #define IDC_EDIT15                      1016
 #define IDC_EDIT18                      1017
+#define IDC_OBJFLAG2                    1017
 #define IDC_SCROLLBAR2                  1018
 #define IDC_EDIT21                      1018
 #define IDC_EDIT19                      1019
@@ -134,8 +135,9 @@
 #define IDC_EDIT25                      1028
 #define IDC_SELECTOBJ                   1029
 #define IDC_CharY                       1029
-#define IDC_EDIT28                      1030
 #define IDC_CharZ                       1030
+#define IDC_SELECTOBJ2                  1030
+#define IDC_SELECTOBJ3                  1031
 #define IDC_OBJNODE                     1032
 #define ID_TOOL_CREATEMAP               32771
 #define ID_TOOL_LOADOBJECT              32772

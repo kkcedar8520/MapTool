@@ -4,7 +4,7 @@
 namespace JH {
 #define MAX_LIGHT_SIZE 5
 #define CONSTANT_BUFFER_SIZE 3
-	const int g_iLightNum = 1;
+	const int g_iLightNum =13;
 
 	struct LightInfoBuffer
 	{

@@ -325,7 +325,7 @@ namespace JH
 		HRESULT hr = S_OK;
 		m_obj.m_VertexSize = sizeof(PNCT_VERTEX);
 		m_VerTex.resize(m_iVertices);
-
+		m_vHeightList.resize(m_iVertices);
 		float fHalfCols = m_iCellCol / 2.0f;
 		float fHalfRows = m_iCellRow / 2.0f;
 		float ftxOffsetU = 1.0f / m_iCellCol;
@@ -344,6 +344,7 @@ namespace JH
 				}
 				else
 				{
+					m_vHeightList[iVertexIndex]= 0.0f;
 					m_VerTex[iVertexIndex].p.y = 0.0f;
 				}
 				m_VerTex[iVertexIndex].p.x = (iCol - fHalfCols) * m_fCellDistance;
@@ -488,7 +489,6 @@ namespace JH
 		pBuffers[0] = I_LIGHT_MGR.m_pLightConstantBuffer[0].Get();
 		LightConstantBuffer mcb = I_LIGHT_MGR.m_cbLight;
 		UpdateConstantBuffer(I_LIGHT_MGR.m_pLightConstantBuffer[0].Get(), &I_LIGHT_MGR.m_cbLight);
-		m_obj.m_pContext->PSSetConstantBuffers(1, 1, pBuffers);
 		m_obj.m_pContext->PSSetConstantBuffers(1, 1, pBuffers);
 		UINT offset = 0;
 		UINT stride = sizeof(D3DXVECTOR3);

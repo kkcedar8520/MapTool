@@ -81,6 +81,8 @@ namespace JH {
 		_stscanf(m_pBuffer, _T("%s %f %f %f\n"), m_pString,
 			&m_MapData.m_CharPos.x, &m_MapData.m_CharPos.y, &m_MapData.m_CharPos.z);
 
+
+
 		m_MapData.m_pSplattTextureFile.resize(m_iTemp);
 		for (int i = 0; i < m_MapData.m_pSplattTextureFile.size(); i++)
 		{
@@ -98,13 +100,18 @@ namespace JH {
 		_fgetts(m_pBuffer, 256, fp);
 		_stscanf(m_pBuffer, _T(" %s\n"), m_pString);
 
-		m_MapData.m_fHegihtList.resize(m_iTemp);
-		int layer = 0;
-		for (int iVertex = 0; iVertex < m_iTemp; iVertex++)
+		m_MapData.m_VerTex.resize(m_iTemp);
+		for (int iVertex = 0; iVertex < m_MapData.m_VerTex.size(); iVertex++)
 		{
 
 			_fgetts(m_pBuffer, 256, fp);
-			_stscanf(m_pBuffer, _T("%f "), &m_MapData.m_fHegihtList[iVertex]);
+			_stscanf(m_pBuffer, _T("%f %f %f \n"), &m_MapData.m_VerTex[iVertex].p.x, &m_MapData.m_VerTex[iVertex].p.y, &m_MapData.m_VerTex[iVertex].p.z);
+			_fgetts(m_pBuffer, 256, fp);
+			_stscanf(m_pBuffer, _T("%f %f %f \n"), &m_MapData.m_VerTex[iVertex].n.x, &m_MapData.m_VerTex[iVertex].n.y, &m_MapData.m_VerTex[iVertex].n.z);
+			_fgetts(m_pBuffer, 256, fp);
+			_stscanf(m_pBuffer, _T("%f %f %f %f\n"), &m_MapData.m_VerTex[iVertex].c.x, &m_MapData.m_VerTex[iVertex].c.y, &m_MapData.m_VerTex[iVertex].c.z, &m_MapData.m_VerTex[iVertex].c.w);
+			_fgetts(m_pBuffer, 256, fp);
+			_stscanf(m_pBuffer, _T("%f %f \n"), &m_MapData.m_VerTex[iVertex].t.x, &m_MapData.m_VerTex[iVertex].t.y);
 
 
 		}
@@ -130,6 +137,10 @@ namespace JH {
 			_fgetts(m_pBuffer, 256, fp);
 			_stscanf(m_pBuffer, _T("%s \n"), Buf);
 			OBJ.m_MapObj->m_BoneName = Buf;
+
+			_fgetts(m_pBuffer, 256, fp);
+			_stscanf(m_pBuffer, _T("%d \n"), &m_iTemp);
+			OBJ.m_MapObj->m_Flag = m_iTemp;
 
 			_fgetts(m_pBuffer, 256, fp);
 			_stscanf(m_pBuffer, _T("\t%s\n"), Buf);
@@ -196,7 +207,7 @@ namespace JH {
 		HRESULT hr;
 
 		GMData.m_pMap->m_pCopySrv.Reset();
-
+		GMData.m_pMap->SetCharPos(m_MapData.m_CharPos);
 
 		hr = D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice,
 			(m_MapData.m_pSplattAlphaTextureFile.data()), NULL, NULL, GMData.m_pMap->m_pCopySrv.GetAddressOf(), NULL);
@@ -217,7 +228,7 @@ namespace JH {
 		static int ID;
 		std::shared_ptr<CBY::CBY_Object> Object;
 		Object =std::make_shared<CBY::CBY_Object>();
-		Object->Create(m_pd3dDevice, m_pContext, L"../../data/shader/SkinShader.txt", nullptr, "VSOBJECT", "PS");
+		Object->Create(m_pd3dDevice, m_pContext, L"../../data/shader/ObjectShader.txt", nullptr, "VSOBJECT", "PS");
 		Object->SkinLoad(Obj.m_MapObj->m_SkinName);
 		Object->BoneLoad(Obj.m_MapObj->m_BoneName);
 

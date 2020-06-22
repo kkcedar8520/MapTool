@@ -217,5 +217,11 @@
     <Text Include="ComputeShader.hlsl">
       <Filter>Shader</Filter>
     </Text>
+    <Text Include="..\..\data\shader\SkinShader.txt">
+      <Filter>Shader</Filter>
+    </Text>
+    <Text Include="..\..\data\shader\ObjectShader.txt">
+      <Filter>Shader</Filter>
+    </Text>
   </ItemGroup>
 </Project>

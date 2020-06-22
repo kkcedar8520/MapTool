@@ -51,8 +51,9 @@ namespace JH {
 		T_STR				m_ShaderFile;
 		D3DXVECTOR3			m_CharPos;
 		T_STR				m_pSplattAlphaTextureFile;
-		std::vector<float>		m_fHegihtList;
-		std::vector<T_STR>		m_pSplattTextureFile;
+		std::vector<float>				m_fHegihtList;
+		std::vector<PNCT_VERTEX>		m_VerTex;
+		std::vector<T_STR>				m_pSplattTextureFile;
 
 		QuadTreeData		m_sQTData;
 		inline void Reset()

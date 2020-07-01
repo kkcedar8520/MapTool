@@ -8,8 +8,6 @@
 #include "afxdialogex.h"
 #include"KG_TextureMgr.h"
 #include"KG_DxRT.h"
-
-
 // JH_MapForm 대화 상자
 
 IMPLEMENT_DYNAMIC(JH_MapForm, CFormView)
@@ -152,6 +150,9 @@ void JH_MapForm::OnBnClickedOk()
 			m_HeightMapFile);
 	}
 
+
+
+	JH::I_MapMgr.AddGameMap(pApp->m_Sample.m_Map, pApp->m_Sample.m_QuadTree);
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }
 
@@ -485,11 +486,14 @@ void JH_MapForm::OnSaveMapData()
 		L"Map Files(*.Map)|*.Map| All Files(*.*)|*.*|", this);
 	dlg.m_ofn.lpstrInitialDir = sFath;
 
-	if (dlg.DoModal() == IDOK)
+	if (dlg.DoModal() == IDOK&& pApp->m_Sample.m_Map!=nullptr)
 	{
 		FileName = dlg.GetPathName();
+		pApp->m_Sample.m_Map->m_pSPTAFile = m_SplattTexture;
 		pApp->m_Sample.m_pSPTAFile = m_SplattTexture;
-		pApp->m_Sample.SaveMapData(FileName);
+		//pApp->m_Sample.SaveMapData(FileName);
+
+		JH::I_MapMgr.SaveMapData(FileName);
 		UpdateData(FALSE);
 	}
 
@@ -511,7 +515,10 @@ void JH_MapForm::OnLoadMapData()
 	{
 		FileName = dlg.GetPathName();
 		m_LoadFileName = FileName;
-		pApp->m_Sample.LoadMapData(m_LoadFileName);
+		JH::I_MapMgr.AddMap(m_LoadFileName);
+		pApp->m_Sample.m_Map=JH::I_MapMgr.GetMap();
+		pApp->m_Sample.m_QuadTree = JH::I_MapMgr.GetCurrentQuadTree();
+		//pApp->m_Sample.LoadMapData(m_LoadFileName);
 		UpdateData(FALSE);
 	}
 }

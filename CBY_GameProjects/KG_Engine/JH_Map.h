@@ -48,24 +48,25 @@ namespace JH
 	public:
 		bool	m_bMapEdit;
 
-		std::shared_ptr<KG_SkyBox>					 m_SkyBox;
-		std::map<int, CTexture*>						 m_vSplattTextureList;
-		std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> m_vSplattSRVList;
+		std::shared_ptr<KG_SkyBox>										 m_SkyBox;
+		std::map<int, CTexture*>										 m_vSplattTextureList;
+		std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>	 m_vSplattSRVList;
 		//
 		CB_SPT m_CBSubData;
-		Microsoft::WRL::ComPtr<ID3D11Buffer>					 m_CBSub;
+		Microsoft::WRL::ComPtr<ID3D11Buffer>							 m_CBSub;
 	public:
 		//NormalMap
-		std::vector<D3DXVECTOR3>						 m_TangentList;
-		NormalMap								 m_NormalMap;
-		D3DXMATRIX								 m_matNormal;
+		std::vector<D3DXVECTOR3>										 m_TangentList;
+		NormalMap														 m_NormalMap;
+		D3DXMATRIX														 m_matNormal;
 
-		Microsoft::WRL::ComPtr<ID3D11Buffer>					 m_pTangentVB;
-		CTexture*								 m_pTexture;
-		int										 m_iTexNum;
-		const TCHAR*							 m_pNormMapFileName;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>		 m_pNormSrv;
+		Microsoft::WRL::ComPtr<ID3D11Buffer>							 m_pTangentVB;
+		CTexture*														 m_pTexture;
+		int																 m_iTexNum;
+		T_STR															 m_pNormMapFileName;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>				 m_pNormSrv;
 
+		const TCHAR*													m_pSPTAFile;
 
 	public:
 		D3DXVECTOR3 m_vEyePos;
@@ -76,9 +77,10 @@ namespace JH
 		int m_iCellCol;
 		int m_iCellRow;
 		int m_iCellCount;
-		const TCHAR* m_TextureFileName;
-		const TCHAR* m_ShaderFileName;
-		const TCHAR* m_HegithFileName;
+		T_STR  m_TextureFileName;
+		T_STR  m_ShaderFileName;
+		T_STR  m_HegithFileName;
+		T_STR m_LightFileName;
 		float m_fCellDistance;
 		float m_fScaleHeight;
 
@@ -91,6 +93,7 @@ namespace JH
 		float GetHeight(float fX, float fZ);
 		float GetHeightMap(int iRow, int iCol);
 		HRESULT Load(ID3D11Device* pD3D11Device, ID3D11DeviceContext* pD3D11DeviceContext);
+		HRESULT LoadMap(ID3D11Device* pd3dDevice, ID3D11DeviceContext* Context, const TCHAR* ShaderFileName = L"../../data/shader/DefaultShader.txt", const TCHAR* TexFileName = nullptr, const CHAR* VSName = "VS", const CHAR* PSName = "PS");
 		HRESULT CreateHeightMap(ID3D11Device* pD3D11Device, ID3D11DeviceContext* pD3D11DeviceContext, const TCHAR* TextureFileName);
 		void SetMapDesc(const TCHAR* TextureFileName,
 			const TCHAR* ShaderFileName,

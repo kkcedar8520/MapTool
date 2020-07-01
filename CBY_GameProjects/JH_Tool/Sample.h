@@ -7,8 +7,9 @@
 #include"KG_DebugCamera.h"
 #include"KG_ModelViewCamera.h"
 #include"KG_SkyBox.h"
-#include "CBY_Object.h"
+#include"CBY_Object.h"
 #include"KG_Shadow.h"
+#include"JH_MapMgr.h"
 //#include"KG_ObjStd.h"
 #define CTL_CHARS		31
 #define SINGLE_QUOTE	39 // ( ' )
@@ -29,66 +30,7 @@ enum TOOL_EVENT
 	
 	
 };
-struct MAP_OBJ_DATA
-{
-	int			m_iQuadTreeIndex;
-	T_STR		m_BoneName;
-	T_STR		m_SkinName;
-	D3DXMATRIX	m_matWorld;
-	DWORD		m_Flag;
-	KG_Box		m_Box;
 
-	inline MAP_OBJ_DATA()
-	{
-		D3DXMatrixIdentity(&m_matWorld);
-	}
-};
-
-struct OBJECT
-{
-	std::shared_ptr<MAP_OBJ_DATA>		m_MapObj;
-	inline OBJECT()
-	{
-	}
-};
-struct QuadTreeData
-{
-	
-	std::vector<OBJECT> m_ObjList;
-	inline QuadTreeData()
-	{
-	
-	}
-};
-struct MAPDATA
-{
-	int			iCol;
-	int			iRow;
-	int			iCellCount;
-	int			iCellSize;
-	T_STR		m_BaseTextureFile;
-	T_STR		m_NormalMapFile;
-	T_STR		m_HeightMapFile;
-	T_STR		m_ShaderFile;
-	D3DXVECTOR3 m_CharPos;
-
-	T_STR						m_pSplattAlphaTextureFile;
-	std::vector<float>			m_fHegihtList;
-	std::vector<PNCT_VERTEX>	m_VerTex;
-	std::vector<T_STR>			m_pSplattTextureFile;
-
-	QuadTreeData		m_sQTData;
-
-	void Reset()
-	{
-		m_pSplattAlphaTextureFile.clear();
-		m_fHegihtList.clear();
-		m_pSplattTextureFile.clear();
-		m_sQTData.m_ObjList.clear();
-	}
-
-
-};
 struct CSBUFF
 {
 	D3DXVECTOR3 vPickPos;
@@ -165,7 +107,7 @@ public:
 	D3D11_VIEWPORT	m_vp;
 
 
-	MAPDATA m_sMapData;
+	JH::MAPDATA m_sMapData;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_pLoadingSplSrv;
 
 public:
@@ -212,7 +154,8 @@ public:
 		int iCellSize,
 		const TCHAR* pTexturFileName,
 		const TCHAR* pNormalMapFileName = nullptr,
-		const TCHAR* pHeightMapFileName = nullptr);
+		const TCHAR* pHeightMapFileName = nullptr,
+		const TCHAR* pLightShaderName = nullptr);
 	int CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName, D3DXMATRIX& matWorld);
 	void SelectObject();
 	void MapUpDown(JH::SPHERE Sphere);
@@ -240,7 +183,7 @@ public:
 	TCHAR* FixupName(T_STR name);
 	//Load
 	bool   LoadMapData(const TCHAR* LoadFile);
-	INT	   AddObject(OBJECT Obj);
+	INT	   AddObject(JH::OBJECT Obj);
 	//OVERRIDE
 
 	bool Init();

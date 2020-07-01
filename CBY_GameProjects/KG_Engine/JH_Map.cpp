@@ -149,7 +149,7 @@ namespace JH
 	}
 	float JH_Map::GetHeightMap(int iRow, int iCol)
 	{
-		return	m_vHeightList[iRow*m_iRowNum + iCol];
+		return	m_VerTex[iRow*m_iRowNum + iCol].p.y;
 	}
 
 	void  JH_Map::UpdateConstantBuffer(ID3D11Buffer* pConstantBuffer, void* Data)
@@ -314,10 +314,54 @@ namespace JH
 		m_SkyBox->CreateTexuture(m_obj.m_pd3dDevice, m_obj.m_pContext, L"../../data/sky/StarFiled2.dds");
 
 
-
+		JH::I_LIGHT_MGR.Create(m_ShaderFileName.data(), m_LightFileName.data());
 		UpdateTangentBuffer();
 		m_CBSub.Attach(CDXH::CreateConstantBuffer(m_obj.m_pd3dDevice, nullptr, sizeof(CB_SPT), 1));
 		return true;
+	}
+	HRESULT JH_Map::LoadMap(ID3D11Device* pd3dDevice, ID3D11DeviceContext* Context, const TCHAR* ShaderFileName, const TCHAR* TexFileName, const CHAR* VSName, const CHAR* PSName)
+	{
+		HRESULT hr = S_OK;
+
+		
+		m_obj.m_pd3dDevice = pd3dDevice;
+		m_obj.m_pContext = Context;
+		m_obj.m_VertexSize = sizeof(PNCT_VERTEX);
+		if (hr=FAILED(LoadShader(ShaderFileName, VSName, PSName)))
+		{
+			return hr;
+		}
+		if (hr=FAILED(CreateVertexBuffer()))
+		{
+			return hr;
+		}
+		if (hr=FAILED(CreateIndexBuffer()))
+		{
+			return hr;
+		}
+		if (hr=FAILED(CreateConstantBuffer()))
+		{
+			return hr;
+		}
+		if (hr=FAILED(CreateInputLayout()))
+		{
+			return hr;
+		}
+		if (hr=FAILED(LoadTexture(TexFileName)))
+		{
+			return hr;
+		}
+
+		m_SkyBox = std::make_shared<KG_SkyBox>();
+		m_SkyBox->CreateSkyBox(m_obj.m_pd3dDevice, m_obj.m_pContext, L"SkyObj.hlsl");
+		m_SkyBox->CreateTexuture(m_obj.m_pd3dDevice, m_obj.m_pContext, L"../../data/sky/StarFiled2.dds");
+
+		
+
+
+		JH::I_LIGHT_MGR.Create(m_ShaderFileName.data(),m_LightFileName.data());
+		UpdateTangentBuffer();
+		return  hr;
 	}
 	HRESULT JH_Map::CreateVertexData()
 	{
@@ -467,9 +511,9 @@ namespace JH
 		if (pszTexFileName == NULL) return S_OK;
 		hr = D3DX11CreateShaderResourceViewFromFile(m_obj.m_pd3dDevice, pszTexFileName, NULL, NULL, &m_obj.m_pSRV, NULL);
 
-		if (m_pNormMapFileName)
+		if (m_pNormMapFileName==L"")
 		{
-			m_iTexNum = I_Texture.Add(m_obj.m_pd3dDevice, m_pNormMapFileName);
+			m_iTexNum = I_Texture.Add(m_obj.m_pd3dDevice, m_pNormMapFileName.data());
 		}
 		m_pTexture = I_Texture.GetPtr(m_iTexNum);
 
@@ -489,10 +533,11 @@ namespace JH
 		pBuffers[0] = I_LIGHT_MGR.m_pLightConstantBuffer[0].Get();
 		LightConstantBuffer mcb = I_LIGHT_MGR.m_cbLight;
 		UpdateConstantBuffer(I_LIGHT_MGR.m_pLightConstantBuffer[0].Get(), &I_LIGHT_MGR.m_cbLight);
+		m_obj.m_pContext->VSSetConstantBuffers(1, 1, pBuffers);
 		m_obj.m_pContext->PSSetConstantBuffers(1, 1, pBuffers);
 		UINT offset = 0;
 		UINT stride = sizeof(D3DXVECTOR3);
-		if (m_pNormMapFileName)
+		if (m_pNormMapFileName==L"")
 		{
 			m_obj.m_pContext->PSSetShaderResources(1, 1, &m_pTexture->m_pTextureRV);
 			m_obj.m_pContext->IASetVertexBuffers(1, 1, &m_pTangentVB, &stride, &offset);
@@ -509,7 +554,6 @@ namespace JH
 	JH_Map::JH_Map()
 	{
 		D3DXMatrixIdentity(&m_matNormal);
-		m_pNormMapFileName = nullptr;
 		m_iTexNum = -1;
 		m_bMapEdit = false;
 	}

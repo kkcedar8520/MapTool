@@ -159,7 +159,7 @@ namespace JH {
 		pNode->m_Box.fExtent[0] = pNode->m_Box.vMax.x - pNode->m_Box.vCenter.x;//D3DXVec3Dot(&pNode->m_Box.vAxis[0], &vHalf);
 		pNode->m_Box.fExtent[1] = pNode->m_Box.vMax.y - pNode->m_Box.vCenter.y;//D3DXVec3Dot(&pNode->m_Box.vAxis[1], &vHalf);
 		pNode->m_Box.fExtent[2] = pNode->m_Box.vMax.z - pNode->m_Box.vCenter.z;//D3DXVec3Dot(&pNode->m_Box.vAxis[2], &vHalf);
-		if ((pNode->m_Box.vMax.y==0&&pNode->m_Box.vMin.y==0))
+		if ((pNode->m_Box.vMax.y == 0 && pNode->m_Box.vMin.y == 0))
 		{
 			pNode->m_Box.fExtent[1] = 1;
 			pNode->m_Box.vMax.y += 1;
@@ -223,13 +223,19 @@ namespace JH {
 		ldiv_t divValue = ldiv(dwTL, m_dwWidth);
 		pNode->m_dwPositionIndex[0] = divValue.rem / (dwTR - dwTL);//rem -> m_dwWidth를 dwTL로 나눈 나머지
 		pNode->m_dwPositionIndex[0] = divValue.quot / (dwTR - dwTL);
+
+		
 		if (pParent != nullptr)
 			pNode->m_dwDepth = pParent->m_dwDepth + 1;
 		else
 		{
 			pNode->m_dwDepth = 0;
 		}
+
+		m_NodeList.insert(std::make_pair(m_iQuadTreeIndex, pNode));
 		m_iQuadTreeIndex++;
+
+		
 		return pNode;
 
 	}
@@ -579,7 +585,7 @@ namespace JH {
 		//Obj->GetObj()->SetMatrix(&Obj->GetObj()->m_matWorld, &m_pCamera->m_View, &m_pCamera->m_Proj);
 		KG_Box Box = Obj->GetObj()->GetCharBox();
 		int pos = CheckOBBNodePlane(m_pRootNode, Box);
-		if (pos==P_FRONT)//CheckRect(m_pRootNode,Obj.get()))
+		if (pos == P_FRONT)//CheckRect(m_pRootNode,Obj.get()))
 		{
 			pNode = FindNode(m_pRootNode, Obj.get());
 			if (pNode)
@@ -610,7 +616,7 @@ namespace JH {
 		Obj->GetObj()->SetMatrix(&Obj->GetObj()->m_matWorld, &m_pCamera->m_View, &m_pCamera->m_Proj);
 		KG_Box Box = Obj->GetObj()->GetCharBox();
 		int pos = CheckOBBNodePlane(m_pRootNode, Box);
-		if (pos==P_FRONT)
+		if (pos == P_FRONT)
 		{
 			pNode = FindNode(m_pRootNode, Obj.get());
 
@@ -650,7 +656,7 @@ namespace JH {
 				if (pNode->m_pChild[iChild] == nullptr) break;
 				KG_Box Box = Obj->GetObj()->GetCharBox();
 				int pos = CheckOBBNodePlane(pNode->m_pChild[iChild], Box);
-				if (pos==P_FRONT)
+				if (pos == P_FRONT)
 				{
 					m_QueueList.push(pNode->m_pChild[iChild]);
 				}
@@ -1032,6 +1038,7 @@ namespace JH {
 			VisibleNode(pNode->m_pChild[iNode]);
 		}
 	}
+
 
 	HQuadTree::HQuadTree()
 	{

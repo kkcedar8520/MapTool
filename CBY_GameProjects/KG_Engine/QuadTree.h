@@ -29,7 +29,7 @@ namespace JH {
 
 					
 
-
+		std::map<int, KG_Node*>						m_NodeList;
 		std::map<int, std::shared_ptr<JH_MapObj>>	m_ObjectList;
 		std::vector<KG_Node*>						m_SelectNodeList;
 		//std::vector< std::shared_ptr<JH_MapObj>>	m_SelectObjList;
@@ -91,6 +91,9 @@ namespace JH {
 	public:
 		bool FindInterSection();
 		void FindNearInterSectionNode(KG_Node* pNode, D3DXVECTOR3 vInterSection);
+		//Save
+
+
 	public:
 		HQuadTree();
 		virtual ~HQuadTree();

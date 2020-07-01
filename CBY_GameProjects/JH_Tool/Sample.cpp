@@ -160,335 +160,755 @@ TCHAR* Sample::SaveFileDlg(TCHAR* szExt, TCHAR* szTitle)
 
 	return szFile;
 }
-bool	Sample::SaveDataReset()
+//bool	Sample::SaveDataReset()
+//{
+//
+//	m_sMapData.m_pSplattAlphaTextureFile.clear();
+//	m_sMapData.m_pSplattTextureFile.clear();
+//	return true;
+//}
+//bool  Sample::SaveMapData(const TCHAR* LoadFile)
+//{
+//	m_sMapData.Reset();
+//	m_sMapData.m_CharPos = m_Map->GetCharPos();
+//	JH::OBJECT OBJ;
+//	for (auto Obj : m_QuadTree->m_ObjectList)
+//	{
+//		OBJ.m_MapObj = std::make_shared<JH::MAP_OBJ_DATA>();
+//		OBJ.m_MapObj->m_matWorld = Obj.second->GetObj()->m_matWorld;
+//		OBJ.m_MapObj->m_BoneName = Obj.second->GetBoneName();
+//		OBJ.m_MapObj->m_SkinName = Obj.second->GetSkinName();
+//		OBJ.m_MapObj->m_iQuadTreeIndex = Obj.second->GetQuadIndex();
+//		OBJ.m_MapObj->m_Box = Obj.second->GetObj()->GetCharBox();
+//		OBJ.m_MapObj->m_Flag = Obj.second->GetFlag();
+//		m_sMapData.m_sQTData.m_ObjList.push_back(OBJ);
+//
+//		m_sMapData.m_pSplattAlphaTextureFile = m_pSPTAFile;
+//	}
+//
+//	FILE* fp;
+//	TCHAR  szFile[256] = { 0, };
+//	fp = _tfopen(LoadFile, _T("wb"));
+//
+//	int		ibuf[6] = {};
+//	DWORD	Dbuf[2] = {};
+//	float	fbuf[40] = {};
+//	TCHAR Temp[256] = {};
+//	
+//	TCHAR cbuf[256] = {};
+//	ibuf[0] = lstrlenW(m_Map->m_TextureFileName);
+//	fwrite((void*)ibuf, sizeof(int), 1, fp);
+//	fwrite((void*)m_Map->m_TextureFileName, sizeof(TCHAR),lstrlenW(m_Map->m_TextureFileName),fp);
+//
+//	ibuf[0] = lstrlenW(m_Map->m_pNormMapFileName);
+//	fwrite((void*)ibuf, sizeof(int), 1, fp);
+//	fwrite((void*)m_Map->m_pNormMapFileName, sizeof(TCHAR), lstrlenW(m_Map->m_pNormMapFileName), fp);
+//
+//	ibuf[0] = lstrlenW(m_Map->m_HegithFileName);
+//	fwrite((void*)ibuf, sizeof(int), 1, fp);
+//	fwrite((void*)m_Map->m_HegithFileName, sizeof(TCHAR), lstrlenW(m_Map->m_HegithFileName), fp);
+//
+//	ibuf[0] = lstrlenW(m_Map->m_ShaderFileName);
+//	fwrite((void*)ibuf, sizeof(int), 1, fp);
+//	fwrite((void*)m_Map->m_ShaderFileName, sizeof(TCHAR), lstrlenW(m_Map->m_ShaderFileName), fp);
+//
+//
+//
+//
+//	ibuf[0] = lstrlenW(m_sMapData.m_pSplattAlphaTextureFile.data());
+//	fwrite((void*)ibuf, sizeof(int), 1, fp);
+//	fwrite((void*)m_sMapData.m_pSplattAlphaTextureFile.data(), sizeof(TCHAR), lstrlenW(m_sMapData.m_pSplattAlphaTextureFile.data()), fp);
+//
+//	for (int i = 0; i < m_Map->m_vSplattTextureList.size(); i++)
+//	{
+//		m_sMapData.m_pSplattTextureFile.push_back(FixupName(m_Map->m_vSplattTextureList[i]->m_szPath+ m_Map->m_vSplattTextureList[i]->m_szName));
+//	}
+//
+//	ibuf[0]=m_sMapData.m_pSplattTextureFile.size();
+//	fwrite((void*)ibuf, sizeof(int), 1, fp);
+//
+//	fbuf[0] = m_sMapData.m_CharPos.x;
+//	fbuf[1] = m_sMapData.m_CharPos.y;
+//	fbuf[2] = m_sMapData.m_CharPos.z;
+//
+//	fwrite((void*)fbuf, sizeof(float), 3, fp);
+//
+//
+//	for (int i = 0; i < m_sMapData.m_pSplattTextureFile.size(); i++)
+//	{
+//		ibuf[0] = lstrlenW(m_sMapData.m_pSplattTextureFile[i].data());
+//		fwrite((void*)ibuf, sizeof(int), 1, fp);
+//		fwrite((void*)m_sMapData.m_pSplattTextureFile[i].data(), sizeof(TCHAR), lstrlenW(m_sMapData.m_pSplattTextureFile[i].data()), fp);
+//	}
+//	int iWidth = m_Map->m_iColumNum / m_Map->m_iCellCount;
+//	int iHeight = m_Map->m_iRowNum / m_Map->m_iCellCount;
+//	int iCellSize = (int)m_Map->m_fCellDistance;
+//
+//	ibuf[0] = iWidth;
+//	ibuf[1] = iHeight;
+//	ibuf[2] = m_Map->m_iCellCount;
+//	ibuf[3] = iCellSize;
+//
+//	fwrite((void*)ibuf, sizeof(int), 4, fp);
+//
+//	ibuf[0] = m_Map->m_VerTex.size();
+//	fwrite((void*)ibuf, sizeof(int), 1, fp);
+//	int layer = 0;
+//	for (int iVertex = 0; iVertex < m_Map->m_VerTex.size(); iVertex++)
+//	{
+//		
+//		fbuf[0] = m_Map->m_VerTex[iVertex].p.x; fbuf[1] = m_Map->m_VerTex[iVertex].p.y; fbuf[2] = m_Map->m_VerTex[iVertex].p.z;
+//		fbuf[3] = m_Map->m_VerTex[iVertex].n.x; fbuf[4] = m_Map->m_VerTex[iVertex].n.y; fbuf[5] = m_Map->m_VerTex[iVertex].n.z;
+//		fbuf[6] = m_Map->m_VerTex[iVertex].c.x; fbuf[7] = m_Map->m_VerTex[iVertex].c.y; fbuf[8] = m_Map->m_VerTex[iVertex].c.z; fbuf[9] = m_Map->m_VerTex[iVertex].c.w;
+//		fbuf[10] = m_Map->m_VerTex[iVertex].t.x; fbuf[11] = m_Map->m_VerTex[iVertex].t.y;
+//		
+//		fwrite((void*)fbuf, sizeof(float), 12, fp);
+//
+//	};
+//
+//	ibuf[0] = m_Map->m_IndexData.size();
+//	fwrite((void*)ibuf, sizeof(int), 1, fp);
+//	for (int Index = 0; Index < m_Map->m_IndexData.size(); Index++)
+//	{
+//		ibuf[0] = m_Map->m_IndexData[Index];
+//		fwrite((void*)ibuf, sizeof(int), 1, fp);
+//
+//
+//
+//
+//	}
+//	ibuf[0] = m_sMapData.m_sQTData.m_ObjList.size();
+//	fwrite((void*)ibuf, sizeof(int), 1, fp);
+//	for (int  iObj = 0; iObj < m_sMapData.m_sQTData.m_ObjList.size(); iObj++)
+//	{
+//		JH::OBJECT &OBJ=
+//			m_sMapData.m_sQTData.m_ObjList[iObj];
+//
+//		ibuf[0] = OBJ.m_MapObj->m_iQuadTreeIndex;
+//		fwrite((void*)ibuf, sizeof(int), 1, fp);
+//
+//		Dbuf[0] = OBJ.m_MapObj->m_Flag;
+//		fwrite((void*)Dbuf, sizeof(DWORD), 1, fp);
+//
+//		ibuf[0] = lstrlenW(OBJ.m_MapObj->m_SkinName.data());
+//		fwrite((void*)ibuf, sizeof(int), 1, fp);
+//		fwrite((void*)OBJ.m_MapObj->m_SkinName.data(), sizeof(TCHAR), lstrlenW(OBJ.m_MapObj->m_SkinName.data()), fp);
+//		ibuf[0] = lstrlenW(OBJ.m_MapObj->m_BoneName.data());
+//		fwrite((void*)ibuf, sizeof(int), 1, fp);
+//
+//		fwrite((void*)OBJ.m_MapObj->m_BoneName.data(), sizeof(TCHAR), lstrlenW(OBJ.m_MapObj->m_SkinName.data()) , fp);
+//
+//
+//		
+//
+//
+//
+//		fbuf[0] = OBJ.m_MapObj->m_matWorld._11; fbuf[1] = OBJ.m_MapObj->m_matWorld._12; 
+//		fbuf[2] = OBJ.m_MapObj->m_matWorld._13; fbuf[3] = OBJ.m_MapObj->m_matWorld._14;
+//
+//		fbuf[4] = OBJ.m_MapObj->m_matWorld._21; fbuf[5] = OBJ.m_MapObj->m_matWorld._22;
+//		fbuf[6] = OBJ.m_MapObj->m_matWorld._23; fbuf[7] = OBJ.m_MapObj->m_matWorld._24;
+//
+//		fbuf[8] = OBJ.m_MapObj->m_matWorld._31; fbuf[9] = OBJ.m_MapObj->m_matWorld._32;
+//		fbuf[10] = OBJ.m_MapObj->m_matWorld._33; fbuf[11] = OBJ.m_MapObj->m_matWorld._34;
+//
+//		fbuf[12] = OBJ.m_MapObj->m_matWorld._41; fbuf[13] = OBJ.m_MapObj->m_matWorld._42;
+//		fbuf[14] = OBJ.m_MapObj->m_matWorld._43; fbuf[15] = OBJ.m_MapObj->m_matWorld._44;
+//
+//
+//
+//
+//
+//		fbuf[16] = OBJ.m_MapObj->m_Box.vCenter.x; fbuf[17] = OBJ.m_MapObj->m_Box.vCenter.y;fbuf[18] = OBJ.m_MapObj->m_Box.vCenter.z;
+//		fbuf[19] = OBJ.m_MapObj->m_Box.vMin.x; fbuf[20] = OBJ.m_MapObj->m_Box.vMin.y; fbuf[21] = OBJ.m_MapObj->m_Box.vMin.z;
+//		fbuf[22] = OBJ.m_MapObj->m_Box.vMax.x; fbuf[23] = OBJ.m_MapObj->m_Box.vMin.y;fbuf[24] = OBJ.m_MapObj->m_Box.vMin.z;
+//		
+//
+//		
+//		fbuf[25] = OBJ.m_MapObj->m_Box.vAxis[0].x; fbuf[26] = OBJ.m_MapObj->m_Box.vAxis[0].y;fbuf[27] = OBJ.m_MapObj->m_Box.vAxis[0].z;
+//		fbuf[28] = OBJ.m_MapObj->m_Box.vAxis[1].x; fbuf[29] = OBJ.m_MapObj->m_Box.vAxis[1].y; fbuf[30] = OBJ.m_MapObj->m_Box.vAxis[1].z;
+//
+//
+//	
+//		fbuf[31] = OBJ.m_MapObj->m_Box.vAxis[2].x; fbuf[32] = OBJ.m_MapObj->m_Box.vAxis[2].y; fbuf[33] = OBJ.m_MapObj->m_Box.vAxis[2].z;
+//		fbuf[34] = OBJ.m_MapObj->m_Box.fExtent[0]; fbuf[35] = OBJ.m_MapObj->m_Box.fExtent[1]; fbuf[36] = OBJ.m_MapObj->m_Box.fExtent[2];
+//
+//		fwrite((void*)fbuf, sizeof(float), 37, fp);
+//	
+//	}
+//
+//	fclose(fp);
+//	//m_sMapData.Reset();
+//
+//	//m_sMapData.m_CharPos = m_Map->GetCharPos();
+//
+//	//
+//	//	OBJECT OBJ;
+//	//	for (auto Obj :  m_QuadTree->m_ObjectList)
+//	//	{
+//	//		 OBJ.m_MapObj = std::make_shared<MAP_OBJ_DATA>();
+//	//		 OBJ.m_MapObj->m_matWorld = Obj.second->GetObj()->m_matWorld;
+//	//		 OBJ.m_MapObj->m_BoneName = Obj.second->GetBoneName();
+//	//		 OBJ.m_MapObj->m_SkinName = Obj.second->GetSkinName();
+//	//		 OBJ.m_MapObj->m_iQuadTreeIndex = Obj.second->GetQuadIndex();
+//	//		 OBJ.m_MapObj->m_Box = Obj.second->GetObj()->GetCharBox();
+//	//		 OBJ.m_MapObj->m_Flag = Obj.second->GetFlag();
+//	//		m_sMapData.m_sQTData.m_ObjList.push_back(OBJ);
+//	//	}
+//	//
+//
+//	//m_sMapData.m_pSplattAlphaTextureFile=m_pSPTAFile;
+//	//FILE* fp;
+//	//TCHAR  szFile[256] = { 0, };
+//	//fp = _tfopen(LoadFile, _T("wt"));
+//
+//
+//	//_ftprintf(fp, _T("%s %s\n"), L"Map",
+//	//	m_Map->m_TextureFileName);
+//	//_ftprintf(fp, _T("%s %s\n "), L"NorMalMap",
+//	//	m_Map->m_pNormMapFileName);
+//	//_ftprintf(fp, _T("%s %s\n "), L"HeightMap",
+//	//	m_Map->m_HegithFileName);
+//
+//	//_ftprintf(fp, _T("%s %s\n"), L"Shader",
+//	//	m_Map->m_ShaderFileName);
+//
+//	//
+//
+//
+//	//_ftprintf(fp, _T("%s %s\n"), L"ALPHATEX",
+//	//	m_sMapData.m_pSplattAlphaTextureFile.data());
+//
+//
+//
+//
+//	//for (int i = 0; i < m_Map->m_vSplattTextureList.size(); i++)
+//	//{
+//	//	m_sMapData.m_pSplattTextureFile.push_back(FixupName(m_Map->m_vSplattTextureList[i]->m_szPath+ m_Map->m_vSplattTextureList[i]->m_szName));
+//	//}
+//
+//	//_ftprintf(fp, _T("%s %d\n"), L"SPT_TEX_NUM", m_sMapData.m_pSplattTextureFile.size());
+//
+//	//_ftprintf(fp, _T("%s %10.4f %10.4f %10.4f\n"), L"CHARPOS",
+//	//	m_sMapData.m_CharPos.x, m_sMapData.m_CharPos.y, m_sMapData.m_CharPos.z);
+//	//for (int i = 0; i < m_sMapData.m_pSplattTextureFile.size(); i++)
+//	//{
+//	//	_ftprintf(fp, _T("%d %s\n"), i, m_sMapData.m_pSplattTextureFile[i].data());
+//	//}
+//
+//	//
+//
+//	//int iWidth = m_Map->m_iColumNum / m_Map->m_iCellCount;
+//	//int iHeight = m_Map->m_iRowNum / m_Map->m_iCellCount;
+//	//int iCellSize = (int)m_Map->m_fCellDistance;
+//	//_ftprintf(fp, _T("%s %d %d %d %d\n"), L"MapSizeData", iWidth, iHeight, m_Map->m_iCellCount, iCellSize);
+//
+//	//_ftprintf(fp, _T("%s %d\n %s\n"), L"VertexNum", m_Map->m_VerTex.size(), L"Vertex");
+//	//int layer = 0;
+//	//for (int iVertex = 0; iVertex < m_Map->m_VerTex.size(); iVertex++)
+//	//{
+//
+//	//	_ftprintf(fp, _T("%10.4f %10.4f %10.4f \n"), m_Map->m_VerTex[iVertex].p.x, m_Map->m_VerTex[iVertex].p.y, m_Map->m_VerTex[iVertex].p.z);
+//	//	_ftprintf(fp, _T("%10.4f %10.4f %10.4f \n"), m_Map->m_VerTex[iVertex].n.x, m_Map->m_VerTex[iVertex].n.y, m_Map->m_VerTex[iVertex].n.z);
+//	//	_ftprintf(fp, _T("%10.4f %10.4f %10.4f %10.4f\n"), m_Map->m_VerTex[iVertex].c.x, m_Map->m_VerTex[iVertex].c.y, m_Map->m_VerTex[iVertex].c.z,m_Map->m_VerTex[iVertex].c.w);
+//	//	_ftprintf(fp, _T("%10.4f %10.4f \n"), m_Map->m_VerTex[iVertex].t.x, m_Map->m_VerTex[iVertex].t.y);
+//
+//
+//	//}
+//	//_ftprintf(fp, _T("%s %d\n %s\n"), L"IndexNum", m_Map->m_IndexData.size(), L"Index");
+//	//for (int Index = 0; Index < m_Map->m_IndexData.size(); Index++)
+//	//{
+//
+//	//	_ftprintf(fp, _T("%d \n"), m_Map->m_IndexData[Index]);
+//
+//
+//
+//	//}
+//	//_ftprintf(fp, _T("%s %d \n"), L"QUAD_OBJECT_NUM ", m_sMapData.m_sQTData.m_ObjList.size());
+//	//for (int  iObj = 0; iObj < m_sMapData.m_sQTData.m_ObjList.size(); iObj++)
+//	//{
+//	//	OBJECT &OBJ=
+//	//		m_sMapData.m_sQTData.m_ObjList[iObj];
+//	//	_ftprintf(fp, _T("%d \n"),  OBJ.m_MapObj->m_iQuadTreeIndex);
+//	//	_ftprintf(fp, _T("%s \n"),  OBJ.m_MapObj->m_SkinName.data());
+//	//	_ftprintf(fp, _T("%s \n"),  OBJ.m_MapObj->m_BoneName.data());
+//	//	_ftprintf(fp, _T("%d \n"), OBJ.m_MapObj->m_Flag);
+//
+//
+//
+//	//	_ftprintf(fp, _T("\t%s\n"), _T("WORLD_MATRIX"));
+//	//	_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f %10.4f\n"),
+//	//		 OBJ.m_MapObj->m_matWorld._11,  OBJ.m_MapObj->m_matWorld._12,  OBJ.m_MapObj->m_matWorld._13,  OBJ.m_MapObj->m_matWorld._14);
+//	//	_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f %10.4f\n"),
+//	//		 OBJ.m_MapObj->m_matWorld._21,  OBJ.m_MapObj->m_matWorld._22,  OBJ.m_MapObj->m_matWorld._23,  OBJ.m_MapObj->m_matWorld._24);
+//	//	_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f %10.4f\n"),
+//	//		 OBJ.m_MapObj->m_matWorld._31,  OBJ.m_MapObj->m_matWorld._32,  OBJ.m_MapObj->m_matWorld._33,  OBJ.m_MapObj->m_matWorld._34);
+//	//	_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f %10.4f\n"),
+//	//		 OBJ.m_MapObj->m_matWorld._41,  OBJ.m_MapObj->m_matWorld._42,  OBJ.m_MapObj->m_matWorld._43,  OBJ.m_MapObj->m_matWorld._44);
+//
+//	//	_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),
+//	//		 OBJ.m_MapObj->m_Box.vCenter.x,  OBJ.m_MapObj->m_Box.vCenter.y,  OBJ.m_MapObj->m_Box.vCenter.z);
+//	//	_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),
+//	//		 OBJ.m_MapObj->m_Box.vMin.x,  OBJ.m_MapObj->m_Box.vMin.y,  OBJ.m_MapObj->m_Box.vMin.z);
+//	//	_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),
+//	//		 OBJ.m_MapObj->m_Box.vMax.x,  OBJ.m_MapObj->m_Box.vMax.y,  OBJ.m_MapObj->m_Box.vMax.z);
+//
+//
+//	//	_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),
+//	//		 OBJ.m_MapObj->m_Box.vAxis[0].x,  OBJ.m_MapObj->m_Box.vAxis[0].y,  OBJ.m_MapObj->m_Box.vAxis[0].z);
+//	//	_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),									   
+//	//		 OBJ.m_MapObj->m_Box.vAxis[1].x,  OBJ.m_MapObj->m_Box.vAxis[1].y,  OBJ.m_MapObj->m_Box.vAxis[1].z);
+//	//	_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),									   
+//	//		 OBJ.m_MapObj->m_Box.vAxis[2].x,  OBJ.m_MapObj->m_Box.vAxis[2].y,  OBJ.m_MapObj->m_Box.vAxis[2].z);
+//
+//	//	_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),
+//	//		 OBJ.m_MapObj->m_Box.fExtent[0],  OBJ.m_MapObj->m_Box.fExtent[1],  OBJ.m_MapObj->m_Box.fExtent[2]);
+//	//}
+//
+//
+//
+//	//fclose(fp);
+//	//m_sMapData.Reset();
+//	return true;
+//}
+//bool  Sample::LoadMapData(const TCHAR* LoadFile)
+//{
+//	//FILE* fp;
+//	//TCHAR  szFile[256] = { 0, };
+//
+//	//fp = _tfopen(LoadFile, _T("rb"));
+//
+//	//if (fp == nullptr)
+//	//{
+//	//	return false;
+//	//}
+//	//fseek(fp, 0, SEEK_END);    // 파일 포인터를 파일의 끝으로 이동시킴
+//	//int size = ftell(fp);
+//	//fseek(fp, 0, SEEK_SET);
+//
+//	//m_sMapData.Reset();
+//
+//	//int		ibuf[6] = {};
+//	//DWORD	Dbuf[6] = {};
+//	//int		ilength[3] = {};
+//	//float	fbuf[256] = {};
+//
+//	//TCHAR   Temp[256];
+//	//TCHAR cbuf[256] = {};
+//
+//	//fread((void*)ibuf, sizeof(int), 1, fp);
+//	//fread((void*)cbuf, sizeof(TCHAR), ibuf[0], fp);
+//	//_tcsncpy_s(Temp,cbuf, sizeof(TCHAR)*ibuf[0]);
+//	//m_sMapData.m_BaseTextureFile = Temp;
+//
+//
+//	//fread((void*)ibuf, sizeof(int), 1, fp);
+//	//fread((void*)cbuf, sizeof(TCHAR), ibuf[0], fp);
+//	//_tcsncpy_s(Temp, cbuf, sizeof(TCHAR)*ibuf[0]);
+//	//m_sMapData.m_NormalMapFile = Temp;
+//
+//	//fread((void*)ibuf, sizeof(int), 1, fp);
+//	//fread((void*)cbuf, sizeof(TCHAR), ibuf[0], fp);
+//	//_tcsncpy_s(Temp, cbuf, sizeof(TCHAR)*ibuf[0]);
+//	//m_sMapData.m_HeightMapFile = Temp;
+//
+//	//fread((void*)ibuf, sizeof(int), 1, fp);
+//	//fread((void*)cbuf, sizeof(TCHAR), ibuf[0], fp);
+//	//_tcsncpy_s(Temp, cbuf, sizeof(TCHAR)*ibuf[0]);
+//	//m_sMapData.m_ShaderFile = Temp;
+//
+//
+//	//fread((void*)ibuf, sizeof(int), 1, fp);
+//	//fread((void*)cbuf, sizeof(TCHAR), ibuf[0], fp);
+//	//_tcsncpy_s(Temp, cbuf, sizeof(TCHAR)*ibuf[0]);
+//	//m_sMapData.m_pSplattAlphaTextureFile = Temp;
+//	//
+//	//fread((void*)ibuf, sizeof(int), 1, fp);
+//
+//	//m_sMapData.m_pSplattTextureFile.resize(ibuf[0]);
+//
+//	//fread((void*)fbuf, sizeof(float), 3, fp);
+//
+//	// m_sMapData.m_CharPos.x=fbuf[0];
+//	// m_sMapData.m_CharPos.y=fbuf[1];
+//	// m_sMapData.m_CharPos.z=fbuf[2];
+//
+//	//
+//	// for (int i = 0; i < m_sMapData.m_pSplattTextureFile.size(); i++)
+//	// {
+//	//
+//	//	 fread((void*)ilength, sizeof(int), 1, fp);
+//	//	 fread((void*)cbuf, sizeof(TCHAR), ilength[0], fp);
+//	//	 _tcsncpy_s(Temp, cbuf, sizeof(TCHAR)*ilength[0]);
+//	//	 m_sMapData.m_pSplattTextureFile[i]= Temp;
+//	//	 memset(cbuf, 0, sizeof(TCHAR) * 256);
+//	// }
+//
+//	//fread((void*)ibuf, sizeof(int), 4, fp);
+//
+//
+//	//m_sMapData.iRow = ibuf[0];
+//	//m_sMapData.iCol = ibuf[1];
+//	//m_sMapData.iCellCount = ibuf[2];
+//	//m_sMapData.iCellSize = ibuf[3];
+//
+//
+//	//fread((void*)ibuf, sizeof(int), 1, fp);
+//	//m_sMapData.m_VerTex.resize(ibuf[0]);
+//	//int layer = 0;
+//	//for (int iVertex = 0; iVertex < m_sMapData.m_VerTex.size(); iVertex++)
+//	//{
+//	//	fread((void*)fbuf, sizeof(float), 12, fp);
+//	//	m_sMapData.m_VerTex[iVertex].p.x= fbuf[0];  m_sMapData.m_VerTex[iVertex].p.y=fbuf[1];  m_sMapData.m_VerTex[iVertex].p.z= fbuf[2];
+//	//	m_sMapData.m_VerTex[iVertex].n.x= fbuf[3];  m_sMapData.m_VerTex[iVertex].n.y= fbuf[4]; m_sMapData.m_VerTex[iVertex].n.z= fbuf[5];
+//	//	m_sMapData.m_VerTex[iVertex].c.x= fbuf[6];  m_sMapData.m_VerTex[iVertex].c.y= fbuf[7]; m_sMapData.m_VerTex[iVertex].c.z= fbuf[8]; m_sMapData.m_VerTex[iVertex].c.w= fbuf[9];
+//	//	m_sMapData.m_VerTex[iVertex].t.x= fbuf[10]; m_sMapData.m_VerTex[iVertex].t.y= fbuf[11];
+//
+//
+//
+//	//	memset(fbuf, 0, sizeof(float) * 40);
+//	//};
+//
+//	//
+//	//fread((void*)ibuf, sizeof(int), 1, fp);
+//	//m_sMapData.m_IndexData.resize(ibuf[0]);
+//	//for (int Index = 0; Index < m_sMapData.m_IndexData.size(); Index++)
+//	//{
+//	//	
+//	//	fread((void*)ibuf, sizeof(int), 1, fp);
+//
+//	//	m_sMapData.m_IndexData[Index]= ibuf[0];
+//
+//
+//	//}
+//	//
+//	//fread((void*)ibuf, sizeof(int), 1, fp);
+//	//m_sMapData.m_sQTData.m_ObjList.resize(ibuf[0]);
+//	//for (int iObj = 0; iObj < m_sMapData.m_sQTData.m_ObjList.size(); iObj++)
+//	//{
+//	//	m_sMapData.m_sQTData.m_ObjList[iObj].m_MapObj = std::make_shared<JH::MAP_OBJ_DATA>();
+//	//	JH::OBJECT &OBJ =
+//	//		m_sMapData.m_sQTData.m_ObjList[iObj];
+//
+//	//	int size = ftell(fp);
+//	//	fread((void*)ibuf, sizeof(int), 1, fp);
+//	//	OBJ.m_MapObj->m_iQuadTreeIndex= ibuf[0] ;
+//
+//	//	fread((void*)Dbuf, sizeof(DWORD), 1, fp);
+//	//	OBJ.m_MapObj->m_Flag= Dbuf[0] ;
+//
+//	//	int i = feof(fp);
+//	//	fread((void*)ilength, sizeof(int), 1, fp);
+//	//	fread((void*)cbuf, sizeof(TCHAR), ilength[0], fp);
+//	//
+//	//	if (ilength[0] > 256)
+//	//	{
+//	//		int i=1;
+//	//	}
+//	//	_tcsncpy_s(Temp, cbuf, sizeof(TCHAR)*ilength[0]);
+//	//	
+//
+//
+//	//
+//	//	OBJ.m_MapObj->m_SkinName=Temp;
+//	//	memset(cbuf, 0, sizeof(TCHAR) * 256);
+//	//	memset(Temp, 0, sizeof(TCHAR) * 256);
+//
+//	//	fread((void*)ilength, sizeof(int), 1, fp);
+//	//	fread((void*)cbuf, sizeof(TCHAR), ilength[0], fp);
+//
+//	//	if (ilength[0] > 256)
+//	//	{
+//	//		int i = 1;
+//	//	}
+//	//	_tcsncpy_s(Temp, cbuf, sizeof(TCHAR)*ilength[0]);
+//
+//
+//	//	OBJ.m_MapObj->m_BoneName = Temp;
+//	//
+//
+//	//	memset(cbuf, 0, sizeof(TCHAR) * 256);
+//	//	memset(Temp, 0, sizeof(TCHAR) * 256);
+//
+//
+//
+//	//	fread((void*)fbuf, sizeof(float), 37, fp);
+//	//	OBJ.m_MapObj->m_matWorld._11= fbuf[0] ;  OBJ.m_MapObj->m_matWorld._12= fbuf[1];
+//	//	OBJ.m_MapObj->m_matWorld._13= fbuf[2] ; OBJ.m_MapObj->m_matWorld._14= fbuf[3] ;
+//
+//	//	OBJ.m_MapObj->m_matWorld._21= fbuf[4] ;OBJ.m_MapObj->m_matWorld._22= fbuf[5] ;
+//	//	OBJ.m_MapObj->m_matWorld._23= fbuf[6] ; OBJ.m_MapObj->m_matWorld._24= fbuf[7] ;
+//
+//	//	OBJ.m_MapObj->m_matWorld._31= fbuf[8]; OBJ.m_MapObj->m_matWorld._32= fbuf[9] ;
+//	//	OBJ.m_MapObj->m_matWorld._33= fbuf[10] ; OBJ.m_MapObj->m_matWorld._34= fbuf[11] ;
+//
+//	//	OBJ.m_MapObj->m_matWorld._41= fbuf[12] ;  OBJ.m_MapObj->m_matWorld._42= fbuf[13] ;
+//	//	OBJ.m_MapObj->m_matWorld._43= fbuf[14] ; OBJ.m_MapObj->m_matWorld._44= fbuf[15] ;
+//
+//	//	
+//
+//
+//
+//	//	OBJ.m_MapObj->m_Box.vCenter.x= fbuf[16];  OBJ.m_MapObj->m_Box.vCenter.y= fbuf[17];  OBJ.m_MapObj->m_Box.vCenter.z= fbuf[18] ;
+//	//	 OBJ.m_MapObj->m_Box.vMin.x= fbuf[19] ; OBJ.m_MapObj->m_Box.vMin.y= fbuf[20] ;  OBJ.m_MapObj->m_Box.vMin.z= fbuf[21] ;
+//	//	 OBJ.m_MapObj->m_Box.vMax.x= fbuf[22] ;  OBJ.m_MapObj->m_Box.vMin.y= fbuf[23] ;OBJ.m_MapObj->m_Box.vMin.z= fbuf[24] ;
+//
+//
+//
+//	//	OBJ.m_MapObj->m_Box.vAxis[0].x= fbuf[26] ; OBJ.m_MapObj->m_Box.vAxis[0].y= fbuf[27] ; OBJ.m_MapObj->m_Box.vAxis[0].z= fbuf[28] ;
+//	//	 OBJ.m_MapObj->m_Box.vAxis[1].x= fbuf[29] ; OBJ.m_MapObj->m_Box.vAxis[1].y= fbuf[30] ; OBJ.m_MapObj->m_Box.vAxis[1].z= fbuf[31] ;
+//
+//
+//
+//
+//	//	 OBJ.m_MapObj->m_Box.vAxis[2].x= fbuf[32] ;OBJ.m_MapObj->m_Box.vAxis[2].y= fbuf[33]; OBJ.m_MapObj->m_Box.vAxis[2].z= fbuf[34];
+//	//	OBJ.m_MapObj->m_Box.fExtent[0]= fbuf[35]; OBJ.m_MapObj->m_Box.fExtent[1]= fbuf[36];  OBJ.m_MapObj->m_Box.fExtent[2]= fbuf[37] ;
+//
+//	//	memset(fbuf, 0, sizeof(float) * 40);
+//
+//	//
+//	//}
+//	//const TCHAR* HeightFile;
+//	//if (m_sMapData.m_HeightMapFile==L"")
+//	//{
+//	//	 HeightFile = nullptr;
+//	//}
+//	//else
+//	//{
+//	//	HeightFile = m_sMapData.m_HeightMapFile.data();
+//	//}
+//	//CreateMap(m_sMapData.iRow, m_sMapData.iCol, m_sMapData.iCellCount,m_sMapData.iCellSize, 
+//	//	m_sMapData.m_BaseTextureFile.c_str(), m_sMapData.m_NormalMapFile.c_str(), HeightFile);
+//
+//
+//	//m_Map->SetCharPos(m_sMapData.m_CharPos);
+//	//for (int iTex = 0; iTex < m_sMapData.m_pSplattTextureFile.size(); iTex++)
+//	//{
+//	//	m_Map->AddSplattTexture(m_sMapData.m_pSplattTextureFile[iTex].data(), iTex+1);
+//	//}
+//	//HRESULT hr;
+//
+//
+//
+//
+//
+//	//if (SUCCEEDED(hr = D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice,
+//	//	m_sMapData.m_pSplattAlphaTextureFile.data(), NULL, NULL, m_Map->m_pCopySrv.GetAddressOf(), NULL)))
+//	//{
+//	//}
+//
+//
+//	//for (int i = 0; i < m_sMapData.m_sQTData.m_ObjList.size(); i++)
+//	//{
+//	//	JH::OBJECT& obj = m_sMapData.m_sQTData.m_ObjList[i];
+//	//	AddObject(obj);
+//	//}
+//
+//
+//	//fclose(fp);
+//
+//
+//	FILE* fp;
+//	TCHAR  szFile[256] = { 0, };
+//
+//	fp = _tfopen(LoadFile, _T("rt"));
+//
+//	if (fp == nullptr)
+//	{
+//		return false;
+//	}
+//
+//	//Map Basic Text Data
+//	m_sMapData.Reset();
+//
+//	TCHAR   Temp[256];
+//	_fgetts(m_pBuffer, 256, fp);
+//	_stscanf(m_pBuffer, _T("%s %s\n"), m_pString,
+//		Temp);
+//	m_sMapData.m_BaseTextureFile = Temp;
+//
+//	_fgetts(m_pBuffer, 256, fp);
+//	_stscanf(m_pBuffer, _T("%s %s\n"), m_pString, Temp);
+//	m_sMapData.m_NormalMapFile = Temp;
+//
+//	_fgetts(m_pBuffer, 256, fp);
+//	_stscanf(m_pBuffer, _T("%s %s\n "), m_pString, Temp);
+//	if(Temp!=L"(null)")
+//	m_sMapData.m_HeightMapFile = Temp;
+//
+//	_fgetts(m_pBuffer, 256, fp);
+//	_stscanf(m_pBuffer, _T("%s %s\n "), m_pString, Temp);
+//
+//	m_sMapData.m_ShaderFile = Temp;
+//
+//
+//	_fgetts(m_pBuffer, 256, fp);
+//	_stscanf(m_pBuffer, _T("%s %s\n "), m_pString, Temp);
+//
+//	m_sMapData.m_LightFile = Temp;
+//
+//	
+//		_fgetts(m_pBuffer, 256, fp);
+//		_stscanf(m_pBuffer, _T("%s %s\n"), m_pString,
+//			Temp);
+//		m_sMapData.m_pSplattAlphaTextureFile = Temp;
+//	
+//		
+//	//Splatt Texture
+//	_fgetts(m_pBuffer, 256, fp);
+//	_stscanf(m_pBuffer, _T("%s %d\n"), m_pString, &m_iTemp);
+//
+//
+//	_fgetts(m_pBuffer, 256, fp);
+//	_stscanf(m_pBuffer, _T("%s %f %f %f\n"), m_pString,
+//		&m_sMapData.m_CharPos.x, &m_sMapData.m_CharPos.y, &m_sMapData.m_CharPos.z);
+//
+//
+//
+//	m_sMapData.m_pSplattTextureFile.resize( m_iTemp);
+//	for (int i = 0; i < m_sMapData.m_pSplattTextureFile.size(); i++)
+//	{
+//
+//		_fgetts(m_pBuffer, 256, fp);
+//		_stscanf(m_pBuffer, _T("%d %s"), &m_iTemp, Temp);
+//		m_sMapData.m_pSplattTextureFile[i] = Temp;
+//	}
+//	_fgetts(m_pBuffer, 256, fp);
+//	_stscanf(m_pBuffer, _T("%s %d %d %d %d\n"), m_pString, &m_sMapData.iRow, &m_sMapData.iCol, &m_sMapData.iCellCount, &m_sMapData.iCellSize);
+//	// Vertex Height Data
+//	_fgetts(m_pBuffer, 256, fp);
+//	_stscanf(m_pBuffer, _T("%s %d\n "), m_pString, &m_iTemp, m_pString);
+//
+//	_fgetts(m_pBuffer, 256, fp);
+//	_stscanf(m_pBuffer, _T(" %s\n"), m_pString);
+//
+//	m_sMapData.m_VerTex.resize(m_iTemp);
+//	int layer = 0;
+//
+//		for (int iVertex = 0; iVertex < m_sMapData.m_VerTex.size(); iVertex++)
+//		{
+//
+//			_fgetts(m_pBuffer, 256, fp);
+//			_stscanf(m_pBuffer,_T("%f %f %f \n"), &m_sMapData.m_VerTex[iVertex].p.x,&m_sMapData.m_VerTex[iVertex].p.y, &m_sMapData.m_VerTex[iVertex].p.z);
+//			_fgetts(m_pBuffer, 256, fp);
+//			_stscanf(m_pBuffer, _T("%f %f %f \n"), &m_sMapData.m_VerTex[iVertex].n.x, &m_sMapData.m_VerTex[iVertex].n.y, &m_sMapData.m_VerTex[iVertex].n.z);
+//			_fgetts(m_pBuffer, 256, fp);
+//			_stscanf(m_pBuffer, _T("%f %f %f %f\n"), &m_sMapData.m_VerTex[iVertex].c.x, &m_sMapData.m_VerTex[iVertex].c.y, &m_sMapData.m_VerTex[iVertex].c.z, &m_sMapData.m_VerTex[iVertex].c.w);
+//			_fgetts(m_pBuffer, 256, fp);
+//			_stscanf(m_pBuffer, _T("%f %f \n"), &m_sMapData.m_VerTex[iVertex].t.x, &m_sMapData.m_VerTex[iVertex].t.y);
+//		}
+//	
+//
+//	_fgetts(m_pBuffer, 256, fp);
+//	_stscanf(m_pBuffer, _T("%s %d \n"), m_pString, &m_iTemp);
+//
+//	m_sMapData.m_sQTData.m_ObjList.resize(m_iTemp);
+//	TCHAR  Buf[255];
+//	for (int iObj = 0; iObj < m_sMapData.m_sQTData.m_ObjList.size(); iObj++)
+//	{
+//		m_sMapData.m_sQTData.m_ObjList[iObj].m_MapObj = std::make_shared<JH::MAP_OBJ_DATA>();
+//		JH::OBJECT &OBJ =
+//			m_sMapData.m_sQTData.m_ObjList[iObj];
+//		_fgetts(m_pBuffer, 256, fp);
+//		_stscanf(m_pBuffer, _T("%d \n"),&m_iTemp);
+//
+//		 OBJ.m_MapObj->m_iQuadTreeIndex=m_iTemp;
+//
+//		_fgetts(m_pBuffer, 256, fp);
+//		_stscanf(m_pBuffer, _T("%s \n"), Buf);
+//		 OBJ.m_MapObj->m_SkinName=Buf;
+//		_fgetts(m_pBuffer, 256, fp);
+//		_stscanf(m_pBuffer, _T("%s \n"), Buf);
+//		 OBJ.m_MapObj->m_BoneName=Buf;
+//
+//		 _fgetts(m_pBuffer, 256, fp);
+//		 _stscanf(m_pBuffer, _T("%d \n"), &m_iTemp);
+//		 OBJ.m_MapObj->m_Flag = m_iTemp;
+//
+//		_fgetts(m_pBuffer, 256, fp);
+//		_stscanf(m_pBuffer, _T("\t%s\n"), Buf);
+//
+//		_fgetts(m_pBuffer, 256, fp);
+//		_stscanf(m_pBuffer, _T("\t%f %f %f %f\n"),
+//			& OBJ.m_MapObj->m_matWorld._11, & OBJ.m_MapObj->m_matWorld._12, & OBJ.m_MapObj->m_matWorld._13,& OBJ.m_MapObj->m_matWorld._14);
+//		_fgetts(m_pBuffer, 256, fp);
+//		_stscanf(m_pBuffer, _T("\t%f %f %f %f\n"),
+//			& OBJ.m_MapObj->m_matWorld._21, & OBJ.m_MapObj->m_matWorld._22, & OBJ.m_MapObj->m_matWorld._23, & OBJ.m_MapObj->m_matWorld._24);
+//		_fgetts(m_pBuffer, 256, fp);
+//		_stscanf(m_pBuffer, _T("\t%f %f %f %f\n"),
+//			& OBJ.m_MapObj->m_matWorld._31, & OBJ.m_MapObj->m_matWorld._32, & OBJ.m_MapObj->m_matWorld._33, & OBJ.m_MapObj->m_matWorld._34);
+//		_fgetts(m_pBuffer, 256, fp);
+//		_stscanf(m_pBuffer, _T("\t%f %f %f %f\n"),
+//			& OBJ.m_MapObj->m_matWorld._41, & OBJ.m_MapObj->m_matWorld._42, & OBJ.m_MapObj->m_matWorld._43, & OBJ.m_MapObj->m_matWorld._44);
+//
+//
+//		KG_Box& Box = OBJ.m_MapObj->m_Box;
+//		_fgetts(m_pBuffer, 256, fp);
+//		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
+//			&Box.vCenter.x, &Box.vCenter.y, &Box.vCenter.z);
+//		_fgetts(m_pBuffer, 256, fp);
+//		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
+//			&Box.vMin.x, &Box.vMin.y, &Box.vMin.z);
+//		_fgetts(m_pBuffer, 256, fp);
+//		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
+//			&Box.vMax.x, &Box.vMax.y, &Box.vMax.z);
+//
+//
+//		_fgetts(m_pBuffer, 256, fp);
+//		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
+//			&Box.vAxis[0].x, &Box.vAxis[0].y, &Box.vAxis[0].z);
+//		_fgetts(m_pBuffer, 256, fp);
+//		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
+//			&Box.vAxis[1].x, &Box.vAxis[1].y, &Box.vAxis[1].z);
+//		_fgetts(m_pBuffer, 256, fp);
+//		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
+//			&Box.vAxis[2].x, &Box.vAxis[2].y, &Box.vAxis[2].z);
+//
+//		_fgetts(m_pBuffer, 256, fp);
+//		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
+//			&Box.fExtent[0], &Box.fExtent[1], &Box.fExtent[2]);
+//	}
+//	const TCHAR* HeightFile;
+//	if (StrStrW(m_sMapData.m_HeightMapFile.c_str(),L"(null)"))
+//	{
+//		 HeightFile = nullptr;
+//	}
+//	else
+//	{
+//		HeightFile = m_sMapData.m_HeightMapFile.data();
+//	}
+//	CreateMap(m_sMapData.iRow, m_sMapData.iCol, m_sMapData.iCellCount,m_sMapData.iCellSize, 
+//		m_sMapData.m_BaseTextureFile.c_str(), m_sMapData.m_NormalMapFile.c_str(), HeightFile);
+//
+//
+//	m_Map->SetCharPos(m_sMapData.m_CharPos);
+//	for (int iTex = 0; iTex < m_sMapData.m_pSplattTextureFile.size(); iTex++)
+//	{
+//		m_Map->AddSplattTexture(m_sMapData.m_pSplattTextureFile[iTex].data(), iTex+1);
+//	}
+//	HRESULT hr;
+//
+//
+//
+//
+//
+//	if (SUCCEEDED(hr = D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice,
+//		m_sMapData.m_pSplattAlphaTextureFile.data(), NULL, NULL, m_Map->m_pCopySrv.GetAddressOf(), NULL)))
+//
+//
+//
+//	for (int i = 0; i < m_sMapData.m_sQTData.m_ObjList.size(); i++)
+//	{
+//		JH::OBJECT& obj = m_sMapData.m_sQTData.m_ObjList[i];
+//		AddObject(obj);
+//	}
+//
+//	return true;
+//}
+INT Sample::AddObject(JH::OBJECT OBJ)
 {
 
-	m_sMapData.m_pSplattAlphaTextureFile.clear();
-	m_sMapData.m_pSplattTextureFile.clear();
-	return true;
-}
-bool  Sample::SaveMapData(const TCHAR* LoadFile)
-{
-	m_sMapData.Reset();
 
-	m_sMapData.m_CharPos = m_Map->GetCharPos();
-
-	
-		OBJECT OBJ;
-		for (auto Obj :  m_QuadTree->m_ObjectList)
-		{
-			 OBJ.m_MapObj = std::make_shared<MAP_OBJ_DATA>();
-			 OBJ.m_MapObj->m_matWorld = Obj.second->GetObj()->m_matWorld;
-			 OBJ.m_MapObj->m_BoneName = Obj.second->GetBoneName();
-			 OBJ.m_MapObj->m_SkinName = Obj.second->GetSkinName();
-			 OBJ.m_MapObj->m_iQuadTreeIndex = Obj.second->GetQuadIndex();
-			 OBJ.m_MapObj->m_Box = Obj.second->GetObj()->GetCharBox();
-			 OBJ.m_MapObj->m_Flag = Obj.second->GetFlag();
-			m_sMapData.m_sQTData.m_ObjList.push_back(OBJ);
-		}
-	
-
-	m_sMapData.m_pSplattAlphaTextureFile=m_pSPTAFile;
-	FILE* fp;
-	TCHAR  szFile[256] = { 0, };
-	fp = _tfopen(LoadFile, _T("wt"));
-
-
-	_ftprintf(fp, _T("%s %s\n"), L"Map",
-		m_Map->m_TextureFileName);
-	_ftprintf(fp, _T("%s %s\n "), L"NorMalMap",
-		m_Map->m_pNormMapFileName);
-	_ftprintf(fp, _T("%s %s\n "), L"HeightMap",
-		m_Map->m_HegithFileName);
-
-	_ftprintf(fp, _T("%s %s\n"), L"Shader",
-		m_Map->m_ShaderFileName);
-
-	
-
-
-	_ftprintf(fp, _T("%s %s\n"), L"ALPHATEX",
-		m_sMapData.m_pSplattAlphaTextureFile.data());
-
-
-
-
-	for (int i = 0; i < m_Map->m_vSplattTextureList.size(); i++)
-	{
-		m_sMapData.m_pSplattTextureFile.push_back(FixupName(m_Map->m_vSplattTextureList[i]->m_szPath+ m_Map->m_vSplattTextureList[i]->m_szName));
-	}
-
-	_ftprintf(fp, _T("%s %d\n"), L"SPT_TEX_NUM", m_sMapData.m_pSplattTextureFile.size());
-
-	_ftprintf(fp, _T("%s %10.4f %10.4f %10.4f\n"), L"CHARPOS",
-		m_sMapData.m_CharPos.x, m_sMapData.m_CharPos.y, m_sMapData.m_CharPos.z);
-	for (int i = 0; i < m_sMapData.m_pSplattTextureFile.size(); i++)
-	{
-		_ftprintf(fp, _T("%d %s\n"), i, m_sMapData.m_pSplattTextureFile[i].data());
-	}
-
-	
-
-	int iWidth = m_Map->m_iColumNum / m_Map->m_iCellCount;
-	int iHeight = m_Map->m_iRowNum / m_Map->m_iCellCount;
-	int iCellSize = (int)m_Map->m_fCellDistance;
-	_ftprintf(fp, _T("%s %d %d %d %d\n"), L"MapSizeData", iWidth, iHeight, m_Map->m_iCellCount, iCellSize);
-
-	_ftprintf(fp, _T("%s %d\n %s\n"), L"VertexNum", m_Map->m_VerTex.size(), L"VertexHegiht");
-	int layer = 0;
-	for (int iVertex = 0; iVertex < m_Map->m_VerTex.size(); iVertex++)
-	{
-
-		_ftprintf(fp, _T("%10.4f %10.4f %10.4f \n"), m_Map->m_VerTex[iVertex].p.x, m_Map->m_VerTex[iVertex].p.y, m_Map->m_VerTex[iVertex].p.z);
-		_ftprintf(fp, _T("%10.4f %10.4f %10.4f \n"), m_Map->m_VerTex[iVertex].n.x, m_Map->m_VerTex[iVertex].n.y, m_Map->m_VerTex[iVertex].n.z);
-		_ftprintf(fp, _T("%10.4f %10.4f %10.4f %10.4f\n"), m_Map->m_VerTex[iVertex].c.x, m_Map->m_VerTex[iVertex].c.y, m_Map->m_VerTex[iVertex].c.z,m_Map->m_VerTex[iVertex].c.w);
-		_ftprintf(fp, _T("%10.4f %10.4f \n"), m_Map->m_VerTex[iVertex].t.x, m_Map->m_VerTex[iVertex].t.y);
-
-
-	}
-	_ftprintf(fp, _T("%s %d \n"), L"QUAD_OBJECT_NUM ", m_sMapData.m_sQTData.m_ObjList.size());
-	for (int  iObj = 0; iObj < m_sMapData.m_sQTData.m_ObjList.size(); iObj++)
-	{
-		OBJECT &OBJ=
-			m_sMapData.m_sQTData.m_ObjList[iObj];
-		_ftprintf(fp, _T("%d \n"),  OBJ.m_MapObj->m_iQuadTreeIndex);
-		_ftprintf(fp, _T("%s \n"),  OBJ.m_MapObj->m_SkinName.data());
-		_ftprintf(fp, _T("%s \n"),  OBJ.m_MapObj->m_BoneName.data());
-		_ftprintf(fp, _T("%d \n"), OBJ.m_MapObj->m_Flag);
-
-
-
-		_ftprintf(fp, _T("\t%s\n"), _T("WORLD_MATRIX"));
-		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f %10.4f\n"),
-			 OBJ.m_MapObj->m_matWorld._11,  OBJ.m_MapObj->m_matWorld._12,  OBJ.m_MapObj->m_matWorld._13,  OBJ.m_MapObj->m_matWorld._14);
-		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f %10.4f\n"),
-			 OBJ.m_MapObj->m_matWorld._21,  OBJ.m_MapObj->m_matWorld._22,  OBJ.m_MapObj->m_matWorld._23,  OBJ.m_MapObj->m_matWorld._24);
-		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f %10.4f\n"),
-			 OBJ.m_MapObj->m_matWorld._31,  OBJ.m_MapObj->m_matWorld._32,  OBJ.m_MapObj->m_matWorld._33,  OBJ.m_MapObj->m_matWorld._34);
-		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f %10.4f\n"),
-			 OBJ.m_MapObj->m_matWorld._41,  OBJ.m_MapObj->m_matWorld._42,  OBJ.m_MapObj->m_matWorld._43,  OBJ.m_MapObj->m_matWorld._44);
-
-		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),
-			 OBJ.m_MapObj->m_Box.vCenter.x,  OBJ.m_MapObj->m_Box.vCenter.y,  OBJ.m_MapObj->m_Box.vCenter.z);
-		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),
-			 OBJ.m_MapObj->m_Box.vMin.x,  OBJ.m_MapObj->m_Box.vMin.y,  OBJ.m_MapObj->m_Box.vMin.z);
-		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),
-			 OBJ.m_MapObj->m_Box.vMax.x,  OBJ.m_MapObj->m_Box.vMax.y,  OBJ.m_MapObj->m_Box.vMax.z);
-
-
-		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),
-			 OBJ.m_MapObj->m_Box.vAxis[0].x,  OBJ.m_MapObj->m_Box.vAxis[0].y,  OBJ.m_MapObj->m_Box.vAxis[0].z);
-		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),									   
-			 OBJ.m_MapObj->m_Box.vAxis[1].x,  OBJ.m_MapObj->m_Box.vAxis[1].y,  OBJ.m_MapObj->m_Box.vAxis[1].z);
-		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),									   
-			 OBJ.m_MapObj->m_Box.vAxis[2].x,  OBJ.m_MapObj->m_Box.vAxis[2].y,  OBJ.m_MapObj->m_Box.vAxis[2].z);
-
-		_ftprintf(fp, _T("\t%10.4f %10.4f %10.4f\n"),
-			 OBJ.m_MapObj->m_Box.fExtent[0],  OBJ.m_MapObj->m_Box.fExtent[1],  OBJ.m_MapObj->m_Box.fExtent[2]);
-	}
-
-
-
-	fclose(fp);
-	m_sMapData.Reset();
-	return true;
-}
-bool  Sample::LoadMapData(const TCHAR* LoadFile)
-{
-	FILE* fp;
-	TCHAR  szFile[256] = { 0, };
-
-	fp = _tfopen(LoadFile, _T("rt"));
-
-	if (fp == nullptr)
-	{
-		return false;
-	}
-
-	//Map Basic Text Data
-	m_sMapData.Reset();
-
-	TCHAR   Temp[256];
-	_fgetts(m_pBuffer, 256, fp);
-	_stscanf(m_pBuffer, _T("%s %s\n"), m_pString,
-		Temp);
-	m_sMapData.m_BaseTextureFile = Temp;
-
-	_fgetts(m_pBuffer, 256, fp);
-	_stscanf(m_pBuffer, _T("%s %s\n"), m_pString, Temp);
-	m_sMapData.m_NormalMapFile = Temp;
-
-	_fgetts(m_pBuffer, 256, fp);
-	_stscanf(m_pBuffer, _T("%s %s\n "), m_pString, Temp);
-	if(Temp!=L"(null)")
-	m_sMapData.m_HeightMapFile = Temp;
-
-	_fgetts(m_pBuffer, 256, fp);
-	_stscanf(m_pBuffer, _T("%s %s\n "), m_pString, Temp);
-
-	m_sMapData.m_ShaderFile = Temp;
-
-
-	
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("%s %s\n"), m_pString,
-			Temp);
-		m_sMapData.m_pSplattAlphaTextureFile = Temp;
-	
-		
-	//Splatt Texture
-	_fgetts(m_pBuffer, 256, fp);
-	_stscanf(m_pBuffer, _T("%s %d\n"), m_pString, &m_iTemp);
-
-
-	_fgetts(m_pBuffer, 256, fp);
-	_stscanf(m_pBuffer, _T("%s %f %f %f\n"), m_pString,
-		&m_sMapData.m_CharPos.x, &m_sMapData.m_CharPos.y, &m_sMapData.m_CharPos.z);
-
-
-
-	m_sMapData.m_pSplattTextureFile.resize( m_iTemp);
-	for (int i = 0; i < m_sMapData.m_pSplattTextureFile.size(); i++)
-	{
-
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("%d %s"), &m_iTemp, Temp);
-		m_sMapData.m_pSplattTextureFile[i] = Temp;
-	}
-	_fgetts(m_pBuffer, 256, fp);
-	_stscanf(m_pBuffer, _T("%s %d %d %d %d\n"), m_pString, &m_sMapData.iRow, &m_sMapData.iCol, &m_sMapData.iCellCount, &m_sMapData.iCellSize);
-	// Vertex Height Data
-	_fgetts(m_pBuffer, 256, fp);
-	_stscanf(m_pBuffer, _T("%s %d\n "), m_pString, &m_iTemp, m_pString);
-
-	_fgetts(m_pBuffer, 256, fp);
-	_stscanf(m_pBuffer, _T(" %s\n"), m_pString);
-
-	m_sMapData.m_VerTex.resize(m_iTemp);
-	int layer = 0;
-
-		for (int iVertex = 0; iVertex < m_sMapData.m_VerTex.size(); iVertex++)
-		{
-
-			_fgetts(m_pBuffer, 256, fp);
-			_stscanf(m_pBuffer,_T("%f %f %f \n"), &m_sMapData.m_VerTex[iVertex].p.x,&m_sMapData.m_VerTex[iVertex].p.y, &m_sMapData.m_VerTex[iVertex].p.z);
-			_fgetts(m_pBuffer, 256, fp);
-			_stscanf(m_pBuffer, _T("%f %f %f \n"), &m_sMapData.m_VerTex[iVertex].n.x, &m_sMapData.m_VerTex[iVertex].n.y, &m_sMapData.m_VerTex[iVertex].n.z);
-			_fgetts(m_pBuffer, 256, fp);
-			_stscanf(m_pBuffer, _T("%f %f %f %f\n"), &m_sMapData.m_VerTex[iVertex].c.x, &m_sMapData.m_VerTex[iVertex].c.y, &m_sMapData.m_VerTex[iVertex].c.z, &m_sMapData.m_VerTex[iVertex].c.w);
-			_fgetts(m_pBuffer, 256, fp);
-			_stscanf(m_pBuffer, _T("%f %f \n"), &m_sMapData.m_VerTex[iVertex].t.x, &m_sMapData.m_VerTex[iVertex].t.y);
-		}
-	
-
-	_fgetts(m_pBuffer, 256, fp);
-	_stscanf(m_pBuffer, _T("%s %d \n"), m_pString, &m_iTemp);
-
-	m_sMapData.m_sQTData.m_ObjList.resize(m_iTemp);
-	TCHAR  Buf[255];
-	for (int iObj = 0; iObj < m_sMapData.m_sQTData.m_ObjList.size(); iObj++)
-	{
-		m_sMapData.m_sQTData.m_ObjList[iObj].m_MapObj = std::make_shared<MAP_OBJ_DATA>();
-		OBJECT &OBJ =
-			m_sMapData.m_sQTData.m_ObjList[iObj];
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("%d \n"),&m_iTemp);
-
-		 OBJ.m_MapObj->m_iQuadTreeIndex=m_iTemp;
-
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("%s \n"), Buf);
-		 OBJ.m_MapObj->m_SkinName=Buf;
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("%s \n"), Buf);
-		 OBJ.m_MapObj->m_BoneName=Buf;
-
-		 _fgetts(m_pBuffer, 256, fp);
-		 _stscanf(m_pBuffer, _T("%d \n"), &m_iTemp);
-		 OBJ.m_MapObj->m_Flag = m_iTemp;
-
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("\t%s\n"), Buf);
-
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("\t%f %f %f %f\n"),
-			& OBJ.m_MapObj->m_matWorld._11, & OBJ.m_MapObj->m_matWorld._12, & OBJ.m_MapObj->m_matWorld._13,& OBJ.m_MapObj->m_matWorld._14);
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("\t%f %f %f %f\n"),
-			& OBJ.m_MapObj->m_matWorld._21, & OBJ.m_MapObj->m_matWorld._22, & OBJ.m_MapObj->m_matWorld._23, & OBJ.m_MapObj->m_matWorld._24);
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("\t%f %f %f %f\n"),
-			& OBJ.m_MapObj->m_matWorld._31, & OBJ.m_MapObj->m_matWorld._32, & OBJ.m_MapObj->m_matWorld._33, & OBJ.m_MapObj->m_matWorld._34);
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("\t%f %f %f %f\n"),
-			& OBJ.m_MapObj->m_matWorld._41, & OBJ.m_MapObj->m_matWorld._42, & OBJ.m_MapObj->m_matWorld._43, & OBJ.m_MapObj->m_matWorld._44);
-
-
-		KG_Box& Box = OBJ.m_MapObj->m_Box;
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-			&Box.vCenter.x, &Box.vCenter.y, &Box.vCenter.z);
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-			&Box.vMin.x, &Box.vMin.y, &Box.vMin.z);
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-			&Box.vMax.x, &Box.vMax.y, &Box.vMax.z);
-
-
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-			&Box.vAxis[0].x, &Box.vAxis[0].y, &Box.vAxis[0].z);
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-			&Box.vAxis[1].x, &Box.vAxis[1].y, &Box.vAxis[1].z);
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-			&Box.vAxis[2].x, &Box.vAxis[2].y, &Box.vAxis[2].z);
-
-		_fgetts(m_pBuffer, 256, fp);
-		_stscanf(m_pBuffer, _T("\t%f %f %f\n"),
-			&Box.fExtent[0], &Box.fExtent[1], &Box.fExtent[2]);
-	}
-	const TCHAR* HeightFile;
-	if (StrStrW(m_sMapData.m_HeightMapFile.c_str(),L"(null)"))
-	{
-		 HeightFile = nullptr;
-	}
-	else
-	{
-		HeightFile = m_sMapData.m_HeightMapFile.data();
-	}
-	CreateMap(m_sMapData.iRow, m_sMapData.iCol, m_sMapData.iCellCount,m_sMapData.iCellSize, 
-		m_sMapData.m_BaseTextureFile.c_str(), m_sMapData.m_NormalMapFile.c_str(), HeightFile);
-
-
-	m_Map->SetCharPos(m_sMapData.m_CharPos);
-	for (int iTex = 0; iTex < m_sMapData.m_pSplattTextureFile.size(); iTex++)
-	{
-		m_Map->AddSplattTexture(m_sMapData.m_pSplattTextureFile[iTex].data(), iTex+1);
-	}
-	HRESULT hr;
-
-
-
-
-
-	if (SUCCEEDED(hr = D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice,
-		m_sMapData.m_pSplattAlphaTextureFile.data(), NULL, NULL, m_Map->m_pCopySrv.GetAddressOf(), NULL)))
-
-
-
-	for (int i = 0; i < m_sMapData.m_sQTData.m_ObjList.size(); i++)
-	{
-		OBJECT& obj = m_sMapData.m_sQTData.m_ObjList[i];
-		AddObject(obj);
-	}
-
-	return true;
-}
-INT Sample::AddObject(OBJECT OBJ)
-{
 	std::shared_ptr<CBY::CBY_Object> Object;
 	Object = std::make_shared<CBY::CBY_Object>();
 	Object->Create(m_pd3dDevice, m_pContext, L"../../data/shader/ObjectShader.txt", nullptr, "VSOBJECT", "PS");
@@ -502,6 +922,8 @@ INT Sample::AddObject(OBJECT OBJ)
 	
 	//OBJ.m_MapObj->SetObj(Object);
 	//OBJ.m_MapObj->SetID(m_ObjID++);
+
+
 
 	std::shared_ptr < JH::JH_MapObj> MapObj = std::make_shared<JH::JH_MapObj>();
 	MapObj->SetBoneName(OBJ.m_MapObj->m_BoneName);
@@ -1036,7 +1458,8 @@ bool Sample::CreateMap(int iWidth,
 	int iCellSize,
 	const TCHAR* pTexturFileName,
 	const TCHAR* pNormalMapFileName,
-	const TCHAR* pHeightMapFileName)
+	const TCHAR* pHeightMapFileName,
+	const TCHAR* pLightShaderFileName)
 {
 
 
@@ -1078,6 +1501,8 @@ bool Sample::CreateMap(int iWidth,
 
 	m_Map->m_pNormMapFileName = pNormalMapFileName;
 	m_Map->m_HegithFileName = pHeightMapFileName;
+	m_Map->m_LightFileName = pLightShaderFileName;
+
 	m_Map->Load(m_pd3dDevice, m_pContext);
 	CreateCSTexture();
 
@@ -1142,7 +1567,7 @@ int Sample::CreateObj(const TCHAR* pSkinFileName, const TCHAR* pBoneFileName, D3
 		m_CurrentMapObj = std::make_shared<JH::JH_MapObj>();
 		//m_QuadTree->= std::make_shared<JH::JH_MapObj>();
 		m_CurrentMapObj->SetObj(m_Object);
-		m_CurrentMapObj->SetID(m_ObjID++);
+		m_CurrentMapObj->SetID(JH::I_MapMgr.m_ObjID++);
 		m_CurrentMapObj->SetSkinName(pSkinFileName);
 		m_CurrentMapObj->SetBoneName(pBoneFileName);
 		m_CurrentMapObj->SetFlag(JH::WALL);
@@ -1190,11 +1615,12 @@ bool Sample::Init()
 	float fAspect = (float)Winrt.right / Winrt.bottom;
 	m_pMainCamera->CreateProjMatrix(0.1F, 2000.0F, D3DX_PI*0.5F, fAspect);
 
+	JH::I_MapMgr.Set(m_pd3dDevice, m_pContext, m_pMainCamera, &m_Select);
 
 	JH::I_LIGHT_MGR.GetDevice(m_pd3dDevice);
 	JH::I_LIGHT_MGR.GetContext(m_pContext);
 	JH::I_LIGHT_MGR.SetCamera(m_pMainCamera);
-	JH::I_LIGHT_MGR.Create(L"../../data/Shader/JHMapShader.txt", L"../../data/LightSrc/LightInfo.txt");
+//	JH::I_LIGHT_MGR.Create(L"../../data/Shader/JHMapShader.txt", L"../../data/LightSrc/LightInfo.txt");
 
 	//ComPuteShader
 	(CDXH::CreateComputeShader( L"ComputeShader.HLSL", "CSMAIN", m_pd3dDevice, m_pCS.GetAddressOf()));
@@ -1208,6 +1634,14 @@ bool Sample::Init()
 bool Sample::Frame()
 {
 	if (m_Map == nullptr)return true;
+	
+	if (I_Input.KeyCheck(VK_F1))
+	{
+		JH::I_LIGHT_MGR.GetDevice(m_pd3dDevice);
+		JH::I_LIGHT_MGR.GetContext(m_pContext);
+		JH::I_LIGHT_MGR.SetCamera(m_pMainCamera);
+		JH::I_LIGHT_MGR.Create(L"../../data/Shader/JHMapShader.txt", L"../../data/LightSrc/LightInfo.txt");
+	}
 	
 	//test/adsfadsf
 	m_QuadTree->m_pSelect->SetMarix(nullptr, &m_pMainCamera->m_View, &m_pMainCamera->m_Proj);
